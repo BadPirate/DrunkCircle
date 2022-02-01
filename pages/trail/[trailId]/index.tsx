@@ -68,20 +68,21 @@ const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
         <Card.Subtitle>Directions</Card.Subtitle>
         { trail.latitude !== 0 || trail.longitude !== 0
           ? (
-            <div style={{ height: '300px', width: '100%' }}>
-              <GoogleMapReact
-                bootstrapURLKeys={{ key: mapKey }}
-                defaultCenter={start}
-                defaultZoom={20}
-              >
-                <TrailStart
-                  lat={trail.latitude}
-                  lng={trail.longitude}
-                />
-              </GoogleMapReact>
-            </div>
+            <Card.Text>
+              <div style={{ height: '300px', width: '100%' }}>
+                <GoogleMapReact
+                  bootstrapURLKeys={{ key: mapKey }}
+                  defaultCenter={start}
+                  defaultZoom={20}
+                >
+                  <TrailStart
+                    lat={trail.latitude}
+                    lng={trail.longitude}
+                  />
+                </GoogleMapReact>
+              </div>
+            </Card.Text>
           ) : null}
-
         <Card.Text>
           {trail.directions}
         </Card.Text>
