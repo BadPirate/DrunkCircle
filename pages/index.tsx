@@ -1,27 +1,26 @@
 import {
-  Card, ListGroup,
+  Card, Container,
 } from 'react-bootstrap'
 import RootNav from '../src/components/RootNav'
 
 const Home = () => (
-  <div>
-    <RootNav>
+  <RootNav>
+    <Container>
       <Card>
         <Card.Body>
-          <Card.Title><a href="https://github.com/BadPirate/nextstrap">Nextstrap</a></Card.Title>
+          <Card.Title>DrunkCircle</Card.Title>
           <Card.Text>
-            A template for building full stack projects, just the way BadPirate likes it.
+            Welcome to the DrunkCircle website.  A free resource for Hash House Harriers.
           </Card.Text>
-          <ListGroup>
-            <ListGroup.Item>Next JS</ListGroup.Item>
-            <ListGroup.Item>Typescript</ListGroup.Item>
-            <ListGroup.Item>ESLint</ListGroup.Item>
-            <ListGroup.Item>ReactBootstrap</ListGroup.Item>
-          </ListGroup>
+          <Card.Text>
+            Thanklessly maintained by
+            {' '}
+            <a href="mailto:ni@fhacu.com">Nothing Interesting</a>
+          </Card.Text>
         </Card.Body>
       </Card>
-    </RootNav>
-  </div>
+    </Container>
+  </RootNav>
 )
 
 export default Home

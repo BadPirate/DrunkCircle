@@ -1,0 +1,5 @@
+schema:
+  - https://hasura.badpirate.net/v1/graphql:
+    headers:
+        X-Hasura-Admin-Secret: iJqS6+ZfzQQ3s/fiFHd/9q98+JorNxWKN3N+IeqCksg=
+documents: "src/**/*.{graphql,js,ts,jsx,tsx}"

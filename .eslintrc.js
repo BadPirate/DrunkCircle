@@ -28,7 +28,8 @@ module.exports = {
       namedComponents: 'arrow-function',
       unnamedComponents: 'arrow-function',
     }],
+    'no-use-before-define': 'off',
     'react/react-in-jsx-scope': 0,
-    'import/extensions': ['error', 'always', { tsx: 'never', js: 'never' }],
+    'import/extensions': ['error', 'always', { tsx: 'never', js: 'never', ts: 'never' }],
   },
 }
