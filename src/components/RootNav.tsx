@@ -20,7 +20,7 @@ const RootNav = ({ children } : {children : React.ReactNode}) => {
           { !session?.user
             ? <Button variant="success" onClick={() => { signIn() }}>Login</Button>
             : [
-              <Navbar.Text><a href="hasher">{session?.user.name}</a></Navbar.Text>,
+              <Navbar.Text><a href="/hasher">{session?.user.name}</a></Navbar.Text>,
               <Button className="ms-2" variant="danger" onClick={() => { signOut() }}>Logout</Button>,
             ]}
         </Container>

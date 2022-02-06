@@ -1,27 +1,35 @@
-import { Card, Container, Spinner } from 'react-bootstrap'
+import {
+  Button, Card, Container, Spinner,
+} from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { gql, useQuery } from '@apollo/client'
 import dateFormat from 'dateformat'
 import GoogleMapReact from 'google-map-react'
-import Image from 'next/image'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBeer } from '@fortawesome/free-solid-svg-icons'
+import ReactMarkdown from 'react-markdown'
 import RootNav from '../../../src/components/RootNav'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
 import ErrorBanner from '../../../src/components/ErrorBanner'
 import { GQLPageTrailId, PublicFragmentTrail } from '../../../src/graph/types'
-import FootImage from '../../../public/on_on_foot.png'
 
 const GQL_TRAIL_ID = gql`
 fragment PublicFragmentTrail on trails {
-    calculated_number
-    description
-    directions
-    kennelInfo {
+  calculated_number
+  description
+  directions
+  kennelInfo {
+    name
+  }
+  latitude
+  longitude
+  name
+  start
+  hares {
+    hasherInfo {
       name
     }
-    latitude
-    longitude
-    name
-    start
+  }
 }
 
 query GQLPageTrailId($trailId: Int) {
@@ -37,11 +45,9 @@ const Body = ({ children } : { children: React.ReactNode }) => (
   </RootNav>
 )
 
+// eslint-disable-next-line no-unused-vars
 const TrailStart = ({ lat, lng } : { lat: number, lng: number}) => (
-  <Image
-    src={FootImage}
-    alt={`Starting location ${lat} ${lng}`}
-  />
+  <FontAwesomeIcon icon={faBeer} size="3x" />
 )
 
 const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
@@ -56,16 +62,24 @@ const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
   return (
     <Card>
       <Card.Body>
+        <Card.Subtitle>{`${trail.kennelInfo.name} presents...`}</Card.Subtitle>
         <Card.Title>
-          {trail.name}
+          {`#${trail.calculated_number} ${trail.name}`}
         </Card.Title>
         <Card.Subtitle>Start</Card.Subtitle>
         <Card.Text>{dateFormat(trail.start, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</Card.Text>
+        <Card.Subtitle>{trail.hares.length === 1 ? 'Hare' : 'Hares'}</Card.Subtitle>
+        <Card.Text>{trail.hares.map((hare) => hare.hasherInfo.name).join(', ')}</Card.Text>
         <Card.Subtitle>Description</Card.Subtitle>
         <Card.Text>
-          {trail.description}
+          <ReactMarkdown>
+            {trail.description || 'TBD'}
+          </ReactMarkdown>
         </Card.Text>
         <Card.Subtitle>Directions</Card.Subtitle>
+        <Card.Text>
+          {trail.directions}
+        </Card.Text>
         { trail.latitude !== 0 || trail.longitude !== 0
           ? (
             <Card.Text>
@@ -73,7 +87,7 @@ const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
                 <GoogleMapReact
                   bootstrapURLKeys={{ key: mapKey }}
                   defaultCenter={start}
-                  defaultZoom={20}
+                  defaultZoom={18}
                 >
                   <TrailStart
                     lat={trail.latitude}
@@ -84,7 +98,12 @@ const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
             </Card.Text>
           ) : null}
         <Card.Text>
-          {trail.directions}
+          <Button
+            href={`https://www.google.com/maps/dir//${trail.latitude},${trail.longitude}/`}
+            target="google"
+          >
+            Google Directions
+          </Button>
         </Card.Text>
       </Card.Body>
     </Card>

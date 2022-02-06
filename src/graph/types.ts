@@ -89,6 +89,19 @@ export interface GQLPageTrailId_trails_kennelInfo {
   name: string | null;
 }
 
+export interface GQLPageTrailId_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLPageTrailId_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLPageTrailId_trails_hares_hasherInfo;
+}
+
 export interface GQLPageTrailId_trails {
   __typename: "trails";
   calculated_number: number | null;
@@ -102,6 +115,10 @@ export interface GQLPageTrailId_trails {
   longitude: any | null;
   name: string;
   start: any;
+  /**
+   * An array relationship
+   */
+  hares: GQLPageTrailId_trails_hares[];
 }
 
 export interface GQLPageTrailId {
@@ -573,6 +590,19 @@ export interface PublicFragmentTrail_kennelInfo {
   name: string | null;
 }
 
+export interface PublicFragmentTrail_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface PublicFragmentTrail_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: PublicFragmentTrail_hares_hasherInfo;
+}
+
 export interface PublicFragmentTrail {
   __typename: "trails";
   calculated_number: number | null;
@@ -586,6 +616,10 @@ export interface PublicFragmentTrail {
   longitude: any | null;
   name: string;
   start: any;
+  /**
+   * An array relationship
+   */
+  hares: PublicFragmentTrail_hares[];
 }
 
 /* tslint:disable */
