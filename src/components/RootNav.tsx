@@ -9,19 +9,20 @@ const RootNav = ({ children } : {children : React.ReactNode}) => {
     <>
       <Navbar key="navbar" variant="dark" bg="secondary" style={{ marginBottom: '1em' }}>
         <Container>
-          <Navbar.Brand href="/" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
+          <Navbar.Brand href="/" key="brand" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
             {`${process.env.NEXT_PUBLIC_APP_NAME} ${process.env.NEXT_PUBLIC_APP_VERSION}`}
           </Navbar.Brand>
-          <Navbar.Toggle />
-          <Nav className="me-auto">
+          <Navbar.Toggle key="toggle" />
+          <Nav key="links" className="me-auto">
             <Nav.Link href="/trail">Trails</Nav.Link>
+            <Nav.Link href="/kennel">Kennels</Nav.Link>
           </Nav>
-          <Navbar.Text className="ms-auto" />
+          <Navbar.Text className="ms-auto" key="spacer" />
           { !session?.user
-            ? <Button variant="success" onClick={() => { signIn() }}>Login</Button>
+            ? <Button key="login" variant="success" onClick={() => { signIn() }}>Login</Button>
             : [
-              <Navbar.Text><a href="/hasher">{session?.user.name}</a></Navbar.Text>,
-              <Button className="ms-2" variant="danger" onClick={() => { signOut() }}>Logout</Button>,
+              <Navbar.Text key="info"><a href="/hasher">{session?.user.name}</a></Navbar.Text>,
+              <Button key="logout" className="ms-2" variant="danger" onClick={() => { signOut() }}>Logout</Button>,
             ]}
         </Container>
       </Navbar>

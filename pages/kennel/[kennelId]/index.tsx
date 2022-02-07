@@ -1,0 +1,137 @@
+import { gql, useQuery } from '@apollo/client'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import dateFormat from 'dateformat'
+import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
+import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
+import LoadSpinner from '../../../src/components/LoadSpinner'
+import PageCard from '../../../src/components/PageCard'
+import PublicClientHasura from '../../../src/graph/PublicClientHasura'
+import { GQLGetKennelPage, GQLHareRank } from '../../../src/graph/types'
+
+const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
+  const { data, loading, error } = useQuery<GQLHareRank>(
+    gql`
+   query GQLHareRank($kennelId: Int) {
+  hashers(where: {name: {_is_null: false}, hares: {trailInfo: {kennel: {_eq: $kennelId}}}}, limit: 50) {
+    name
+    hares_aggregate(where: {trailInfo: {kennel: {_eq: $kennelId}}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+`,
+    { variables: { kennelId }, client: PublicClientHasura },
+  )
+  if (loading || !data) return <LoadSpinner />
+  if (error) return <ErrorBanner error={error} />
+
+  const hareCounts = [...data.hashers]
+  hareCounts.sort((a, b) => b.hares_aggregate.aggregate!.count - a.hares_aggregate.aggregate!.count)
+  return (
+    <ListTable
+      columns={['Hasher', 'Hare Count']}
+      rows={hareCounts.map((h) => [
+        { row: h.name },
+        { row: h.hares_aggregate.aggregate!.count },
+      ])}
+    />
+  )
+}
+
+const KennelPage = () => {
+  const { kennelId } = useRouter().query
+  const [after] = useState(() => {
+    const date = new Date()
+    date.setHours(date.getHours() - 8)
+    return date
+  })
+  const { data: kennelData, loading: kennelLoading, error: kennelError } = useQuery<GQLGetKennelPage>(gql`
+query GQLGetKennelPage($kennelId: Int, $after: timestamptz) {
+  kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
+    short_name
+    name
+    id
+    description
+    area
+    web
+    trails(limit: 10, order_by: {calculated_number: asc}, where: {start: {_gt: $after}}) {
+      calculated_number
+      hares {
+        hasherInfo {
+          name
+        }
+      }
+      id
+      start
+      name
+    }
+  }
+}`, {
+    client: PublicClientHasura,
+    variables: { kennelId, after },
+  })
+
+  if (!kennelId) return <BodyError error="Kennel ID not set" />
+  if (kennelError) return <BodyError error={kennelError} />
+  if (kennelLoading || !kennelData?.kennels) return <LoadSpinner />
+  const kennel = kennelData.kennels[0]
+  if (!kennel) { return <BodyError error="Unable to retrieve Kennel" /> }
+
+  const rows : DataRow[] = [
+    {
+      title: kennel.short_name || 'Description',
+      row: <ReactMarkdown>{kennel.description || 'New kennel.'}</ReactMarkdown>,
+    },
+  ]
+
+  if (kennel.area) {
+    rows.push({
+      title: 'Hashing Area',
+      row: kennel.area,
+    })
+  }
+
+  if (kennel.web) {
+    rows.push({
+      title: 'Web',
+      row: <a href={kennel.web}>{kennel.web}</a>,
+    })
+  }
+
+  rows.push({
+    title: 'Trails',
+    row: (
+      <ListTable
+        columns={['#', 'Date', 'Name', 'Hare']}
+        rows={
+          kennel.trails.map((t) => {
+            const link = `/trail/${t.id}`
+            return [
+              { row: `#${t.calculated_number}`, link },
+              { row: dateFormat(t.start, 'dddd, mmmm dS'), link },
+              { row: t.name, link, wrap: true },
+              { row: t.hares.length > 0 ? t.hares.map((h) => h.hasherInfo.name).join(', ') : 'Could be you!', link },
+            ]
+          })
+        }
+      />
+    ),
+  })
+
+  rows.push({
+    title: 'Hares',
+    row: <HareRank kennelId={kennelId} />,
+  })
+
+  return (
+    <PageCard title={kennel.name || 'Kennel'}>
+      <InfoTable rows={rows} />
+    </PageCard>
+  )
+}
+
+export default KennelPage

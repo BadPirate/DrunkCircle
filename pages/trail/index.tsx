@@ -1,5 +1,5 @@
 import {
-  Button, Container, Spinner, Table,
+  Button, Container,
 } from 'react-bootstrap'
 import { gql, useQuery } from '@apollo/client'
 import dateFormat from 'dateformat'
@@ -8,6 +8,8 @@ import RootNav from '../../src/components/RootNav'
 import ErrorBanner from '../../src/components/ErrorBanner'
 import { GQLPageTrails } from '../../src/graph/types'
 import PublicClientHasura from '../../src/graph/PublicClientHasura'
+import ListTable from '../../src/components/ListTable'
+import LoadSpinner from '../../src/components/LoadSpinner'
 
 const Trail = () => {
   const [limit, setLimit] = useState(10)
@@ -33,36 +35,19 @@ query GQLPageTrails($after: timestamptz, $limit: Int = 10) {
     <RootNav>
       <Container>
         <h1>Upcumming Trails</h1>
-        <Table responsive striped bordered hover>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Kennel</th>
-              <th>Name</th>
-            </tr>
-          </thead>
-          {
-            data ? (
-              <tbody>
-                {data.trails.map((trail) => (
-                  <tr
-                    key={trail.id}
-                    onClick={() => {
-                      window.location.href = `/trail/${trail.id}`
-                    }}
-                  >
-                    <td style={{ whiteSpace: 'nowrap' }}>{dateFormat(trail.start, 'dddd, mmmm dS')}</td>
-                    <td style={{ whiteSpace: 'nowrap' }}>{trail.kennelInfo.short_name}</td>
-                    <td>{trail.name}</td>
-                  </tr>
-                ))}
-              </tbody>
-            ) : null
+        <ListTable
+          columns={['Date', 'Kennel', 'Name']}
+          rows={
+            data ? data.trails.map((t) => [
+              { row: dateFormat(t.start, 'dddd, mmmm dS'), link: `/trail/${t.id}` },
+              { row: t.kennelInfo.short_name, link: `/kennel/${t.kennelInfo.id}` },
+              { row: t.name, wrap: true, link: `/trail/${t.id}` },
+            ]) : []
           }
-        </Table>
+        />
         { limit === 10 ? <Button onClick={() => { setLimit(50) }}>More</Button> : null }
         { error ? <ErrorBanner error={error} /> : null }
-        { loading ? <Spinner animation="grow" /> : null }
+        { loading ? <LoadSpinner /> : null }
       </Container>
     </RootNav>
   )

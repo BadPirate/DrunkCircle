@@ -1,5 +1,5 @@
 import {
-  Button, Card, Container, Spinner,
+  Button, Card, Container,
 } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { gql, useQuery } from '@apollo/client'
@@ -12,6 +12,9 @@ import RootNav from '../../../src/components/RootNav'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
 import ErrorBanner from '../../../src/components/ErrorBanner'
 import { GQLPageTrailId, PublicFragmentTrail } from '../../../src/graph/types'
+import { BodyCard } from '../../../src/components/PageCard'
+import { BodySpinner } from '../../../src/components/LoadSpinner'
+import { DataRow, InfoTable } from '../../../src/components/ListTable'
 
 const GQL_TRAIL_ID = gql`
 fragment PublicFragmentTrail on trails {
@@ -20,6 +23,7 @@ fragment PublicFragmentTrail on trails {
   directions
   kennelInfo {
     name
+    id
   }
   latitude
   longitude
@@ -45,45 +49,63 @@ const Body = ({ children } : { children: React.ReactNode }) => (
   </RootNav>
 )
 
+const CardRow = ({ title, children } : {
+    title: string, children?: React.ReactNode | undefined
+}) => (
+  <span key={title}>
+    <Card.Subtitle style={{ paddingTop: '1em' }} key="subtitle">{title}</Card.Subtitle>
+    <Card.Text key="content">
+      {children}
+    </Card.Text>
+  </span>
+)
+
+CardRow.defaultProps = { children: null }
+
 // eslint-disable-next-line no-unused-vars
 const TrailStart = ({ lat, lng } : { lat: number, lng: number}) => (
   <FontAwesomeIcon icon={faBeer} size="3x" />
 )
 
 const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
+  const showMap = trail.latitude !== 0 || trail.longitude !== 0
   const mapKey = process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY
   if (!mapKey) {
     return <ErrorBanner error="NEXT_PUBLIC_GOOGLE_MAP_KEY not set" />
   }
+
   const start = {
     lat: trail.latitude,
     lng: trail.longitude,
   }
-  return (
-    <Card>
-      <Card.Body>
-        <Card.Subtitle>{`${trail.kennelInfo.name} presents...`}</Card.Subtitle>
-        <Card.Title>
-          {`#${trail.calculated_number} ${trail.name}`}
-        </Card.Title>
-        <Card.Subtitle>Start</Card.Subtitle>
-        <Card.Text>{dateFormat(trail.start, 'dddd, mmmm dS, yyyy, h:MM TT Z')}</Card.Text>
-        <Card.Subtitle>{trail.hares.length === 1 ? 'Hare' : 'Hares'}</Card.Subtitle>
-        <Card.Text>{trail.hares.map((hare) => hare.hasherInfo.name).join(', ')}</Card.Text>
-        <Card.Subtitle>Description</Card.Subtitle>
-        <Card.Text>
-          <ReactMarkdown>
-            {trail.description || 'TBD'}
-          </ReactMarkdown>
-        </Card.Text>
-        <Card.Subtitle>Directions</Card.Subtitle>
-        <Card.Text>
-          {trail.directions}
-        </Card.Text>
-        { trail.latitude !== 0 || trail.longitude !== 0
-          ? (
-            <Card.Text>
-              <div style={{ height: '300px', width: '100%' }}>
+
+  const rows : Array<DataRow> = [
+    {
+      title: 'Start',
+      row: dateFormat(trail.start, 'dddd, mmmm dS, yyyy, h:MM TT Z'),
+    },
+    {
+      title: 'Hares',
+      row: trail.hares.map((hare) => hare.hasherInfo.name).join(', '),
+    },
+    {
+      title: 'Description',
+      row: (
+        <ReactMarkdown key="react-block">
+          {trail.description || 'TBD'}
+        </ReactMarkdown>
+      ),
+    },
+    {
+      title: 'Directions',
+      row: (
+        <div>
+          <Card.Text key="directions">
+            {trail.directions}
+          </Card.Text>
+          {
+            showMap ? (
+              <div style={{ height: '300px', width: '100%' }} key="map">
                 <GoogleMapReact
                   bootstrapURLKeys={{ key: mapKey }}
                   defaultCenter={start}
@@ -95,18 +117,37 @@ const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
                   />
                 </GoogleMapReact>
               </div>
-            </Card.Text>
+            ) : null
+          }
+          { showMap ? (
+            <Button
+              key="google"
+              href={
+                `https://www.google.com/maps/dir//${trail.latitude},${trail.longitude}/`
+              }
+              target="google"
+            >
+              Google Directions
+            </Button>
           ) : null}
-        <Card.Text>
-          <Button
-            href={`https://www.google.com/maps/dir//${trail.latitude},${trail.longitude}/`}
-            target="google"
-          >
-            Google Directions
-          </Button>
-        </Card.Text>
-      </Card.Body>
-    </Card>
+        </div>
+      ),
+    },
+  ]
+
+  return (
+    <BodyCard
+      title={`#${trail.calculated_number} ${trail.name}`}
+      preamble={(
+        <Card.Subtitle key="subtitle">
+          <a href={`/kennel/${trail.kennelInfo.id}`}>{trail.kennelInfo.name}</a>
+          {' '}
+          presents...
+        </Card.Subtitle>
+      )}
+    >
+      <InfoTable rows={rows} />
+    </BodyCard>
   )
 }
 
@@ -122,9 +163,7 @@ const TrailId = () => {
     return <Body><ErrorBanner error={error} /></Body>
   }
 
-  if (loading || !data?.trails) {
-    return <Body><Spinner animation="grow" /></Body>
-  }
+  if (loading || !data?.trails) return <BodySpinner />
 
   return (
     <Body>

@@ -81,12 +81,136 @@ export interface GQLPageHasherHaresVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLGetKennelPage
+// ====================================================
+
+export interface GQLGetKennelPage_kennels_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLGetKennelPage_kennels_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLGetKennelPage_kennels_trails_hares_hasherInfo;
+}
+
+export interface GQLGetKennelPage_kennels_trails {
+  __typename: "trails";
+  calculated_number: number | null;
+  /**
+   * An array relationship
+   */
+  hares: GQLGetKennelPage_kennels_trails_hares[];
+  id: number;
+  start: any;
+  name: string;
+}
+
+export interface GQLGetKennelPage_kennels {
+  __typename: "kennels";
+  short_name: string | null;
+  name: string | null;
+  id: number;
+  description: string | null;
+  area: string | null;
+  web: string | null;
+  /**
+   * An array relationship
+   */
+  trails: GQLGetKennelPage_kennels_trails[];
+}
+
+export interface GQLGetKennelPage {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLGetKennelPage_kennels[];
+}
+
+export interface GQLGetKennelPageVariables {
+  kennelId?: number | null;
+  after?: any | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLHareRank
+// ====================================================
+
+export interface GQLHareRank_hashers_hares_aggregate_aggregate {
+  __typename: "hares_aggregate_fields";
+  count: number;
+}
+
+export interface GQLHareRank_hashers_hares_aggregate {
+  __typename: "hares_aggregate";
+  aggregate: GQLHareRank_hashers_hares_aggregate_aggregate | null;
+}
+
+export interface GQLHareRank_hashers {
+  __typename: "hashers";
+  name: string | null;
+  /**
+   * An aggregate relationship
+   */
+  hares_aggregate: GQLHareRank_hashers_hares_aggregate;
+}
+
+export interface GQLHareRank {
+  /**
+   * fetch data from the table: "hashers"
+   */
+  hashers: GQLHareRank_hashers[];
+}
+
+export interface GQLHareRankVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLGetKennels
+// ====================================================
+
+export interface GQLGetKennels_kennels {
+  __typename: "kennels";
+  short_name: string | null;
+  name: string | null;
+  id: number;
+  description: string | null;
+}
+
+export interface GQLGetKennels {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLGetKennels_kennels[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLPageTrailId
 // ====================================================
 
 export interface GQLPageTrailId_trails_kennelInfo {
   __typename: "kennels";
   name: string | null;
+  id: number;
 }
 
 export interface GQLPageTrailId_trails_hares_hasherInfo {
@@ -168,6 +292,7 @@ export interface GQLPageTrails {
 
 export interface GQLPageTrailsVariables {
   after?: any | null;
+  limit?: number | null;
 }
 
 /* tslint:disable */
@@ -588,6 +713,7 @@ export interface GQLUpdateSessionVariables {
 export interface PublicFragmentTrail_kennelInfo {
   __typename: "kennels";
   name: string | null;
+  id: number;
 }
 
 export interface PublicFragmentTrail_hares_hasherInfo {
