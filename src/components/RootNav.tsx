@@ -2,6 +2,7 @@ import {
   Navbar, Container, Button, Nav,
 } from 'react-bootstrap'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import Link from 'next/link'
 
 const RootNav = ({ children } : {children : React.ReactNode}) => {
   const { data: session } = useSession()
@@ -21,7 +22,7 @@ const RootNav = ({ children } : {children : React.ReactNode}) => {
           { !session?.user
             ? <Button key="login" variant="success" onClick={() => { signIn() }}>Login</Button>
             : [
-              <Navbar.Text key="info"><a href="/hasher">{session?.user.name}</a></Navbar.Text>,
+              <Navbar.Text key="info"><Link href="/hasher">{session?.user.name}</Link></Navbar.Text>,
               <Button key="logout" className="ms-2" variant="danger" onClick={() => { signOut() }}>Logout</Button>,
             ]}
         </Container>
