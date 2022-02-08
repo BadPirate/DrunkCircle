@@ -8,9 +8,10 @@ import GoogleMapReact from 'google-map-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBeer } from '@fortawesome/free-solid-svg-icons'
 import ReactMarkdown from 'react-markdown'
+import Link from 'next/link'
 import RootNav from '../../../src/components/RootNav'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
-import ErrorBanner from '../../../src/components/ErrorBanner'
+import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import { GQLPageTrailId, PublicFragmentTrail } from '../../../src/graph/types'
 import { BodyCard } from '../../../src/components/PageCard'
 import { BodySpinner } from '../../../src/components/LoadSpinner'
@@ -42,12 +43,6 @@ query GQLPageTrailId($trailId: Int) {
   }
 }
 `
-
-const Body = ({ children } : { children: React.ReactNode }) => (
-  <RootNav>
-    <Container key="container">{children}</Container>
-  </RootNav>
-)
 
 const CardRow = ({ title, children } : {
     title: string, children?: React.ReactNode | undefined
@@ -140,7 +135,7 @@ const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
       title={`#${trail.calculated_number} ${trail.name}`}
       preamble={(
         <Card.Subtitle key="subtitle">
-          <a href={`/kennel/${trail.kennelInfo.id}`}>{trail.kennelInfo.name}</a>
+          <Link href={`/kennel/${trail.kennelInfo.id}`}>{trail.kennelInfo.name}</Link>
           {' '}
           presents...
         </Card.Subtitle>
@@ -160,15 +155,17 @@ const TrailId = () => {
   })
 
   if (error) {
-    return <Body><ErrorBanner error={error} /></Body>
+    return <BodyError error={error} />
   }
 
   if (loading || !data?.trails) return <BodySpinner />
 
   return (
-    <Body>
-      <TrailCard trail={data.trails[0]} />
-    </Body>
+    <RootNav title={data.trails[0].name}>
+      <Container>
+        <TrailCard trail={data.trails[0]} />
+      </Container>
+    </RootNav>
   )
 }
 

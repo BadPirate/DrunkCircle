@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import {
   Card,
 } from 'react-bootstrap'
@@ -11,7 +12,7 @@ const Home = () => (
     <Card.Text>
       Thanklessly maintained by
       {' '}
-      <a href="mailto:ni@fhacu.com">Nothing Interesting</a>
+      <Link href="mailto:ni@fhacu.com">Nothing Interesting</Link>
     </Card.Text>
   </PageCard>
 )

@@ -32,7 +32,7 @@ query GQLPageTrails($after: timestamptz, $limit: Int = 10) {
   }
 }`, { client: PublicClientHasura, variables: { limit, after } })
   return (
-    <RootNav>
+    <RootNav title="DrunkCircle Upcumming Trails">
       <Container>
         <h1>Upcumming Trails</h1>
         <ListTable

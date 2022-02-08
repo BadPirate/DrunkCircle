@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import dateFormat from 'dateformat'
+import Link from 'next/link'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
 import LoadSpinner from '../../../src/components/LoadSpinner'
@@ -98,7 +99,7 @@ query GQLGetKennelPage($kennelId: Int, $after: timestamptz) {
   if (kennel.web) {
     rows.push({
       title: 'Web',
-      row: <a href={kennel.web}>{kennel.web}</a>,
+      row: <Link href={kennel.web}>{kennel.web}</Link>,
     })
   }
 

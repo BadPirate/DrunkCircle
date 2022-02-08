@@ -12,7 +12,7 @@ const ErrorBanner = ({ error } : ErrorDetail) => (
 )
 
 export const BodyError = ({ error } : ErrorDetail) => (
-  <RootNav>
+  <RootNav title="DrunkCircle Error">
     <Container>
       <ErrorBanner error={error} />
     </Container>

@@ -11,9 +11,6 @@ import PageCard from '../src/components/PageCard'
 import RootNav from '../src/components/RootNav'
 import { GQLPageHasher, GQLPageHasherHares } from '../src/graph/types'
 
-const Body = ({ children } : { children : React.ReactNode }) => (
-  <RootNav key="info"><Container>{children}</Container></RootNav>)
-
 const Hasher = () => {
   const { data: session, status } = useSession()
   const [getHasher, { loading: hasherLoading, error: hasherError, data }] = useLazyQuery<GQLPageHasher>(gql`
@@ -50,7 +47,11 @@ const Hasher = () => {
   }, [sessionId, getHasher, getHares])
 
   if (status === 'unauthenticated') {
-    return (<Body><Alert>Login required</Alert></Body>)
+    return (
+      <RootNav title="Login Required" key="info">
+        <Container><Alert>Login required</Alert></Container>
+      </RootNav>
+    )
   }
 
   if (error) {

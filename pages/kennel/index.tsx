@@ -19,7 +19,7 @@ const KennelList = () => {
 }`, { client: PublicClientHasura })
   const error = errorKennels
   return (
-    <RootNav>
+    <RootNav title="DrunkCircle Kennels">
       <Container>
         <h1>Kennels</h1>
         {error ? <ErrorBanner error={error} /> : null }

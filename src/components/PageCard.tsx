@@ -22,7 +22,7 @@ BodyCard.defaultProps = {
 }
 
 const PageCard = ({ title, children, preamble } : CardInfo) => (
-  <RootNav key={title}>
+  <RootNav key={title} title={title}>
     <Container>
       <BodyCard title={title} preamble={preamble}>
         {children}

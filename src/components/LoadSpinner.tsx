@@ -3,6 +3,6 @@ import RootNav from './RootNav'
 
 const LoadSpinner = () => <Spinner animation="grow" />
 
-export const BodySpinner = () => <RootNav><Container><LoadSpinner /></Container></RootNav>
+export const BodySpinner = () => <RootNav title="Loading"><Container><LoadSpinner /></Container></RootNav>
 
 export default LoadSpinner
