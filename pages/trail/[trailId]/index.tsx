@@ -1,20 +1,19 @@
 import {
   Button, Card, Container,
 } from 'react-bootstrap'
-import { useRouter } from 'next/router'
-import { gql, useQuery } from '@apollo/client'
+import { gql } from '@apollo/client'
 import dateFormat from 'dateformat'
 import GoogleMapReact from 'google-map-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBeer } from '@fortawesome/free-solid-svg-icons'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
+import { GetServerSideProps } from 'next'
 import RootNav from '../../../src/components/RootNav'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import { GQLPageTrailId, PublicFragmentTrail } from '../../../src/graph/types'
 import { BodyCard } from '../../../src/components/PageCard'
-import { BodySpinner } from '../../../src/components/LoadSpinner'
 import { DataRow, InfoTable } from '../../../src/components/ListTable'
 
 const GQL_TRAIL_ID = gql`
@@ -146,19 +145,19 @@ const TrailCard = ({ trail } : { trail : PublicFragmentTrail }) => {
   )
 }
 
-const TrailId = () => {
-  const router = useRouter()
-  const { trailId } = router.query
-  const { loading, error, data } = useQuery<GQLPageTrailId>(GQL_TRAIL_ID, {
-    variables: { trailId },
-    client: PublicClientHasura,
-  })
+interface ServerSideProps {
+    error? : any | undefined,
+    data? : GQLPageTrailId | undefined
+}
 
+const TrailId = ({ error, data } : ServerSideProps) => {
   if (error) {
     return <BodyError error={error} />
   }
+  if (!data) {
+    return <BodyError error="Unable to find trail" />
+  }
 
-  if (loading || !data?.trails) return <BodySpinner />
   const trail = data.trails[0]
   const mapImage = trail.longitude === 0 && trail.latitude === 0
     ? undefined
@@ -175,6 +174,22 @@ const TrailId = () => {
       </Container>
     </RootNav>
   )
+}
+
+TrailId.defaultProps = {
+  error: undefined,
+  data: undefined,
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ query: { trailId } }) => {
+  let props : ServerSideProps = {}
+  await PublicClientHasura.query<GQLPageTrailId>({
+    query: GQL_TRAIL_ID,
+    variables: { trailId },
+  })
+    .catch((error) => { props = { error } })
+    .then((r) => { props = { data: r ? r.data : undefined } })
+  return { props }
 }
 
 export default TrailId

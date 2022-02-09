@@ -4,11 +4,10 @@ import React, { useEffect } from 'react'
 import {
   Alert, Button, Container, ListGroup, ListGroupItem, Table,
 } from 'react-bootstrap'
-import { BodyError } from '../src/components/ErrorBanner'
+import ErrorBanner from '../src/components/ErrorBanner'
 import { DataRow, DataTable } from '../src/components/ListTable'
-import { BodySpinner } from '../src/components/LoadSpinner'
+import LoadSpinner from '../src/components/LoadSpinner'
 import PageCard from '../src/components/PageCard'
-import RootNav from '../src/components/RootNav'
 import { GQLPageHasher, GQLPageHasherHares } from '../src/graph/types'
 
 const HasherImp = () => {
@@ -48,18 +47,16 @@ const HasherImp = () => {
 
   if (status === 'unauthenticated') {
     return (
-      <RootNav title="Login Required" key="info">
-        <Container><Alert>Login required</Alert></Container>
-      </RootNav>
+      <Container><Alert>Login required</Alert></Container>
     )
   }
 
   if (error) {
-    return <BodyError error={error} />
+    return <ErrorBanner error={error} />
   }
 
   if (hasherLoading || !data?.hashers || data.hashers.length < 1) {
-    return <BodySpinner />
+    return <LoadSpinner />
   }
 
   const hasher = data.hashers[0]
