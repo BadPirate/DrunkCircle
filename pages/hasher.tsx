@@ -11,7 +11,7 @@ import PageCard from '../src/components/PageCard'
 import RootNav from '../src/components/RootNav'
 import { GQLPageHasher, GQLPageHasherHares } from '../src/graph/types'
 
-const Hasher = () => {
+const HasherImp = () => {
   const { data: session, status } = useSession()
   const [getHasher, { loading: hasherLoading, error: hasherError, data }] = useLazyQuery<GQLPageHasher>(gql`
   query GQLPageHasher($id: Int) {
@@ -104,11 +104,17 @@ const Hasher = () => {
     })
   }
   return (
-    <PageCard title={hasher.name || 'Hasher Info'}>
+    <>
       <DataTable rows={rows} />
       <Button key="logout" onClick={() => signOut()} variant="danger">Logout</Button>
-    </PageCard>
+    </>
   )
 }
+
+const Hasher = () => (
+  <PageCard title="Hasher Info" description="Login required">
+    <HasherImp />
+  </PageCard>
+)
 
 export default Hasher
