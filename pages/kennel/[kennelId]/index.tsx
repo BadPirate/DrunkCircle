@@ -1,9 +1,9 @@
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import dateFormat from 'dateformat'
 import Link from 'next/link'
+import { GetServerSideProps } from 'next'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
 import LoadSpinner from '../../../src/components/LoadSpinner'
@@ -43,42 +43,18 @@ const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
   )
 }
 
-const KennelPage = () => {
+interface ServerSideProps {
+    error? : any | undefined,
+    data? : GQLGetKennelPage | undefined
+}
+
+const KennelPage = ({ error: kennelError, data: kennelData } : ServerSideProps) => {
   const { kennelId } = useRouter().query
-  const [after] = useState(() => {
-    const date = new Date()
-    date.setHours(date.getHours() - 8)
-    return date
-  })
-  const { data: kennelData, loading: kennelLoading, error: kennelError } = useQuery<GQLGetKennelPage>(gql`
-query GQLGetKennelPage($kennelId: Int, $after: timestamptz) {
-  kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
-    short_name
-    name
-    id
-    description
-    area
-    web
-    trails(limit: 10, order_by: {calculated_number: asc}, where: {start: {_gt: $after}}) {
-      calculated_number
-      hares {
-        hasherInfo {
-          name
-        }
-      }
-      id
-      start
-      name
-    }
-  }
-}`, {
-    client: PublicClientHasura,
-    variables: { kennelId, after },
-  })
 
   if (!kennelId) return <BodyError error="Kennel ID not set" />
   if (kennelError) return <BodyError error={kennelError} />
-  if (kennelLoading || !kennelData?.kennels) return <LoadSpinner />
+  if (!kennelData) return <BodyError error="Unknown Kennel" />
+
   const kennel = kennelData.kennels[0]
   if (!kennel) { return <BodyError error="Unable to retrieve Kennel" /> }
 
@@ -129,10 +105,49 @@ query GQLGetKennelPage($kennelId: Int, $after: timestamptz) {
   })
 
   return (
-    <PageCard title={kennel.name || 'Kennel'}>
+    <PageCard title={kennel.name || 'DrunkCircle Kennel'} description={kennel.description || undefined}>
       <InfoTable rows={rows} />
     </PageCard>
   )
+}
+
+KennelPage.defaultProps = {
+  error: undefined,
+  data: undefined,
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ query: { kennelId } }) => {
+  let props : ServerSideProps = {}
+  const after = new Date()
+  after.setHours(after.getHours() - 8)
+  await PublicClientHasura.query<GQLGetKennelPage>({
+    query: gql`
+      query GQLGetKennelPage($kennelId: Int, $after: timestamptz) {
+        kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
+          short_name
+          name
+          id
+          description
+          area
+          web
+          trails(limit: 10, order_by: {calculated_number: asc}, where: {start: {_gt: $after}}) {
+            calculated_number
+            hares {
+              hasherInfo {
+                name
+              }
+            }
+            id
+            start
+            name
+          }
+        }
+      }`,
+    variables: { kennelId, after },
+  })
+    .catch((error) => { props = { error } })
+    .then((r) => { props = { data: r ? r.data : undefined } })
+  return { props }
 }
 
 export default KennelPage

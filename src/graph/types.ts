@@ -81,6 +81,45 @@ export interface GQLPageHasherHaresVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLHareRank
+// ====================================================
+
+export interface GQLHareRank_hashers_hares_aggregate_aggregate {
+  __typename: "hares_aggregate_fields";
+  count: number;
+}
+
+export interface GQLHareRank_hashers_hares_aggregate {
+  __typename: "hares_aggregate";
+  aggregate: GQLHareRank_hashers_hares_aggregate_aggregate | null;
+}
+
+export interface GQLHareRank_hashers {
+  __typename: "hashers";
+  name: string | null;
+  /**
+   * An aggregate relationship
+   */
+  hares_aggregate: GQLHareRank_hashers_hares_aggregate;
+}
+
+export interface GQLHareRank {
+  /**
+   * fetch data from the table: "hashers"
+   */
+  hashers: GQLHareRank_hashers[];
+}
+
+export interface GQLHareRankVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLGetKennelPage
 // ====================================================
 
@@ -141,45 +180,6 @@ export interface GQLGetKennelPageVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GQLHareRank
-// ====================================================
-
-export interface GQLHareRank_hashers_hares_aggregate_aggregate {
-  __typename: "hares_aggregate_fields";
-  count: number;
-}
-
-export interface GQLHareRank_hashers_hares_aggregate {
-  __typename: "hares_aggregate";
-  aggregate: GQLHareRank_hashers_hares_aggregate_aggregate | null;
-}
-
-export interface GQLHareRank_hashers {
-  __typename: "hashers";
-  name: string | null;
-  /**
-   * An aggregate relationship
-   */
-  hares_aggregate: GQLHareRank_hashers_hares_aggregate;
-}
-
-export interface GQLHareRank {
-  /**
-   * fetch data from the table: "hashers"
-   */
-  hashers: GQLHareRank_hashers[];
-}
-
-export interface GQLHareRankVariables {
-  kennelId?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL query operation: GQLGetKennels
 // ====================================================
 
@@ -210,6 +210,7 @@ export interface GQLGetKennels {
 export interface GQLPageTrailId_trails_kennelInfo {
   __typename: "kennels";
   name: string | null;
+  short_name: string | null;
   id: number;
 }
 
@@ -713,6 +714,7 @@ export interface GQLUpdateSessionVariables {
 export interface PublicFragmentTrail_kennelInfo {
   __typename: "kennels";
   name: string | null;
+  short_name: string | null;
   id: number;
 }
 

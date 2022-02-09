@@ -23,6 +23,7 @@ fragment PublicFragmentTrail on trails {
   directions
   kennelInfo {
     name
+    short_name
     id
   }
   latitude
@@ -164,8 +165,8 @@ const TrailId = ({ error, data } : ServerSideProps) => {
     : `https://maps.googleapis.com/maps/api/staticmap?markers=${trail.latitude},${trail.longitude}&zoom=18&center=${trail.latitude},${trail.longitude}&size=600x315&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`
   return (
     <RootNav
-      title={trail.name}
-      description={trail.description || trail.name}
+      title={`${trail.kennelInfo.short_name}: ${trail.name}`}
+      description={`${trail.kennelInfo.short_name} ${dateFormat(trail.start, 'DDDD m/d/yy')} - ${trail.description || trail.name}`}
       image={mapImage}
       imageSize={{ width: 600, height: 315 }}
     >
