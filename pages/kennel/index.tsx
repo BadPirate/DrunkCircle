@@ -19,7 +19,11 @@ const KennelList = () => {
 }`, { client: PublicClientHasura })
   const error = errorKennels
   return (
-    <RootNav title="DrunkCircle Kennels">
+    <RootNav
+      title="DrunkCircle Kennels"
+      description={kennels ? kennels.kennels.map((k) => k.name).join(', ')
+        : 'A list of all the Kennels that you can find trails for through DrunkCircle.'}
+    >
       <Container>
         <h1>Kennels</h1>
         {error ? <ErrorBanner error={error} /> : null }

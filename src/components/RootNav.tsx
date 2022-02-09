@@ -1,25 +1,49 @@
 import {
   Navbar, Container, Button, Nav,
 } from 'react-bootstrap'
-import { signIn, signOut, useSession } from 'next-auth/react'
+import {
+  signIn, signOut, useSession,
+} from 'next-auth/react'
 import Link from 'next/link'
 import Head from 'next/head'
 import Image from 'next/image'
+import { NextSeo } from 'next-seo'
+import brand from '../../public/banner_svg.svg'
+import HasuraProvider from './HasuraProvider'
 
-interface RootNavProps {
+export interface RootNavProps {
   children : React.ReactNode,
   title: string,
   type?: string,
-  image?: string,
+  image?: string | undefined,
   description?: string | undefined,
+  imageSize?: {
+    width: number,
+    height: number
+  }
 }
 
 const RootNav = ({
-  children, title, type, image, description,
+  children, title, type, image, description, imageSize,
 } : RootNavProps) => {
   const { data: session } = useSession()
   return (
     <>
+      <NextSeo
+        title={title}
+        description={description}
+        openGraph={{
+          title,
+          type,
+          description,
+          images: image ? [{
+            url: image,
+            ...imageSize,
+            alt: title,
+            type: 'image/png',
+          }] : undefined,
+        }}
+      />
       <Head>
         <title key="title">{title}</title>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" key="ati" />
@@ -29,39 +53,41 @@ const RootNav = ({
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" key="maskpin" />
         <meta name="msapplication-TileColor" content="#12B328" key="tilecolor" />
         <meta name="theme-color" content="#12B328" key="theme" />
-        <meta property="og:title" content={title} key="ogtitle" />
-        <meta property="og:type" content={type} key="ogtype" />
-        { description ? <meta property="og:description" content={description} key="ogdesc" /> : null}
-        <meta property="og:image" content={image} key="ogimage" />
       </Head>
-      <Navbar key="navbar" variant="dark" bg="secondary" style={{ marginBottom: '1em' }}>
-        <Container>
-          <Navbar.Brand href="/" key="brand" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
-            <Image height="45px" width="85px" src="/brand.png" alt={process.env.NEXT_PUBLIC_APP_VERSION} />
-          </Navbar.Brand>
-          <Navbar.Toggle key="toggle" />
-          <Nav key="links" className="me-auto">
-            <Nav.Link href="/trail">Trails</Nav.Link>
-            <Nav.Link href="/kennel">Kennels</Nav.Link>
-          </Nav>
-          <Navbar.Text className="ms-auto" key="spacer" />
-          { !session?.user
-            ? <Button key="login" variant="success" onClick={() => { signIn() }}>Login</Button>
-            : [
-              <Navbar.Text key="info"><Link href="/hasher">{session?.user.name}</Link></Navbar.Text>,
-              <Button key="logout" className="ms-2" variant="danger" onClick={() => { signOut() }}>Logout</Button>,
-            ]}
-        </Container>
-      </Navbar>
-      {children}
+      <HasuraProvider>
+        <Navbar key="navbar" variant="dark" bg="secondary" style={{ marginBottom: '1em' }}>
+          <Container>
+            <Navbar.Brand href="/" key="brand" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
+              <Image height="45px" width="85px" src={brand} alt={process.env.NEXT_PUBLIC_APP_VERSION} />
+            </Navbar.Brand>
+            <Navbar.Toggle key="toggle" />
+            <Nav key="links" className="me-auto">
+              <Nav.Link href="/trail">Trails</Nav.Link>
+              <Nav.Link href="/kennel">Kennels</Nav.Link>
+            </Nav>
+            <Navbar.Text className="ms-auto" key="spacer" />
+            { !session?.user
+              ? <Button key="login" variant="success" onClick={() => { signIn() }}>Login</Button>
+              : [
+                <Navbar.Text key="info"><Link href="/hasher">{session?.user.name}</Link></Navbar.Text>,
+                <Button key="logout" className="ms-2" variant="danger" onClick={() => { signOut() }}>Logout</Button>,
+              ]}
+          </Container>
+        </Navbar>
+        {children}
+      </HasuraProvider>
     </>
   )
 }
 
 RootNav.defaultProps = {
   type: 'website',
-  image: '/og_dc.png',
+  image: undefined,
   description: undefined,
+  imageSize: {
+    width: 1200,
+    height: 630,
+  },
 }
 
 export default RootNav

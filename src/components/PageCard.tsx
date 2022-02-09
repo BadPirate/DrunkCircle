@@ -1,9 +1,7 @@
 import { Card, Container } from 'react-bootstrap'
-import RootNav from './RootNav'
+import RootNav, { RootNavProps } from './RootNav'
 
-type CardInfo = {
-    title: string,
-    children: React.ReactNode,
+interface CardInfo extends RootNavProps {
     preamble?: React.ReactNode | undefined,
 }
 
@@ -21,8 +19,10 @@ BodyCard.defaultProps = {
   preamble: null,
 }
 
-const PageCard = ({ title, children, preamble } : CardInfo) => (
-  <RootNav key={title} title={title}>
+const PageCard = ({
+  title, children, preamble, description,
+} : CardInfo) => (
+  <RootNav key={title} title={title} description={description}>
     <Container>
       <BodyCard title={title} preamble={preamble}>
         {children}

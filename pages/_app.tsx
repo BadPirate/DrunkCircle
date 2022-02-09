@@ -3,14 +3,27 @@ import '../styles/styles.css'
 
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
-import HasuraProvider from '../src/components/HasuraProvider'
+import { DefaultSeo } from 'next-seo'
 
 // eslint-disable-next-line react/jsx-props-no-spreading
 const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => (
   <SessionProvider session={session}>
-    <HasuraProvider>
-      <Component {...pageProps} />
-    </HasuraProvider>
+    <DefaultSeo
+      openGraph={{
+        type: 'website',
+        locale: 'en_US',
+        site_name: 'DrunkCircle',
+        images: [{
+          url: `${process.env.NEXT_PUBLIC_URL}og_dc.png`,
+          width: 1200,
+          height: 630,
+          alt: 'DrunkCircle Banner',
+          type: 'image/png',
+        }],
+      }}
+      key="seo"
+    />
+    <Component {...pageProps} key="component" />
   </SessionProvider>
 )
 

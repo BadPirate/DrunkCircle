@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200px" height="630px" viewBox="0 0 1200 630" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>banner_svg</title>
+    <defs>
+        <text id="text-1" font-family="UpchuckedBB-Regular, Upchucked BB" font-size="500" font-weight="normal" fill="#FDB702">
+            <tspan x="128" y="464">DRUNK</tspan>
+        </text>
+        <filter x="-2.1%" y="-1.7%" width="104.2%" height="106.7%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="10" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <circle id="path-3" cx="600" cy="315" r="281"></circle>
+        <text id="text-5" font-family="UpchuckedBB-Regular, Upchucked BB" font-size="500" font-weight="normal" fill="#058ED9">
+            <tspan x="128" y="464">DRUNK</tspan>
+        </text>
+        <filter x="-2.1%" y="-1.7%" width="104.2%" height="106.7%" filterUnits="objectBoundingBox" id="filter-6">
+            <feOffset dx="0" dy="10" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="OG-Image" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g>
+            <g id="Inverted">
+                <rect id="Rectangle" fill="#12B328" x="0" y="0" width="1200" height="630"></rect>
+                <g id="DRUNK" fill="#FDB702" fill-opacity="1">
+                    <use filter="url(#filter-2)" xlink:href="#text-1"></use>
+                    <use xlink:href="#text-1"></use>
+                </g>
+            </g>
+            <mask id="mask-4" fill="white">
+                <use xlink:href="#path-3"></use>
+            </mask>
+            <circle stroke="#000000" stroke-width="121" cx="600" cy="315" r="220.5"></circle>
+            <g id="Regular" mask="url(#mask-4)">
+                <rect id="Rectangle" fill="#F55D3E" x="0" y="0" width="1200" height="630"></rect>
+                <g id="DRUNK" fill="#058ED9" fill-opacity="1">
+                    <use filter="url(#filter-6)" xlink:href="#text-5"></use>
+                    <use xlink:href="#text-5"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

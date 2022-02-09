@@ -159,11 +159,19 @@ const TrailId = () => {
   }
 
   if (loading || !data?.trails) return <BodySpinner />
-
+  const trail = data.trails[0]
+  const mapImage = trail.longitude === 0 && trail.latitude === 0
+    ? undefined
+    : `https://maps.googleapis.com/maps/api/staticmap?markers=${trail.latitude},${trail.longitude}&zoom=18&center=${trail.latitude},${trail.longitude}&size=600x315&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`
   return (
-    <RootNav title={data.trails[0].name}>
+    <RootNav
+      title={trail.name}
+      description={trail.description || trail.name}
+      image={mapImage}
+      imageSize={{ width: 600, height: 315 }}
+    >
       <Container>
-        <TrailCard trail={data.trails[0]} />
+        <TrailCard trail={trail} />
       </Container>
     </RootNav>
   )

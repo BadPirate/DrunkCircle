@@ -11,10 +11,8 @@ const HasuraProvider = ({ children } : {children : React.ReactNode}) => {
 
   const client = useMemo(() => {
     if (!session || !session.hasura_token) {
-      console.log('Public Client', session)
       return PublicClientHasura
     }
-    console.log('Authenticated client', session.hasura_token)
     return new ApolloClient({
       link: new HttpLink({
         uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
