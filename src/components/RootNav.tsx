@@ -1,13 +1,14 @@
 import {
-  Navbar, Container, Button, Nav,
+  Navbar, Container, Button, Nav, Dropdown,
 } from 'react-bootstrap'
 import {
   signIn, signOut, useSession,
 } from 'next-auth/react'
-import Link from 'next/link'
 import Head from 'next/head'
 import Image from 'next/image'
 import { NextSeo } from 'next-seo'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
 import brand from '../../public/banner_svg.svg'
 import HasuraProvider from './HasuraProvider'
 
@@ -67,11 +68,22 @@ const RootNav = ({
             </Nav>
             <Navbar.Text className="ms-auto" key="spacer" />
             { !session?.user
-              ? <Button key="login" variant="success" onClick={() => { signIn() }}>Login</Button>
-              : [
-                <Navbar.Text key="info"><Link href="/hasher">{session?.user.name}</Link></Navbar.Text>,
-                <Button key="logout" className="ms-2" variant="danger" onClick={() => { signOut() }}>Logout</Button>,
-              ]}
+              ? (
+                <Button key="login" variant="warning" onClick={() => { signIn() }}>
+                  <FontAwesomeIcon icon={faUser} height={20} />
+                </Button>
+              )
+              : (
+                <Dropdown drop="start">
+                  <Dropdown.Toggle variant="success">
+                    <FontAwesomeIcon icon={faUser} height={20} />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="/hasher">{session.user.name}</Dropdown.Item>
+                    <Dropdown.Item style={{ color: 'red' }} onClick={() => { signOut() }}>Signout</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              )}
           </Container>
         </Navbar>
         {children}

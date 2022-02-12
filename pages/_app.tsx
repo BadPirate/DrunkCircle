@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import '../styles/styles.css'
+import '../styles/global.css'
 import { useRouter } from 'next/router'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
