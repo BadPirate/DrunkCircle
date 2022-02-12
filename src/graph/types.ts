@@ -4,14 +4,49 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLHasherInfo
+// ====================================================
+
+export interface GQLHasherInfo_hashers_gm {
+  __typename: "kennels";
+  id: number;
+  name: string | null;
+}
+
+export interface GQLHasherInfo_hashers {
+  __typename: "hashers";
+  name: string | null;
+  /**
+   * An array relationship
+   */
+  gm: GQLHasherInfo_hashers_gm[];
+}
+
+export interface GQLHasherInfo {
+  /**
+   * fetch data from the table: "hashers"
+   */
+  hashers: GQLHasherInfo_hashers[];
+}
+
+export interface GQLHasherInfoVariables {
+  hasherId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLPageHasher
 // ====================================================
 
 export interface GQLPageHasher_hashers_gm {
   __typename: "kennels";
-  short_name: string | null;
-  name: string | null;
   id: number;
+  name: string | null;
+  short_name: string | null;
 }
 
 export interface GQLPageHasher_hashers {
@@ -32,47 +67,7 @@ export interface GQLPageHasher {
 }
 
 export interface GQLPageHasherVariables {
-  id?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GQLPageHasherHares
-// ====================================================
-
-export interface GQLPageHasherHares_kennels_trails_aggregate_aggregate {
-  __typename: "trails_aggregate_fields";
-  count: number;
-}
-
-export interface GQLPageHasherHares_kennels_trails_aggregate {
-  __typename: "trails_aggregate";
-  aggregate: GQLPageHasherHares_kennels_trails_aggregate_aggregate | null;
-}
-
-export interface GQLPageHasherHares_kennels {
-  __typename: "kennels";
-  id: number;
-  short_name: string | null;
-  /**
-   * An aggregate relationship
-   */
-  trails_aggregate: GQLPageHasherHares_kennels_trails_aggregate;
-}
-
-export interface GQLPageHasherHares {
-  /**
-   * fetch data from the table: "kennels"
-   */
-  kennels: GQLPageHasherHares_kennels[];
-}
-
-export interface GQLPageHasherHaresVariables {
-  id?: number | null;
+  hasherId?: number | null;
 }
 
 /* tslint:disable */
@@ -97,6 +92,7 @@ export interface GQLHareRank_hashers_hares_aggregate {
 export interface GQLHareRank_hashers {
   __typename: "hashers";
   name: string | null;
+  id: number;
   /**
    * An aggregate relationship
    */
@@ -294,6 +290,46 @@ export interface GQLPageTrails {
 export interface GQLPageTrailsVariables {
   after?: any | null;
   limit?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLPageHasherHares
+// ====================================================
+
+export interface GQLPageHasherHares_kennels_trails_aggregate_aggregate {
+  __typename: "trails_aggregate_fields";
+  count: number;
+}
+
+export interface GQLPageHasherHares_kennels_trails_aggregate {
+  __typename: "trails_aggregate";
+  aggregate: GQLPageHasherHares_kennels_trails_aggregate_aggregate | null;
+}
+
+export interface GQLPageHasherHares_kennels {
+  __typename: "kennels";
+  id: number;
+  short_name: string | null;
+  /**
+   * An aggregate relationship
+   */
+  trails_aggregate: GQLPageHasherHares_kennels_trails_aggregate;
+}
+
+export interface GQLPageHasherHares {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLPageHasherHares_kennels[];
+}
+
+export interface GQLPageHasherHaresVariables {
+  hasherId?: number | null;
 }
 
 /* tslint:disable */
@@ -748,6 +784,21 @@ export interface PublicFragmentTrail {
    * An array relationship
    */
   hares: PublicFragmentTrail_hares[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: GQLKennelListFragment
+// ====================================================
+
+export interface GQLKennelListFragment {
+  __typename: "kennels";
+  id: number;
+  name: string | null;
 }
 
 /* tslint:disable */

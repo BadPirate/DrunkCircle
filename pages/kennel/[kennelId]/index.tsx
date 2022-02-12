@@ -17,6 +17,7 @@ const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
    query GQLHareRank($kennelId: Int) {
   hashers(where: {name: {_is_null: false}, hares: {trailInfo: {kennel: {_eq: $kennelId}}}}, limit: 50) {
     name
+    id
     hares_aggregate(where: {trailInfo: {kennel: {_eq: $kennelId}}}) {
       aggregate {
         count
@@ -36,8 +37,14 @@ const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
     <ListTable
       columns={['Hasher', 'Hare Count']}
       rows={hareCounts.map((h) => [
-        { row: h.name },
-        { row: h.hares_aggregate.aggregate!.count },
+        {
+          row: h.name,
+          link: `/hasher/${h.id}`,
+        },
+        {
+          row: h.hares_aggregate.aggregate!.count,
+          link: `/hasher/${h.id}`,
+        },
       ])}
     />
   )
@@ -45,7 +52,7 @@ const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
 
 interface ServerSideProps {
     error? : any | undefined,
-    data? : GQLGetKennelPage | undefined
+    data? : GQLGetKennelPage | null | undefined
 }
 
 const KennelPage = ({ error: kennelError, data: kennelData } : ServerSideProps) => {
@@ -146,7 +153,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query: { kennelId
     variables: { kennelId, after },
   })
     .catch((error) => { props = { error } })
-    .then((r) => { props = { data: r ? r.data : undefined } })
+    .then((r) => { props = { data: r ? r.data : null } })
   return { props }
 }
 
