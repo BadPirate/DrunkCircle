@@ -34,7 +34,7 @@ const KennelList = () => {
               const link = `/kennel/${k.id}`
               return [
                 { row: k.short_name, link },
-                { row: k.name, link },
+                { row: k.name, link, wrap: true },
                 { row: k.description, wrap: true, link },
               ]
             }) : []

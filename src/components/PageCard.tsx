@@ -1,15 +1,31 @@
-import { Card, Container } from 'react-bootstrap'
+import { faPenSquare } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  Button, Card, Col, Container, Row,
+} from 'react-bootstrap'
 import RootNav, { RootNavProps } from './RootNav'
 
 interface CardInfo extends RootNavProps {
     preamble?: React.ReactNode | undefined,
+    editLink?: string | undefined,
 }
 
-export const BodyCard = ({ title, children, preamble } : CardInfo) => (
+export const BodyCard = ({
+  title, children, preamble, editLink,
+} : CardInfo) => (
   <Card>
     <Card.Body>
       {preamble || null}
-      <Card.Title>{title}</Card.Title>
+      <Row>
+        <Col xs key="title"><h2>{title}</h2></Col>
+        {editLink ? (
+          <Col xs="auto" key="edit">
+            <Button href={editLink} variant="link">
+              <FontAwesomeIcon icon={faPenSquare} height="30" width="30" />
+            </Button>
+          </Col>
+        ) : null}
+      </Row>
       {children}
     </Card.Body>
   </Card>
@@ -17,14 +33,15 @@ export const BodyCard = ({ title, children, preamble } : CardInfo) => (
 
 BodyCard.defaultProps = {
   preamble: null,
+  editLink: null,
 }
 
 const PageCard = ({
-  title, children, preamble, description,
+  title, children, preamble, description, editLink,
 } : CardInfo) => (
   <RootNav key={title} title={title} description={description}>
     <Container>
-      <BodyCard title={title} preamble={preamble}>
+      <BodyCard title={title} preamble={preamble} editLink={editLink}>
         {children}
       </BodyCard>
     </Container>
@@ -33,6 +50,7 @@ const PageCard = ({
 
 PageCard.defaultProps = {
   preamble: null,
+  editLink: null,
 }
 
 export default PageCard

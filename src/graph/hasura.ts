@@ -55,7 +55,18 @@ export const hasuraToken = (
 }
 
 export const HasuraCallbacks = <Partial<CallbacksOptions<Profile, Account>>>{
-  session: async ({ user: { email, name, id }, session }) => {
+  jwt: async ({ token, user }) => {
+    console.log('jwt:', token, user)
+    if (user) {
+      return {
+        ...token,
+        user,
+      }
+    }
+    return token
+  },
+  session: async ({ user: { email, name, id }, session, token }) => {
+    console.log('session:', email, token)
     if (!email || !id || !name) return session
     return <Session>{
       hasura_token: hasuraToken(email, id, name, 'hasher', MAX_AGE),

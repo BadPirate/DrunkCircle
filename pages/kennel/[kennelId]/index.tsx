@@ -1,7 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
-import dateFormat from 'dateformat'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
@@ -10,6 +9,7 @@ import LoadSpinner from '../../../src/components/LoadSpinner'
 import PageCard from '../../../src/components/PageCard'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
 import { GQLGetKennelPage, GQLHareRank } from '../../../src/graph/types'
+import FormattedDate, { MobileAlt } from '../../../src/components/FormattedDate'
 
 const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
   const { data, loading, error } = useQuery<GQLHareRank>(
@@ -31,8 +31,9 @@ const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
   if (loading || !data) return <LoadSpinner />
   if (error) return <ErrorBanner error={error} />
 
-  const hareCounts = [...data.hashers]
+  let hareCounts = [...data.hashers]
   hareCounts.sort((a, b) => b.hares_aggregate.aggregate!.count - a.hares_aggregate.aggregate!.count)
+  hareCounts = hareCounts.slice(0, 14)
   return (
     <ListTable
       columns={['Hasher', 'Hare Count']}
@@ -88,31 +89,55 @@ const KennelPage = ({ error: kennelError, data: kennelData } : ServerSideProps) 
 
   rows.push({
     title: 'Trails',
-    row: (
-      <ListTable
-        columns={['#', 'Date', 'Name', 'Hare']}
-        rows={
-          kennel.trails.map((t) => {
-            const link = `/trail/${t.id}`
-            return [
-              { row: `#${t.calculated_number}`, link },
-              { row: dateFormat(t.start, 'dddd, mmmm dS'), link },
-              { row: t.name, link, wrap: true },
-              { row: t.hares.length > 0 ? t.hares.map((h) => h.hasherInfo.name).join(', ') : 'Could be you!', link },
-            ]
-          })
-        }
-      />
-    ),
+    row: <MobileAlt
+      mobile={(
+        <ListTable
+          key="desktop"
+          className="d-none d-sm-block"
+          columns={['#', 'Date', 'Name', 'Hare']}
+          rows={
+            kennel.trails.map((t) => {
+              const link = `/trail/${t.id}`
+              return [
+                { row: `#${t.calculated_number}`, link },
+                { row: <FormattedDate date={t.start} />, link },
+                { row: t.name, link, wrap: true },
+                { row: t.hares.length > 0 ? t.hares.map((h) => h.hasherInfo.name).join(', ') : 'Could be you!', link },
+              ]
+            })
+          }
+        />
+      )}
+      desktop={(
+        <ListTable
+          key="mobile"
+          className=".d-none d-sm-block .d-md-none"
+          columns={['Date', 'Name']}
+          rows={
+            kennel.trails.map((t) => {
+              const link = `/trail/${t.id}`
+              return [
+                { row: <FormattedDate date={t.start} />, link },
+                { row: `#${t.calculated_number}: ${t.name}`, link, wrap: true },
+              ]
+            })
+          }
+        />
+      )}
+    />,
   })
 
   rows.push({
-    title: 'Hares',
+    title: 'Top Hares',
     row: <HareRank kennelId={kennelId} />,
   })
 
   return (
-    <PageCard title={kennel.name || 'DrunkCircle Kennel'} description={kennel.description || undefined}>
+    <PageCard
+      title={kennel.name || 'DrunkCircle Kennel'}
+      description={kennel.description || undefined}
+      editLink={`/kennel/${kennelId}/edit`}
+    >
       <InfoTable rows={rows} />
     </PageCard>
   )

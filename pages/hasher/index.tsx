@@ -10,6 +10,7 @@ import KennelList, { GQL_KENNEL_LIST_FRAGMENT } from '../../src/components/Kenne
 import { DataRow, DataTable } from '../../src/components/ListTable'
 import LoadSpinner from '../../src/components/LoadSpinner'
 import PageCard from '../../src/components/PageCard'
+import UserRequired from '../../src/components/UserRequired'
 import { GQLPageHasher } from '../../src/graph/types'
 
 const HasherImp = () => {
@@ -54,17 +55,17 @@ const HasherImp = () => {
   })
 
   return (
-    <>
+    <PageCard title={hasher.name || 'Hasher details'}>
       <DataTable rows={rows} />
       <Button key="logout" onClick={() => signOut()} variant="danger">Logout</Button>
-    </>
+    </PageCard>
   )
 }
 
 const Hasher = () => (
-  <PageCard title="Hasher Info" description="Login required">
+  <UserRequired>
     <HasherImp />
-  </PageCard>
+  </UserRequired>
 )
 
 export default Hasher

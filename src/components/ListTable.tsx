@@ -15,7 +15,8 @@ export interface DataRow extends ListRow {
 
 type ListParams = {
     columns : string[],
-    rows : ListRow[][]
+    rows : ListRow[][],
+    className?: string | undefined,
 }
 
 export const InfoTable = ({ rows } : { rows: DataRow[] }) => (
@@ -47,8 +48,8 @@ export const DataTable = ({ rows } : { rows: DataRow[] }) => (
   </Table>
 )
 
-const ListTable = ({ columns, rows } : ListParams) => (
-  <Table responsive striped bordered hover>
+const ListTable = ({ columns, rows, className } : ListParams) => (
+  <Table responsive striped bordered hover className={className}>
     <thead>
       <tr>
         {columns.map((c) => <th key={c}>{c}</th>)}
@@ -76,5 +77,9 @@ const ListTable = ({ columns, rows } : ListParams) => (
     </tbody>
   </Table>
 )
+
+ListTable.defaultProps = {
+  className: undefined,
+}
 
 export default ListTable

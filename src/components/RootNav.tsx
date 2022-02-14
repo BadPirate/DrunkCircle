@@ -8,9 +8,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { NextSeo } from 'next-seo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faUserCheck, faUserSlash } from '@fortawesome/free-solid-svg-icons'
 import brand from '../../public/banner_svg.svg'
-import HasuraProvider from './HasuraProvider'
 
 export interface RootNavProps {
   children : React.ReactNode,
@@ -55,39 +54,38 @@ const RootNav = ({
         <meta name="msapplication-TileColor" content="#12B328" key="tilecolor" />
         <meta name="theme-color" content="#12B328" key="theme" />
       </Head>
-      <HasuraProvider>
-        <Navbar key="navbar" variant="dark" bg="secondary" style={{ marginBottom: '1em' }}>
-          <Container>
-            <Navbar.Brand href="/" key="brand" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
-              <Image height="45px" width="85px" src={brand} alt={process.env.NEXT_PUBLIC_APP_VERSION} />
-            </Navbar.Brand>
-            <Navbar.Toggle key="toggle" />
-            <Nav key="links" className="me-auto">
-              <Nav.Link href="/trail">Trails</Nav.Link>
-              <Nav.Link href="/kennel">Kennels</Nav.Link>
-            </Nav>
-            <Navbar.Text className="ms-auto" key="spacer" />
-            { !session?.user
-              ? (
-                <Button key="login" variant="warning" onClick={() => { signIn() }}>
-                  <FontAwesomeIcon icon={faUser} height={20} />
-                </Button>
-              )
-              : (
-                <Dropdown drop="start">
-                  <Dropdown.Toggle variant="success">
-                    <FontAwesomeIcon icon={faUser} height={20} />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="/hasher">{session.user.name}</Dropdown.Item>
-                    <Dropdown.Item style={{ color: 'red' }} onClick={() => { signOut() }}>Signout</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              )}
-          </Container>
-        </Navbar>
-        {children}
-      </HasuraProvider>
+      <Navbar key="navbar" variant="dark" bg="secondary" style={{ marginBottom: '1em' }}>
+        <Container>
+          <Navbar.Brand href="/" key="brand" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
+            <Image height="45px" width="85px" src={brand} alt={process.env.NEXT_PUBLIC_APP_VERSION} />
+          </Navbar.Brand>
+          <Navbar.Toggle key="toggle" />
+          <Nav key="links" className="me-auto">
+            <Nav.Link href="/trail">Trails</Nav.Link>
+            <Nav.Link href="/kennel">Kennels</Nav.Link>
+            <Nav.Link href="/calendar">Calendar</Nav.Link>
+          </Nav>
+          <Navbar.Text className="ms-auto" key="spacer" />
+          { !session?.user
+            ? (
+              <Button key="login" variant="warning" onClick={() => { signIn() }}>
+                <FontAwesomeIcon icon={faUserSlash} height={20} />
+              </Button>
+            )
+            : (
+              <Dropdown drop="start">
+                <Dropdown.Toggle variant="success">
+                  <FontAwesomeIcon icon={faUserCheck} height={20} />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item href="/hasher">{session.user.name}</Dropdown.Item>
+                  <Dropdown.Item style={{ color: 'red' }} onClick={() => { signOut() }}>Signout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
+        </Container>
+      </Navbar>
+      {children}
     </>
   )
 }

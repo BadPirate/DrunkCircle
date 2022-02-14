@@ -76,6 +76,48 @@ export interface GQLPageHasherVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLGetKennelEditDetails
+// ====================================================
+
+export interface GQLGetKennelEditDetails_kennels_gm {
+  __typename: "hashers";
+  id: number;
+  name: string | null;
+}
+
+export interface GQLGetKennelEditDetails_kennels {
+  __typename: "kennels";
+  area: string | null;
+  description: string | null;
+  frequency: number | null;
+  /**
+   * An object relationship
+   */
+  gm: GQLGetKennelEditDetails_kennels_gm | null;
+  google_calendar: string | null;
+  google_token: any | null;
+  name: string | null;
+  short_name: string | null;
+  web: string | null;
+}
+
+export interface GQLGetKennelEditDetails {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLGetKennelEditDetails_kennels[];
+}
+
+export interface GQLGetKennelEditDetailsVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLHareRank
 // ====================================================
 
@@ -736,6 +778,37 @@ export interface GQLUpdateSession {
 
 export interface GQLUpdateSessionVariables {
   sessionToken?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: GQLEditKennelFragment
+// ====================================================
+
+export interface GQLEditKennelFragment_gm {
+  __typename: "hashers";
+  id: number;
+  name: string | null;
+}
+
+export interface GQLEditKennelFragment {
+  __typename: "kennels";
+  area: string | null;
+  description: string | null;
+  frequency: number | null;
+  /**
+   * An object relationship
+   */
+  gm: GQLEditKennelFragment_gm | null;
+  google_calendar: string | null;
+  google_token: any | null;
+  name: string | null;
+  short_name: string | null;
+  web: string | null;
 }
 
 /* tslint:disable */
