@@ -6,6 +6,7 @@ module.exports = {
       './src/**/*.ts',
       './src/**/*.tsx',
       './pages/**/*.tsx',
+      './pages/**/*.ts',
     ],
     service: {
       name: 'drunkcircle',

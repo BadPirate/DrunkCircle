@@ -78,7 +78,7 @@ const RootNav = ({
                   <FontAwesomeIcon icon={faUserCheck} height={20} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item href="/hasher">{session.user.name}</Dropdown.Item>
+                  <Dropdown.Item href="/hasher">{session.user.name || `Just ${session.user.email}`}</Dropdown.Item>
                   <Dropdown.Item style={{ color: 'red' }} onClick={() => { signOut() }}>Signout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

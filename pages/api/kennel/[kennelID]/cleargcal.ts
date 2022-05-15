@@ -1,0 +1,21 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { requireUserEmail } from '../../../../src/func/ServerHelpers'
+import { ServerClient } from '../../../../src/graph/hasura'
+import { MutateGQLUpdateCalendarToken } from '../../../../src/graph/shared'
+import { GQLUpdateCalendarToken } from '../../../../src/graph/types'
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const userEmail = await requireUserEmail(req)
+  const { kennelID } = req.query
+  await ServerClient().mutate<GQLUpdateCalendarToken>({
+    mutation: MutateGQLUpdateCalendarToken,
+    variables: {
+      accessToken: null,
+      refreshToken: null,
+      calendar: null,
+      kennelID,
+      userEmail,
+    },
+  })
+  res.redirect(`/kennel/${kennelID}/edit`)
+}

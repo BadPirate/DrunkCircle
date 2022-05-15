@@ -4,6 +4,96 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLGetRefreshToken
+// ====================================================
+
+export interface GQLGetRefreshToken_kennels {
+  __typename: "kennels";
+  google_refresh: string | null;
+}
+
+export interface GQLGetRefreshToken {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLGetRefreshToken_kennels[];
+}
+
+export interface GQLGetRefreshTokenVariables {
+  accessToken?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLUpdateAccessToken
+// ====================================================
+
+export interface GQLUpdateAccessToken_update_kennels {
+  __typename: "kennels_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLUpdateAccessToken {
+  /**
+   * update data of the table: "kennels"
+   */
+  update_kennels: GQLUpdateAccessToken_update_kennels | null;
+}
+
+export interface GQLUpdateAccessTokenVariables {
+  accessToken?: string | null;
+  urt?: string | null;
+  uat?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLSetCalendarId
+// ====================================================
+
+export interface GQLSetCalendarId_update_kennels_returning {
+  __typename: "kennels";
+  id: number;
+}
+
+export interface GQLSetCalendarId_update_kennels {
+  __typename: "kennels_mutation_response";
+  /**
+   * data from the rows affected by the mutation
+   */
+  returning: GQLSetCalendarId_update_kennels_returning[];
+}
+
+export interface GQLSetCalendarId {
+  /**
+   * update data of the table: "kennels"
+   */
+  update_kennels: GQLSetCalendarId_update_kennels | null;
+}
+
+export interface GQLSetCalendarIdVariables {
+  cal?: string | null;
+  kennelID?: number | null;
+  userEmail?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLHasherInfo
 // ====================================================
 
@@ -76,40 +166,28 @@ export interface GQLPageHasherVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GQLGetKennelEditDetails
+// GraphQL query operation: GQLKennelEditPageSSR
 // ====================================================
 
-export interface GQLGetKennelEditDetails_kennels_gm {
-  __typename: "hashers";
-  id: number;
-  name: string | null;
-}
-
-export interface GQLGetKennelEditDetails_kennels {
+export interface GQLKennelEditPageSSR_kennels {
   __typename: "kennels";
-  area: string | null;
-  description: string | null;
-  frequency: number | null;
-  /**
-   * An object relationship
-   */
-  gm: GQLGetKennelEditDetails_kennels_gm | null;
-  google_calendar: string | null;
-  google_token: any | null;
-  name: string | null;
+  id: number;
   short_name: string | null;
-  web: string | null;
+  google_refresh: string | null;
+  google_token: string | null;
+  google_calendar: string | null;
 }
 
-export interface GQLGetKennelEditDetails {
+export interface GQLKennelEditPageSSR {
   /**
    * fetch data from the table: "kennels"
    */
-  kennels: GQLGetKennelEditDetails_kennels[];
+  kennels: GQLKennelEditPageSSR_kennels[];
 }
 
-export interface GQLGetKennelEditDetailsVariables {
+export interface GQLKennelEditPageSSRVariables {
   kennelId?: number | null;
+  email?: string | null;
 }
 
 /* tslint:disable */
@@ -340,6 +418,36 @@ export interface GQLPageTrailsVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: GQLUpdateGoogleTokens
+// ====================================================
+
+export interface GQLUpdateGoogleTokens_update_kennels {
+  __typename: "kennels_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLUpdateGoogleTokens {
+  /**
+   * update data of the table: "kennels"
+   */
+  update_kennels: GQLUpdateGoogleTokens_update_kennels | null;
+}
+
+export interface GQLUpdateGoogleTokensVariables {
+  accessToken?: string | null;
+  refreshToken?: string | null;
+  kennelID?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLPageHasherHares
 // ====================================================
 
@@ -372,6 +480,267 @@ export interface GQLPageHasherHares {
 
 export interface GQLPageHasherHaresVariables {
   hasherId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLGetGoogleCalendarId
+// ====================================================
+
+export interface GQLGetGoogleCalendarId_kennels {
+  __typename: "kennels";
+  google_calendar: string | null;
+  google_refresh: string | null;
+  google_token: string | null;
+}
+
+export interface GQLGetGoogleCalendarId {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLGetGoogleCalendarId_kennels[];
+}
+
+export interface GQLGetGoogleCalendarIdVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLCountSetCalendarEntries
+// ====================================================
+
+export interface GQLCountSetCalendarEntries_trails_aggregate_aggregate {
+  __typename: "trails_aggregate_fields";
+  count: number;
+}
+
+export interface GQLCountSetCalendarEntries_trails_aggregate {
+  __typename: "trails_aggregate";
+  aggregate: GQLCountSetCalendarEntries_trails_aggregate_aggregate | null;
+}
+
+export interface GQLCountSetCalendarEntries {
+  /**
+   * An aggregate relationship
+   */
+  trails_aggregate: GQLCountSetCalendarEntries_trails_aggregate;
+}
+
+export interface GQLCountSetCalendarEntriesVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLAllSetCalendarEntries
+// ====================================================
+
+export interface GQLAllSetCalendarEntries_trails {
+  __typename: "trails";
+  google_calendar: string | null;
+  id: number;
+}
+
+export interface GQLAllSetCalendarEntries {
+  /**
+   * An array relationship
+   */
+  trails: GQLAllSetCalendarEntries_trails[];
+}
+
+export interface GQLAllSetCalendarEntriesVariables {
+  kennelId?: number | null;
+  limit?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLClearCalendarInfoFromTrail
+// ====================================================
+
+export interface GQLClearCalendarInfoFromTrail_update_trails {
+  __typename: "trails_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLClearCalendarInfoFromTrail {
+  /**
+   * update data of the table: "trails"
+   */
+  update_trails: GQLClearCalendarInfoFromTrail_update_trails | null;
+}
+
+export interface GQLClearCalendarInfoFromTrailVariables {
+  trailIds?: number[] | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLVerifyCalendarAdmin
+// ====================================================
+
+export interface GQLVerifyCalendarAdmin_kennels {
+  __typename: "kennels";
+  id: number;
+}
+
+export interface GQLVerifyCalendarAdmin {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLVerifyCalendarAdmin_kennels[];
+}
+
+export interface GQLVerifyCalendarAdminVariables {
+  kennelId?: number | null;
+  email?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLRefreshKennelAddCount
+// ====================================================
+
+export interface GQLRefreshKennelAddCount_kennels_trails_aggregate_aggregate {
+  __typename: "trails_aggregate_fields";
+  count: number;
+}
+
+export interface GQLRefreshKennelAddCount_kennels_trails_aggregate {
+  __typename: "trails_aggregate";
+  aggregate: GQLRefreshKennelAddCount_kennels_trails_aggregate_aggregate | null;
+}
+
+export interface GQLRefreshKennelAddCount_kennels {
+  __typename: "kennels";
+  google_refresh: string | null;
+  google_token: string | null;
+  google_calendar: string | null;
+  id: number;
+  name: string | null;
+  short_name: string | null;
+  /**
+   * An aggregate relationship
+   */
+  trails_aggregate: GQLRefreshKennelAddCount_kennels_trails_aggregate;
+}
+
+export interface GQLRefreshKennelAddCount {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLRefreshKennelAddCount_kennels[];
+}
+
+export interface GQLRefreshKennelAddCountVariables {
+  kennelID?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLAddToCalendar
+// ====================================================
+
+export interface GQLAddToCalendar_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLAddToCalendar_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLAddToCalendar_trails_hares_hasherInfo;
+}
+
+export interface GQLAddToCalendar_trails {
+  __typename: "trails";
+  calculated_number: number | null;
+  id: number;
+  description: string | null;
+  directions: string | null;
+  /**
+   * An array relationship
+   */
+  hares: GQLAddToCalendar_trails_hares[];
+  latitude: any | null;
+  longitude: any | null;
+  name: string;
+  start: any;
+}
+
+export interface GQLAddToCalendar {
+  /**
+   * An array relationship
+   */
+  trails: GQLAddToCalendar_trails[];
+}
+
+export interface GQLAddToCalendarVariables {
+  kennelID?: number | null;
+  limit?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLUpdateTrailGID
+// ====================================================
+
+export interface GQLUpdateTrailGID_update_trails {
+  __typename: "trails_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLUpdateTrailGID {
+  /**
+   * update data of the table: "trails"
+   */
+  update_trails: GQLUpdateTrailGID_update_trails | null;
+}
+
+export interface GQLUpdateTrailGIDVariables {
+  gid?: string | null;
+  trailId?: number | null;
 }
 
 /* tslint:disable */
@@ -786,29 +1155,35 @@ export interface GQLUpdateSessionVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: GQLEditKennelFragment
+// GraphQL mutation operation: GQLUpdateCalendarToken
 // ====================================================
 
-export interface GQLEditKennelFragment_gm {
-  __typename: "hashers";
+export interface GQLUpdateCalendarToken_update_kennels_returning {
+  __typename: "kennels";
   id: number;
-  name: string | null;
 }
 
-export interface GQLEditKennelFragment {
-  __typename: "kennels";
-  area: string | null;
-  description: string | null;
-  frequency: number | null;
+export interface GQLUpdateCalendarToken_update_kennels {
+  __typename: "kennels_mutation_response";
   /**
-   * An object relationship
+   * data from the rows affected by the mutation
    */
-  gm: GQLEditKennelFragment_gm | null;
-  google_calendar: string | null;
-  google_token: any | null;
-  name: string | null;
-  short_name: string | null;
-  web: string | null;
+  returning: GQLUpdateCalendarToken_update_kennels_returning[];
+}
+
+export interface GQLUpdateCalendarToken {
+  /**
+   * update data of the table: "kennels"
+   */
+  update_kennels: GQLUpdateCalendarToken_update_kennels | null;
+}
+
+export interface GQLUpdateCalendarTokenVariables {
+  calendar?: string | null;
+  refreshToken?: string | null;
+  accessToken?: string | null;
+  kennelID?: number | null;
+  userEmail?: string | null;
 }
 
 /* tslint:disable */

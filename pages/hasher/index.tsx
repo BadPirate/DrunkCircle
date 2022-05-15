@@ -11,6 +11,7 @@ import { DataRow, DataTable } from '../../src/components/ListTable'
 import LoadSpinner from '../../src/components/LoadSpinner'
 import PageCard from '../../src/components/PageCard'
 import UserRequired from '../../src/components/UserRequired'
+import { ilog } from '../../src/func/Logging'
 import { GQLPageHasher } from '../../src/graph/types'
 
 const HasherImp = () => {
@@ -30,6 +31,7 @@ const HasherImp = () => {
     variables: { hasherId: (session?.id || null) },
   })
   if (!session) return <ErrorBanner error="Must log in" />
+  ilog('SESSION', session)
   const hasherId : string = String(session.id)
   if (error) return <ErrorBanner error={error} />
 
