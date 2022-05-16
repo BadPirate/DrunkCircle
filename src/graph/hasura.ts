@@ -154,7 +154,7 @@ mutation GQLCreateVerificationToken($token: String = "", $expires: timestamptz =
       token: string;
   }) => {
       const { identifier, token } = params
-      ilog('useVerificationToken...', params)
+      console.log('useVerificationToken...', params)
       return adapterClient.query<GQLCheckVerificationToken>({
         query: gql`
         query GQLCheckVerificationToken($identifier: String, $token: String) {
@@ -174,7 +174,7 @@ mutation GQLCreateVerificationToken($token: String = "", $expires: timestamptz =
           expires: result.data.hashers[0].login_expires,
           token,
         }
-        ilog('useVerificationToken: valid', validToken)
+        console.log('useVerificationToken: valid', validToken)
         return adapterClient.mutate<GQLUseVerificationToken>({
           mutation: gql`
 mutation GQLUseVerificationToken($identifier: String, $token: String, $email_verified: timestamptz) {
@@ -193,7 +193,7 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
     },
 
     getSessionAndUser: async (sessionToken: any) => {
-      ilog('getSessionAndUser...', sessionToken)
+      console.log('getSessionAndUser...', sessionToken)
       return adapterClient.query<GQLGetSessionAndUser>({
         query: gql`
         query GQLGetSessionAndUser($sessionToken: String) {
@@ -235,7 +235,7 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
           userId: `${user.id}`,
           expires: new Date(expires),
         }
-        ilog('getSessionAndUser:', user.email)
+        console.log('getSessionAndUser:', user.email)
         return { user, session }
       })
     },
@@ -257,7 +257,7 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
       }).then((result) => {
         if (!result.data?.delete_sessions?.returning
           || result.data?.delete_sessions?.returning.length < 1) {
-          ilog('deletesession: no session found')
+          console.log('deletesession: no session found')
           return null
         }
         const data = result.data.delete_sessions.returning[0]
@@ -267,7 +267,7 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
           expires: new Date(data.expires),
           userId: `${data.user_id}`,
         }
-        ilog('deleteSession:', session)
+        console.log('deleteSession:', session)
         return session
       })
     },
@@ -329,13 +329,13 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
           ...session,
           id: result.data.insert_sessions_one.id,
         }
-        ilog('createSession:', authenticatedSession)
+        console.log('createSession:', authenticatedSession)
         return authenticatedSession
       })
     },
 
     createUser: async (omitUser: Omit<AdapterUser, 'id'>) => {
-      ilog('createUser...', omitUser)
+      console.log('createUser...', omitUser)
       return adapterClient.query<GQLCreateUser>({
         query: gql`
 mutation GQLCreateUser($email: String, $name: String) {
@@ -358,7 +358,7 @@ mutation GQLCreateUser($email: String, $name: String) {
     },
 
     getUser: async (id: string) => {
-      ilog('getUser...', id)
+      console.log('getUser...', id)
       return adapterClient.query<GQLGetUser>({
         query: gql`
         query GQLGetUser($id: Int) {
@@ -371,7 +371,7 @@ mutation GQLCreateUser($email: String, $name: String) {
         variables: { id },
       }).then((result) => {
         if (!result.data.hashers || result.data.hashers.length < 0) {
-          ilog('getUser: Unknown', id)
+          console.log('getUser: Unknown', id)
           return null
         }
         const data = result.data.hashers[0]
@@ -381,13 +381,13 @@ mutation GQLCreateUser($email: String, $name: String) {
           emailVerified: data.email_verified,
           name: data.name,
         }
-        ilog('getUser:', user)
+        console.log('getUser:', user)
         return user
       })
     },
 
     getUserByAccount: (providerAccountId: Pick<Account, 'provider' | 'providerAccountId'>) => {
-      ilog('getUserByAccount...', providerAccountId)
+      console.log('getUserByAccount...', providerAccountId)
       return adapterClient.query<GQLGetUserByAccount>({
         query: gql`
         query GQLGetUserByAccount($provider: String, $providerAccountId: String) {
@@ -412,13 +412,13 @@ mutation GQLCreateUser($email: String, $name: String) {
           emailVerified: data.email_verified,
           name: data.name,
         }
-        ilog('getUserByAccount:', user)
+        console.log('getUserByAccount:', user)
         return user
       })
     },
 
     linkAccount: (account: Account) => {
-      ilog('linkAccount...', account)
+      console.log('linkAccount...', account)
       return adapterClient.mutate<GQLLinkAccount>({
         mutation: gql`
         mutation GQLLinkAccount($provider: String, $providerAccountId: String, $userId: Int) {
@@ -436,7 +436,7 @@ mutation GQLCreateUser($email: String, $name: String) {
     },
 
     updateSession: (session: Partial<AdapterSession> & Pick<AdapterSession, 'sessionToken'>) => {
-      ilog('updateSession...', session.userId)
+      console.log('updateSession...', session.userId)
       return adapterClient.query<GQLUpdateSession>({
         query: gql`
         query GQLUpdateSession($sessionToken: String) {
@@ -449,7 +449,7 @@ mutation GQLCreateUser($email: String, $name: String) {
         variables: session,
       }).then((result) => {
         if (!result.data.sessions || result.data.sessions.length < 1) {
-          ilog('updateSession: no session found')
+          console.log('updateSession: no session found')
           return null
         }
         const data = result.data.sessions[0]
@@ -459,7 +459,7 @@ mutation GQLCreateUser($email: String, $name: String) {
           expires: data.expires,
           sessionToken: session.sessionToken,
         }
-        ilog('updateSession:', updatedSession.id)
+        console.log('updateSession:', updatedSession.id)
         return updatedSession
       })
     },

@@ -57,10 +57,10 @@ mutation GQLSetCalendarId($cal: String, $kennelID: Int, $userEmail: String) {
 
   ilog('ADDING')
   // Add new entries
-  await createCalendarEntries(kennelID, GoogleLimit).then((r) => {
-    res.json({
-      ...r,
-      context: 'adding',
-    })
+  const result = await createCalendarEntries(kennelID, GoogleLimit)
+  console.log('RESULT', result)
+  res.json({
+    ...result,
+    context: 'adding',
   })
 }
