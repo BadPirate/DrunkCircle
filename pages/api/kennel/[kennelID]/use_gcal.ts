@@ -58,7 +58,6 @@ mutation GQLSetCalendarId($cal: String, $kennelID: Int, $userEmail: String) {
   ilog('ADDING')
   // Add new entries
   const result = await createCalendarEntries(kennelID, GoogleLimit)
-  console.log('RESULT', result)
   res.json({
     ...result,
     context: 'adding',

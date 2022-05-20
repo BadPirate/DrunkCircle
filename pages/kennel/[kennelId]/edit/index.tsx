@@ -63,7 +63,7 @@ const CalendarEditPart = ({
           <>
             <Card.Body>
               Credential is invalid or not set.
-              You&quot;ll need to authorize Drunk Circle to access your Google Calendar.
+              You&apos;ll need to authorize Drunk Circle to access your Google Calendar.
             </Card.Body>
             <Button href={accessTokenURL} variant="success">
               Authorize Drunk Circle
