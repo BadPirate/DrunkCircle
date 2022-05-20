@@ -23,12 +23,13 @@ query GQLRefreshKennelAddCount($kennelID: Int) {
     id
     name
     short_name
-    trails_aggregate(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _and: {hares: {hasher: {_is_null: false}}, _or: {start: {_gt: "now()"}}}}) {
+    trails_aggregate(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}]}) {
       aggregate {
         count
       }
     }
-  }}
+  }
+}
         `,
     variables: { kennelID },
   })
@@ -51,7 +52,7 @@ query GQLRefreshKennelAddCount($kennelID: Int) {
   const trails = await ac.query<GQLAddToCalendar>({
     query: gql`
 query GQLAddToCalendar($kennelID: Int, $limit: Int) {
-  trails(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _and: {hares: {hasher: {_is_null: false}}, _or: {start: {_gt: "now()"}}}}, limit: $limit) {
+  trails(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}]}, limit: $limit) {
     calculated_number
     id
     description
