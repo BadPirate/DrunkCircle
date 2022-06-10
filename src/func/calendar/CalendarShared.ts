@@ -3,6 +3,22 @@ import { ServerClient } from '../../graph/hasura'
 import { GQLVerifyCalendarAdmin } from '../../graph/types'
 import { ilog } from '../Logging'
 
+export type LabeledPromise<T> = {
+  label: string,
+  promise: Promise<T>
+}
+
+export async function backoffAll<T>(promises: LabeledPromise<T>[], timeout = 1000): Promise<T[]> {
+  const r : T[] = []
+  for (let i = 0; i < promises.length; i += 1) {
+    const p = promises[i]
+    // eslint-disable-next-line no-await-in-loop
+    const ir = await apiBackOff(p.label, p.promise, timeout)
+    r.push(ir)
+  }
+  return r
+}
+
 export async function apiBackOff<T>(label: string, request: Promise<T>, timeout = 100): Promise<T> {
   return new Promise((resolveRD, failRD) => {
     ilog(label, 'Initiating with timeout...', timeout)
@@ -13,7 +29,7 @@ export async function apiBackOff<T>(label: string, request: Promise<T>, timeout 
           ilog(label, 'BACKOFF', e.code, timeout)
           if (timeout > 60000) {
             ilog(label, 'Fully timed out, skipping')
-            return
+            return null
           }
           ilog(label, 'RETRYING')
           return apiBackOff(label, request, timeout * 2)

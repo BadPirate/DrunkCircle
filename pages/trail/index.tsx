@@ -19,8 +19,8 @@ const Trail = () => {
     return date
   })
   const { loading, error, data } = useQuery<GQLPageTrails>(gql`
-query GQLPageTrails($after: timestamptz, $limit: Int = 10) {
-  trails(limit: $limit, order_by: {start: asc}, where: {start: {_gt: $after}}) {
+query GQLPageTrails($after: timestamptz, $limit: Int) {
+  trails(limit: $limit, order_by: {start: asc}, where: {start: {_gt: $after}, draft: {_is_null: true}}) {
     calculated_number
     name
     start

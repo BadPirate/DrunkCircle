@@ -1,12 +1,16 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable import/prefer-default-export */
 import { gql } from '@apollo/client'
 import { gcal } from '../../api/google'
 import { ServerClient } from '../../graph/hasura'
-import { GQLAddToCalendar, GQLRefreshKennelAddCount, GQLUpdateTrailGID } from '../../graph/types'
+import {
+  GQLAddToCalendar, GQLRefreshKennelAddCount,
+} from '../../graph/types'
 import { GoogleLimit } from '../ServerHelpers'
 import { ProgressResult } from '../SharedTypes'
-import { apiBackOff } from './CalendarShared'
+import { insertCalendar } from './updateGcal'
+import { GQL_KENNEL_INFO_FRAGMENT, GQL_INSERT_FRAGMENT } from './gcalData'
 
 export async function createCalendarEntries(
   kennelID: string,
@@ -15,15 +19,12 @@ export async function createCalendarEntries(
   const ac = ServerClient()
   const kennelInfo = await ac.query<GQLRefreshKennelAddCount>({
     query: gql`
+${GQL_KENNEL_INFO_FRAGMENT}
+
 query GQLRefreshKennelAddCount($kennelID: Int) {
   kennels(where: {id: {_eq: $kennelID}, google_refresh: {_is_null: false}, google_calendar: {_is_null: false}, google_token: {_is_null: false}}) {
-    google_refresh
-    google_token
-    google_calendar
-    id
-    name
-    short_name
-    trails_aggregate(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}]}) {
+    ...GQLKennelInfoFragment
+    trails_aggregate(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}], draft: {_is_null: true}}) {
       aggregate {
         count
       }
@@ -51,21 +52,10 @@ query GQLRefreshKennelAddCount($kennelID: Int) {
 
   const trails = await ac.query<GQLAddToCalendar>({
     query: gql`
+${GQL_INSERT_FRAGMENT}
 query GQLAddToCalendar($kennelID: Int, $limit: Int) {
-  trails(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}]}, limit: $limit) {
-    calculated_number
-    id
-    description
-    directions
-    hares {
-      hasherInfo {
-        name
-      }
-    }
-    latitude
-    longitude
-    name
-    start
+  trails(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}], draft: {_is_null: true}}, limit: $limit) {
+    ...GQLInsertFragment
   }
 }
         `,
@@ -75,64 +65,7 @@ query GQLAddToCalendar($kennelID: Int, $limit: Int) {
   const cal = gcal(kennelInfo.google_token!, kennelInfo.google_refresh!)
   for (let index = 0; index < trails.length; index += 1) {
     const trail = trails[index]
-    const summary = `${kennelInfo.short_name}${trail.calculated_number ? ` #${trail.calculated_number}` : ''}: ${trail.name}`
-    const start = trail.start!
-    const end = new Date(start)
-    const htmlLink = `${process.env.NEXT_PUBLIC_URL}/trail/${trail.id}`
-    let description = ''
-    if (trail.hares.length < 1) {
-      description = `You could Hare this trail! <a href=${htmlLink}>Signup!</a>`
-    } else {
-      if (trail.description) {
-        description += `<h3>Description</h3>
-${trail.description}
-`
-      }
-      if (trail.directions) {
-        description += `<h3>Directions</h3>
-${trail.directions}
-`
-      }
-      description += `<h3>Hares</h3>
-${trail.hares.map((hare) => hare.hasherInfo.name).join(', ')}`
-    }
-    const location = trail.latitude && trail.longitude ? `${trail.latitude}, ${trail.longitude}` : 'TBD'
-    end.setHours(end.getHours() + 4)
-    await apiBackOff(`${trail.id}`, cal.events.insert({
-      calendarId: kennelInfo.google_calendar!,
-      requestBody: {
-        summary,
-        start: {
-          dateTime: start,
-          timeZone: 'America/Los_Angeles',
-        },
-        end: {
-          dateTime: end.toISOString(),
-          timeZone: 'America/Los_Angeles',
-        },
-        description,
-        location,
-        htmlLink,
-      },
-    })).then((r) => {
-      const { id } = r.data
-      if (!id) { throw Error(`Unable to create ${trail.id}`) }
-      return id
-    }).then((gid) => ac.mutate<GQLUpdateTrailGID>({
-      mutation: gql`
-mutation GQLUpdateTrailGID($gid: String, $trailId: Int) {
-  update_trails(where: {id: {_eq: $trailId}}, _set: {google_calendar: $gid}) {
-    affected_rows
-  }
-}
-                `,
-      variables: { trailId: trail.id, gid },
-    })).then((r) => {
-      if (r.errors) { throw r.errors[0] }
-      if (!r.data?.update_trails?.affected_rows || r.data.update_trails.affected_rows < 1) {
-        throw Error(`Error updating trail info ${trail.id}`)
-      }
-    })
+    await insertCalendar(ac, cal, kennelInfo, trail)
   }
   return {
     total,

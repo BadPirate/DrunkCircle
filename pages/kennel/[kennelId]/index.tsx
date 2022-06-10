@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
+import { Button } from 'react-bootstrap'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
 import LoadSpinner from '../../../src/components/LoadSpinner'
@@ -91,38 +92,54 @@ const KennelPage = ({ error: kennelError, data: kennelData } : ServerSideProps) 
     title: 'Trails',
     row: <MobileAlt
       mobile={(
-        <ListTable
-          key="desktop"
-          className="d-none d-sm-block"
-          columns={['#', 'Date', 'Name', 'Hare']}
-          rows={
-            kennel.trails.map((t) => {
-              const link = `/trail/${t.id}`
-              return [
-                { row: `#${t.calculated_number}`, link },
-                { row: <FormattedDate date={t.start} />, link },
-                { row: t.name, link, wrap: true },
-                { row: t.hares.length > 0 ? t.hares.map((h) => h.hasherInfo.name).join(', ') : 'Could be you!', link },
-              ]
-            })
-          }
-        />
+        <>
+          <ListTable
+            key="desktop"
+            className="d-none d-sm-block"
+            columns={['#', 'Date', 'Name', 'Hare']}
+            rows={
+              kennel.trails.map((t) => {
+                const link = `/trail/${t.id}`
+                return [
+                  { row: `#${t.calculated_number}`, link },
+                  { row: <FormattedDate date={t.start} />, link },
+                  { row: t.name, link, wrap: true },
+                  { row: t.hares.length > 0 ? t.hares.map((h) => h.hasherInfo.name).join(', ') : 'Could be you!', link },
+                ]
+              })
+            }
+          />
+          <Button
+            variant="success"
+            href={`/api/kennel/${kennelId}/create_draft`}
+          >
+            Add a trail
+          </Button>
+        </>
       )}
       desktop={(
-        <ListTable
-          key="mobile"
-          className=".d-none d-sm-block .d-md-none"
-          columns={['Date', 'Name']}
-          rows={
-            kennel.trails.map((t) => {
-              const link = `/trail/${t.id}`
-              return [
-                { row: <FormattedDate date={t.start} />, link },
-                { row: `#${t.calculated_number}: ${t.name}`, link, wrap: true },
-              ]
-            })
-          }
-        />
+        <>
+          <ListTable
+            key="mobile"
+            className=".d-none d-sm-block .d-md-none"
+            columns={['Date', 'Name']}
+            rows={
+              kennel.trails.map((t) => {
+                const link = `/trail/${t.id}`
+                return [
+                  { row: <FormattedDate date={t.start} />, link },
+                  { row: `#${t.calculated_number}: ${t.name}`, link, wrap: true },
+                ]
+              })
+            }
+          />
+          <Button
+            variant="success"
+            href={`/api/kennel/${kennelId}/create_draft`}
+          >
+            Add a trail
+          </Button>
+        </>
       )}
     />,
   })
@@ -155,14 +172,14 @@ export const getServerSideProps: GetServerSideProps = async ({ query: { kennelId
   await PublicClientHasura.query<GQLGetKennelPage>({
     query: gql`
       query GQLGetKennelPage($kennelId: Int, $after: timestamptz) {
-        kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
+        kennels(limit: 1, where: {id: {_eq: $kennelId}}, ) {
           short_name
           name
           id
           description
           area
           web
-          trails(limit: 10, order_by: {calculated_number: asc}, where: {start: {_gt: $after}}) {
+          trails(limit: 10, order_by: {calculated_number: asc}, where: {start: {_gt: $after}, draft: {_is_null: true}}) {
             calculated_number
             hares {
               hasherInfo {

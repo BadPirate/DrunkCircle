@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {
   ApolloClient, InMemoryCache, HttpLink, gql,
 } from '@apollo/client'
@@ -15,7 +14,7 @@ import {
   GQLDeleteSession, GQLGetSessionAndUser, GQLGetUser, GQLGetUserByAccount, GQLGetUserByEmail,
   GQLLinkAccount, GQLUpdateSession, GQLUpdateUser, GQLUseVerificationToken,
 } from './types'
-import { ilog } from '../func/Logging'
+import { ilog, ilogError } from '../func/Logging'
 
 const MAX_AGE = (24 * 60 * 60 * 30) // 30 days
 
@@ -77,9 +76,13 @@ export const HasuraCallbacks = <Partial<CallbacksOptions<Profile, Account>>>{
     }
     return token
   },
-  session: async ({ user: { email, name, id }, session, token }) => {
+  session: async ({ user: { email, name, id }, session: sessionIm, token }) => {
+    const session = sessionIm
     ilog('session:', email, token)
     if (!email || !id || !name) return session
+    if (session.user) {
+      session.user.id = id
+    }
     return <Session>{
       hasura_token: hasuraToken(email, id, name, 'hasher', MAX_AGE),
       id,
@@ -154,7 +157,7 @@ mutation GQLCreateVerificationToken($token: String = "", $expires: timestamptz =
       token: string;
   }) => {
       const { identifier, token } = params
-      console.log('useVerificationToken...', params)
+      ilog('useVerificationToken...', params)
       return adapterClient.query<GQLCheckVerificationToken>({
         query: gql`
         query GQLCheckVerificationToken($identifier: String, $token: String) {
@@ -166,7 +169,7 @@ mutation GQLCreateVerificationToken($token: String = "", $expires: timestamptz =
         variables: params,
       }).then((result) => {
         if (result.data.hashers.length < 1) {
-          console.error('useVerificationToken expired or 0 length')
+          ilogError('useVerificationToken expired or 0 length')
           return null
         }
         const validToken = {
@@ -174,7 +177,7 @@ mutation GQLCreateVerificationToken($token: String = "", $expires: timestamptz =
           expires: result.data.hashers[0].login_expires,
           token,
         }
-        console.log('useVerificationToken: valid', validToken)
+        ilog('useVerificationToken: valid', validToken)
         return adapterClient.mutate<GQLUseVerificationToken>({
           mutation: gql`
 mutation GQLUseVerificationToken($identifier: String, $token: String, $email_verified: timestamptz) {
@@ -193,7 +196,7 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
     },
 
     getSessionAndUser: async (sessionToken: any) => {
-      console.log('getSessionAndUser...', sessionToken)
+      ilog('getSessionAndUser...', sessionToken)
       return adapterClient.query<GQLGetSessionAndUser>({
         query: gql`
         query GQLGetSessionAndUser($sessionToken: String) {
@@ -235,13 +238,13 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
           userId: `${user.id}`,
           expires: new Date(expires),
         }
-        console.log('getSessionAndUser:', user.email)
+        ilog('getSessionAndUser:', user.email)
         return { user, session }
       })
     },
 
     deleteSession: async (sessionToken: any) => {
-      console.error('deleteSession...', sessionToken)
+      ilogError('deleteSession...', sessionToken)
       return adapterClient.mutate<GQLDeleteSession>({
         mutation: gql`
         mutation GQLDeleteSession($sessionToken: String) {
@@ -257,7 +260,7 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
       }).then((result) => {
         if (!result.data?.delete_sessions?.returning
           || result.data?.delete_sessions?.returning.length < 1) {
-          console.log('deletesession: no session found')
+          ilog('deletesession: no session found')
           return null
         }
         const data = result.data.delete_sessions.returning[0]
@@ -267,13 +270,13 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
           expires: new Date(data.expires),
           userId: `${data.user_id}`,
         }
-        console.log('deleteSession:', session)
+        ilog('deleteSession:', session)
         return session
       })
     },
 
     updateUser: async (user: Partial<AdapterUser>) => {
-      console.error('updateUser', user)
+      ilogError('updateUser', user)
       return adapterClient.mutate<GQLUpdateUser>({
         mutation: gql`
         mutation GQLUpdateUser($id: Int = 10, $emailVerified: timestamptz) {
@@ -308,7 +311,7 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
       userId: string;
       expires: Date;
   }) => {
-      console.error('createSession...', session)
+      ilogError('createSession...', session)
       return adapterClient.mutate<GQLCreateSession>({
         mutation: gql`
         mutation GQLCreateSession($sessionToken: String, $userId: Int = 10, $expires: timestamptz, $id: String = "") {
@@ -322,20 +325,20 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
         },
       }).then((result) => {
         if (!result.data?.insert_sessions_one?.id) {
-          console.error('createSession: unable to insert')
+          ilogError('createSession: unable to insert')
           return null
         }
         const authenticatedSession = <AdapterSession>{
           ...session,
           id: result.data.insert_sessions_one.id,
         }
-        console.log('createSession:', authenticatedSession)
+        ilog('createSession:', authenticatedSession)
         return authenticatedSession
       })
     },
 
     createUser: async (omitUser: Omit<AdapterUser, 'id'>) => {
-      console.log('createUser...', omitUser)
+      ilog('createUser...', omitUser)
       return adapterClient.query<GQLCreateUser>({
         query: gql`
 mutation GQLCreateUser($email: String, $name: String) {
@@ -358,7 +361,7 @@ mutation GQLCreateUser($email: String, $name: String) {
     },
 
     getUser: async (id: string) => {
-      console.log('getUser...', id)
+      ilog('getUser...', id)
       return adapterClient.query<GQLGetUser>({
         query: gql`
         query GQLGetUser($id: Int) {
@@ -371,7 +374,7 @@ mutation GQLCreateUser($email: String, $name: String) {
         variables: { id },
       }).then((result) => {
         if (!result.data.hashers || result.data.hashers.length < 0) {
-          console.log('getUser: Unknown', id)
+          ilog('getUser: Unknown', id)
           return null
         }
         const data = result.data.hashers[0]
@@ -381,13 +384,13 @@ mutation GQLCreateUser($email: String, $name: String) {
           emailVerified: data.email_verified,
           name: data.name,
         }
-        console.log('getUser:', user)
+        ilog('getUser:', user)
         return user
       })
     },
 
     getUserByAccount: (providerAccountId: Pick<Account, 'provider' | 'providerAccountId'>) => {
-      console.log('getUserByAccount...', providerAccountId)
+      ilog('getUserByAccount...', providerAccountId)
       return adapterClient.query<GQLGetUserByAccount>({
         query: gql`
         query GQLGetUserByAccount($provider: String, $providerAccountId: String) {
@@ -412,13 +415,13 @@ mutation GQLCreateUser($email: String, $name: String) {
           emailVerified: data.email_verified,
           name: data.name,
         }
-        console.log('getUserByAccount:', user)
+        ilog('getUserByAccount:', user)
         return user
       })
     },
 
     linkAccount: (account: Account) => {
-      console.log('linkAccount...', account)
+      ilog('linkAccount...', account)
       return adapterClient.mutate<GQLLinkAccount>({
         mutation: gql`
         mutation GQLLinkAccount($provider: String, $providerAccountId: String, $userId: Int) {
@@ -436,7 +439,7 @@ mutation GQLCreateUser($email: String, $name: String) {
     },
 
     updateSession: (session: Partial<AdapterSession> & Pick<AdapterSession, 'sessionToken'>) => {
-      console.log('updateSession...', session.userId)
+      ilog('updateSession...', session.userId)
       return adapterClient.query<GQLUpdateSession>({
         query: gql`
         query GQLUpdateSession($sessionToken: String) {
@@ -449,7 +452,7 @@ mutation GQLCreateUser($email: String, $name: String) {
         variables: session,
       }).then((result) => {
         if (!result.data.sessions || result.data.sessions.length < 1) {
-          console.log('updateSession: no session found')
+          ilog('updateSession: no session found')
           return null
         }
         const data = result.data.sessions[0]
@@ -459,7 +462,7 @@ mutation GQLCreateUser($email: String, $name: String) {
           expires: data.expires,
           sessionToken: session.sessionToken,
         }
-        console.log('updateSession:', updatedSession.id)
+        ilog('updateSession:', updatedSession.id)
         return updatedSession
       })
     },

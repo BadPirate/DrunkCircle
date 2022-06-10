@@ -5,11 +5,10 @@ import {
   signIn, signOut, useSession,
 } from 'next-auth/react'
 import Head from 'next/head'
-import Image from 'next/image'
 import { NextSeo } from 'next-seo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUserSlash } from '@fortawesome/free-solid-svg-icons'
-import brand from '../../public/banner_svg.svg'
+import BrandImage from '../../public/banner_svg.svg'
 
 export interface RootNavProps {
   children : React.ReactNode,
@@ -57,7 +56,7 @@ const RootNav = ({
       <Navbar key="navbar" variant="dark" bg="secondary" style={{ marginBottom: '1em' }}>
         <Container>
           <Navbar.Brand href="/" key="brand" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
-            <Image height="45px" width="85px" src={brand} alt={process.env.NEXT_PUBLIC_APP_VERSION} />
+            <BrandImage height="45px" width="85px" alt={process.env.NEXT_PUBLIC_APP_VERSION} />
           </Navbar.Brand>
           <Navbar.Toggle key="toggle" />
           <Nav key="links" className="me-auto">

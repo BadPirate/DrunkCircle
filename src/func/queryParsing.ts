@@ -1,0 +1,51 @@
+export function firstString(param: string | string[] | null): string | null {
+  if (!param) { return null }
+  if (Array.isArray(param)) {
+    return param.length > 0 ? param[0] : null
+  }
+  return param
+}
+
+export function requireString(name: string, param: string | string[] | null): string {
+  const s = firstString(param)
+  if (!s) { throw Error(`${name} required`) }
+  if (s.length === 0) { throw Error(`${name} must be longer than 0`) }
+  return s
+}
+
+export function queryToStrings(params: {
+  [key: string]: string | string[]; }): { [key: string]: string; } {
+  const result: { [key: string]: string; } = {}
+  Object.keys(params).forEach((k) => {
+    const element = firstString(params[k])
+    if (element) {
+      result[k] = element
+    }
+  })
+  return result
+}
+
+export function queryToFloat(params: {
+  [key: string]: string | string[]; }): { [key: string]: number; } {
+  const result: { [key: string]: number; } = {}
+  const strings = queryToStrings(params)
+  Object.keys(strings).forEach((k) => {
+    result[k] = parseFloat(strings[k])
+  })
+  return result
+}
+export function queryToInt(params: {
+  [key: string]: string | string[]; }): { [key: string]: number; } {
+  const result: { [key: string]: number; } = {}
+  const strings = queryToStrings(params)
+  Object.keys(strings).forEach((k) => {
+    result[k] = parseInt(strings[k], 10)
+  })
+  return result
+}
+
+export function requireAll(params: { [key: string]: any }) {
+  Object.keys(params).forEach((k) => {
+    if (!params[k]) throw new Error(`${k} is required`)
+  })
+}

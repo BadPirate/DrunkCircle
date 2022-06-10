@@ -59,6 +59,31 @@ export interface GQLUpdateAccessTokenVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: GQLUpdateSelfDraft
+// ====================================================
+
+export interface GQLUpdateSelfDraft_update_trails_by_pk {
+  __typename: "trails";
+  id: number;
+}
+
+export interface GQLUpdateSelfDraft {
+  /**
+   * update single row of the table: "trails"
+   */
+  update_trails_by_pk: GQLUpdateSelfDraft_update_trails_by_pk | null;
+}
+
+export interface GQLUpdateSelfDraftVariables {
+  trailId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: GQLSetCalendarId
 // ====================================================
 
@@ -86,6 +111,129 @@ export interface GQLSetCalendarIdVariables {
   cal?: string | null;
   kennelID?: number | null;
   userEmail?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLCalendarUpdate
+// ====================================================
+
+export interface GQLCalendarUpdate_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLCalendarUpdate_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLCalendarUpdate_trails_hares_hasherInfo;
+}
+
+export interface GQLCalendarUpdate_trails_kennelInfo {
+  __typename: "kennels";
+  google_calendar: string | null;
+  short_name: string | null;
+  google_refresh: string | null;
+  google_token: string | null;
+  id: number;
+  name: string | null;
+}
+
+export interface GQLCalendarUpdate_trails {
+  __typename: "trails";
+  calculated_number: number | null;
+  id: number;
+  name: string;
+  start: any;
+  latitude: any | null;
+  longitude: any | null;
+  directions: string | null;
+  google_calendar: string | null;
+  description: string | null;
+  /**
+   * An array relationship
+   */
+  hares: GQLCalendarUpdate_trails_hares[];
+  gcal_dirty: boolean;
+  /**
+   * An object relationship
+   */
+  kennelInfo: GQLCalendarUpdate_trails_kennelInfo;
+}
+
+export interface GQLCalendarUpdate {
+  /**
+   * An array relationship
+   */
+  trails: GQLCalendarUpdate_trails[];
+}
+
+export interface GQLCalendarUpdateVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLEditTrailInfo
+// ====================================================
+
+export interface GQLEditTrailInfo_trails_hares {
+  __typename: "hares";
+  hasher: number;
+}
+
+export interface GQLEditTrailInfo_trails_draftFor_hares {
+  __typename: "hares";
+  hasher: number;
+}
+
+export interface GQLEditTrailInfo_trails_draftFor {
+  __typename: "trails";
+  id: number;
+  draft: number | null;
+  google_calendar: string | null;
+  kennel: number;
+  /**
+   * An array relationship
+   */
+  hares: GQLEditTrailInfo_trails_draftFor_hares[];
+}
+
+export interface GQLEditTrailInfo_trails {
+  __typename: "trails";
+  id: number;
+  draft: number | null;
+  google_calendar: string | null;
+  kennel: number;
+  /**
+   * An array relationship
+   */
+  hares: GQLEditTrailInfo_trails_hares[];
+  /**
+   * An object relationship
+   */
+  draftFor: GQLEditTrailInfo_trails_draftFor | null;
+}
+
+export interface GQLEditTrailInfo {
+  /**
+   * An array relationship
+   */
+  trails: GQLEditTrailInfo_trails[];
+}
+
+export interface GQLEditTrailInfoVariables {
+  trailId?: number | null;
 }
 
 /* tslint:disable */
@@ -320,65 +468,6 @@ export interface GQLGetKennels {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GQLPageTrailId
-// ====================================================
-
-export interface GQLPageTrailId_trails_kennelInfo {
-  __typename: "kennels";
-  name: string | null;
-  short_name: string | null;
-  id: number;
-}
-
-export interface GQLPageTrailId_trails_hares_hasherInfo {
-  __typename: "hashers";
-  name: string | null;
-}
-
-export interface GQLPageTrailId_trails_hares {
-  __typename: "hares";
-  /**
-   * An object relationship
-   */
-  hasherInfo: GQLPageTrailId_trails_hares_hasherInfo;
-}
-
-export interface GQLPageTrailId_trails {
-  __typename: "trails";
-  calculated_number: number | null;
-  description: string | null;
-  directions: string | null;
-  /**
-   * An object relationship
-   */
-  kennelInfo: GQLPageTrailId_trails_kennelInfo;
-  latitude: any | null;
-  longitude: any | null;
-  name: string;
-  start: any;
-  /**
-   * An array relationship
-   */
-  hares: GQLPageTrailId_trails_hares[];
-}
-
-export interface GQLPageTrailId {
-  /**
-   * An array relationship
-   */
-  trails: GQLPageTrailId_trails[];
-}
-
-export interface GQLPageTrailIdVariables {
-  trailId?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL query operation: GQLPageTrails
 // ====================================================
 
@@ -480,6 +569,210 @@ export interface GQLPageHasherHares {
 
 export interface GQLPageHasherHaresVariables {
   hasherId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLGetHasherNames
+// ====================================================
+
+export interface GQLGetHasherNames_hashers {
+  __typename: "hashers";
+  name: string | null;
+  id: number;
+}
+
+export interface GQLGetHasherNames {
+  /**
+   * fetch data from the table: "hashers"
+   */
+  hashers: GQLGetHasherNames_hashers[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLPageTrailId
+// ====================================================
+
+export interface GQLPageTrailId_trails_kennelInfo {
+  __typename: "kennels";
+  name: string | null;
+  short_name: string | null;
+  id: number;
+}
+
+export interface GQLPageTrailId_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+  id: number;
+}
+
+export interface GQLPageTrailId_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLPageTrailId_trails_hares_hasherInfo;
+}
+
+export interface GQLPageTrailId_trails {
+  __typename: "trails";
+  calculated_number: number | null;
+  description: string | null;
+  directions: string | null;
+  /**
+   * An object relationship
+   */
+  kennelInfo: GQLPageTrailId_trails_kennelInfo;
+  id: number;
+  latitude: any | null;
+  longitude: any | null;
+  name: string;
+  start: any;
+  /**
+   * An array relationship
+   */
+  hares: GQLPageTrailId_trails_hares[];
+}
+
+export interface GQLPageTrailId {
+  /**
+   * An array relationship
+   */
+  trails: GQLPageTrailId_trails[];
+}
+
+export interface GQLPageTrailIdVariables {
+  trailId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLVerifyCalendarAdmin
+// ====================================================
+
+export interface GQLVerifyCalendarAdmin_kennels {
+  __typename: "kennels";
+  id: number;
+}
+
+export interface GQLVerifyCalendarAdmin {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLVerifyCalendarAdmin_kennels[];
+}
+
+export interface GQLVerifyCalendarAdminVariables {
+  kennelId?: number | null;
+  email?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLRefreshKennelAddCount
+// ====================================================
+
+export interface GQLRefreshKennelAddCount_kennels_trails_aggregate_aggregate {
+  __typename: "trails_aggregate_fields";
+  count: number;
+}
+
+export interface GQLRefreshKennelAddCount_kennels_trails_aggregate {
+  __typename: "trails_aggregate";
+  aggregate: GQLRefreshKennelAddCount_kennels_trails_aggregate_aggregate | null;
+}
+
+export interface GQLRefreshKennelAddCount_kennels {
+  __typename: "kennels";
+  google_calendar: string | null;
+  short_name: string | null;
+  google_refresh: string | null;
+  google_token: string | null;
+  id: number;
+  name: string | null;
+  /**
+   * An aggregate relationship
+   */
+  trails_aggregate: GQLRefreshKennelAddCount_kennels_trails_aggregate;
+}
+
+export interface GQLRefreshKennelAddCount {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLRefreshKennelAddCount_kennels[];
+}
+
+export interface GQLRefreshKennelAddCountVariables {
+  kennelID?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLAddToCalendar
+// ====================================================
+
+export interface GQLAddToCalendar_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLAddToCalendar_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLAddToCalendar_trails_hares_hasherInfo;
+}
+
+export interface GQLAddToCalendar_trails {
+  __typename: "trails";
+  calculated_number: number | null;
+  id: number;
+  name: string;
+  start: any;
+  latitude: any | null;
+  longitude: any | null;
+  directions: string | null;
+  google_calendar: string | null;
+  description: string | null;
+  /**
+   * An array relationship
+   */
+  hares: GQLAddToCalendar_trails_hares[];
+}
+
+export interface GQLAddToCalendar {
+  /**
+   * An array relationship
+   */
+  trails: GQLAddToCalendar_trails[];
+}
+
+export interface GQLAddToCalendarVariables {
+  kennelID?: number | null;
+  limit?: number | null;
 }
 
 /* tslint:disable */
@@ -600,126 +893,6 @@ export interface GQLClearCalendarInfoFromTrailVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GQLVerifyCalendarAdmin
-// ====================================================
-
-export interface GQLVerifyCalendarAdmin_kennels {
-  __typename: "kennels";
-  id: number;
-}
-
-export interface GQLVerifyCalendarAdmin {
-  /**
-   * fetch data from the table: "kennels"
-   */
-  kennels: GQLVerifyCalendarAdmin_kennels[];
-}
-
-export interface GQLVerifyCalendarAdminVariables {
-  kennelId?: number | null;
-  email?: string | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GQLRefreshKennelAddCount
-// ====================================================
-
-export interface GQLRefreshKennelAddCount_kennels_trails_aggregate_aggregate {
-  __typename: "trails_aggregate_fields";
-  count: number;
-}
-
-export interface GQLRefreshKennelAddCount_kennels_trails_aggregate {
-  __typename: "trails_aggregate";
-  aggregate: GQLRefreshKennelAddCount_kennels_trails_aggregate_aggregate | null;
-}
-
-export interface GQLRefreshKennelAddCount_kennels {
-  __typename: "kennels";
-  google_refresh: string | null;
-  google_token: string | null;
-  google_calendar: string | null;
-  id: number;
-  name: string | null;
-  short_name: string | null;
-  /**
-   * An aggregate relationship
-   */
-  trails_aggregate: GQLRefreshKennelAddCount_kennels_trails_aggregate;
-}
-
-export interface GQLRefreshKennelAddCount {
-  /**
-   * fetch data from the table: "kennels"
-   */
-  kennels: GQLRefreshKennelAddCount_kennels[];
-}
-
-export interface GQLRefreshKennelAddCountVariables {
-  kennelID?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GQLAddToCalendar
-// ====================================================
-
-export interface GQLAddToCalendar_trails_hares_hasherInfo {
-  __typename: "hashers";
-  name: string | null;
-}
-
-export interface GQLAddToCalendar_trails_hares {
-  __typename: "hares";
-  /**
-   * An object relationship
-   */
-  hasherInfo: GQLAddToCalendar_trails_hares_hasherInfo;
-}
-
-export interface GQLAddToCalendar_trails {
-  __typename: "trails";
-  calculated_number: number | null;
-  id: number;
-  description: string | null;
-  directions: string | null;
-  /**
-   * An array relationship
-   */
-  hares: GQLAddToCalendar_trails_hares[];
-  latitude: any | null;
-  longitude: any | null;
-  name: string;
-  start: any;
-}
-
-export interface GQLAddToCalendar {
-  /**
-   * An array relationship
-   */
-  trails: GQLAddToCalendar_trails[];
-}
-
-export interface GQLAddToCalendarVariables {
-  kennelID?: number | null;
-  limit?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL mutation operation: GQLUpdateTrailGID
 // ====================================================
 
@@ -741,6 +914,160 @@ export interface GQLUpdateTrailGID {
 export interface GQLUpdateTrailGIDVariables {
   gid?: string | null;
   trailId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLDeleteTrail
+// ====================================================
+
+export interface GQLDeleteTrail_delete_trails {
+  __typename: "trails_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLDeleteTrail {
+  /**
+   * delete data from the table: "trails"
+   */
+  delete_trails: GQLDeleteTrail_delete_trails | null;
+}
+
+export interface GQLDeleteTrailVariables {
+  trailId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLFixTrailNumberInfo
+// ====================================================
+
+export interface GQLFixTrailNumberInfo_trails {
+  __typename: "trails";
+  number: number | null;
+  calculated_number: number | null;
+  id: number;
+}
+
+export interface GQLFixTrailNumberInfo {
+  /**
+   * An array relationship
+   */
+  trails: GQLFixTrailNumberInfo_trails[];
+}
+
+export interface GQLFixTrailNumberInfoVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLUpdateCalculatedNumber
+// ====================================================
+
+export interface GQLUpdateCalculatedNumber_update_trails_by_pk {
+  __typename: "trails";
+  id: number;
+}
+
+export interface GQLUpdateCalculatedNumber {
+  /**
+   * update single row of the table: "trails"
+   */
+  update_trails_by_pk: GQLUpdateCalculatedNumber_update_trails_by_pk | null;
+}
+
+export interface GQLUpdateCalculatedNumberVariables {
+  id: number;
+  calculated_number?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLInsertTrail
+// ====================================================
+
+export interface GQLInsertTrail_insert_trails_one {
+  __typename: "trails";
+  id: number;
+}
+
+export interface GQLInsertTrail {
+  /**
+   * insert a single row into the table: "trails"
+   */
+  insert_trails_one: GQLInsertTrail_insert_trails_one | null;
+}
+
+export interface GQLInsertTrailVariables {
+  id?: number | null;
+  calculated_number?: number | null;
+  description?: string | null;
+  directions?: string | null;
+  draft?: number | null;
+  google_calendar?: string | null;
+  hares: hares_insert_input[];
+  kennel?: number | null;
+  latitude?: any | null;
+  longitude?: any | null;
+  name?: string | null;
+  number?: number | null;
+  start?: any | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLInsertTrailDraft
+// ====================================================
+
+export interface GQLInsertTrailDraft_insert_trails_one {
+  __typename: "trails";
+  id: number;
+}
+
+export interface GQLInsertTrailDraft {
+  /**
+   * insert a single row into the table: "trails"
+   */
+  insert_trails_one: GQLInsertTrailDraft_insert_trails_one | null;
+}
+
+export interface GQLInsertTrailDraftVariables {
+  calculated_number?: number | null;
+  description?: string | null;
+  directions?: string | null;
+  draft?: number | null;
+  google_calendar?: string | null;
+  hares: hares_insert_input[];
+  kennel?: number | null;
+  latitude?: any | null;
+  longitude?: any | null;
+  name?: string | null;
+  number?: number | null;
+  start?: any | null;
 }
 
 /* tslint:disable */
@@ -1192,46 +1519,39 @@ export interface GQLUpdateCalendarTokenVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: PublicFragmentTrail
+// GraphQL fragment: GQLTrailInfoFragment
 // ====================================================
 
-export interface PublicFragmentTrail_kennelInfo {
-  __typename: "kennels";
-  name: string | null;
-  short_name: string | null;
-  id: number;
-}
-
-export interface PublicFragmentTrail_hares_hasherInfo {
-  __typename: "hashers";
-  name: string | null;
-}
-
-export interface PublicFragmentTrail_hares {
+export interface GQLTrailInfoFragment_hares {
   __typename: "hares";
-  /**
-   * An object relationship
-   */
-  hasherInfo: PublicFragmentTrail_hares_hasherInfo;
+  hasher: number;
 }
 
-export interface PublicFragmentTrail {
+export interface GQLTrailInfoFragment {
   __typename: "trails";
-  calculated_number: number | null;
-  description: string | null;
-  directions: string | null;
-  /**
-   * An object relationship
-   */
-  kennelInfo: PublicFragmentTrail_kennelInfo;
-  latitude: any | null;
-  longitude: any | null;
-  name: string;
-  start: any;
+  id: number;
+  draft: number | null;
+  google_calendar: string | null;
+  kennel: number;
   /**
    * An array relationship
    */
-  hares: PublicFragmentTrail_hares[];
+  hares: GQLTrailInfoFragment_hares[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: PublicHasherInfo
+// ====================================================
+
+export interface PublicHasherInfo {
+  __typename: "hashers";
+  name: string | null;
+  id: number;
 }
 
 /* tslint:disable */
@@ -1254,9 +1574,531 @@ export interface GQLKennelListFragment {
 // @generated
 // This file was automatically generated and should not be edited.
 
+// ====================================================
+// GraphQL fragment: PublicFragmentTrail
+// ====================================================
+
+export interface PublicFragmentTrail_kennelInfo {
+  __typename: "kennels";
+  name: string | null;
+  short_name: string | null;
+  id: number;
+}
+
+export interface PublicFragmentTrail_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+  id: number;
+}
+
+export interface PublicFragmentTrail_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: PublicFragmentTrail_hares_hasherInfo;
+}
+
+export interface PublicFragmentTrail {
+  __typename: "trails";
+  calculated_number: number | null;
+  description: string | null;
+  directions: string | null;
+  /**
+   * An object relationship
+   */
+  kennelInfo: PublicFragmentTrail_kennelInfo;
+  id: number;
+  latitude: any | null;
+  longitude: any | null;
+  name: string;
+  start: any;
+  /**
+   * An array relationship
+   */
+  hares: PublicFragmentTrail_hares[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: GQLInsertFragment
+// ====================================================
+
+export interface GQLInsertFragment_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLInsertFragment_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLInsertFragment_hares_hasherInfo;
+}
+
+export interface GQLInsertFragment {
+  __typename: "trails";
+  calculated_number: number | null;
+  id: number;
+  name: string;
+  start: any;
+  latitude: any | null;
+  longitude: any | null;
+  directions: string | null;
+  google_calendar: string | null;
+  description: string | null;
+  /**
+   * An array relationship
+   */
+  hares: GQLInsertFragment_hares[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: GQLKennelInfoFragment
+// ====================================================
+
+export interface GQLKennelInfoFragment {
+  __typename: "kennels";
+  google_calendar: string | null;
+  short_name: string | null;
+  google_refresh: string | null;
+  google_token: string | null;
+  id: number;
+  name: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
 //==============================================================
 // START Enums and Input Objects
 //==============================================================
+
+/**
+ * unique or primary key constraints on table "hares"
+ */
+export enum hares_constraint {
+  hare_index = "hare_index",
+}
+
+/**
+ * update columns of table "hares"
+ */
+export enum hares_update_column {
+  hasher = "hasher",
+  trail = "trail",
+}
+
+/**
+ * unique or primary key constraints on table "hashers"
+ */
+export enum hashers_constraint {
+  hashers_email_key = "hashers_email_key",
+  hashers_name_key = "hashers_name_key",
+  hashers_pkey = "hashers_pkey",
+}
+
+/**
+ * update columns of table "hashers"
+ */
+export enum hashers_update_column {
+  email = "email",
+  email_verified = "email_verified",
+  id = "id",
+  login = "login",
+  login_expires = "login_expires",
+  name = "name",
+}
+
+/**
+ * unique or primary key constraints on table "kennels"
+ */
+export enum kennels_constraint {
+  kennels_pkey = "kennels_pkey",
+}
+
+/**
+ * update columns of table "kennels"
+ */
+export enum kennels_update_column {
+  area = "area",
+  dc_verify = "dc_verify",
+  description = "description",
+  frequency = "frequency",
+  gm_email = "gm_email",
+  gm_verify = "gm_verify",
+  google_calendar = "google_calendar",
+  google_refresh = "google_refresh",
+  google_token = "google_token",
+  id = "id",
+  name = "name",
+  next = "next",
+  short_name = "short_name",
+  timezone = "timezone",
+  web = "web",
+}
+
+/**
+ * unique or primary key constraints on table "trails"
+ */
+export enum trails_constraint {
+  trails_pkey = "trails_pkey",
+}
+
+/**
+ * update columns of table "trails"
+ */
+export enum trails_update_column {
+  calculated_number = "calculated_number",
+  description = "description",
+  directions = "directions",
+  draft = "draft",
+  gcal_dirty = "gcal_dirty",
+  google_calendar = "google_calendar",
+  id = "id",
+  kennel = "kennel",
+  latitude = "latitude",
+  longitude = "longitude",
+  name = "name",
+  number = "number",
+  start = "start",
+  verification = "verification",
+}
+
+/**
+ * Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+ */
+export interface Boolean_comparison_exp {
+  _eq?: boolean | null;
+  _gt?: boolean | null;
+  _gte?: boolean | null;
+  _in?: boolean[] | null;
+  _is_null?: boolean | null;
+  _lt?: boolean | null;
+  _lte?: boolean | null;
+  _neq?: boolean | null;
+  _nin?: boolean[] | null;
+}
+
+/**
+ * Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+ */
+export interface Int_comparison_exp {
+  _eq?: number | null;
+  _gt?: number | null;
+  _gte?: number | null;
+  _in?: number[] | null;
+  _is_null?: boolean | null;
+  _lt?: number | null;
+  _lte?: number | null;
+  _neq?: number | null;
+  _nin?: number[] | null;
+}
+
+/**
+ * Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+ */
+export interface String_comparison_exp {
+  _eq?: string | null;
+  _gt?: string | null;
+  _gte?: string | null;
+  _ilike?: string | null;
+  _in?: string[] | null;
+  _iregex?: string | null;
+  _is_null?: boolean | null;
+  _like?: string | null;
+  _lt?: string | null;
+  _lte?: string | null;
+  _neq?: string | null;
+  _nilike?: string | null;
+  _nin?: string[] | null;
+  _niregex?: string | null;
+  _nlike?: string | null;
+  _nregex?: string | null;
+  _nsimilar?: string | null;
+  _regex?: string | null;
+  _similar?: string | null;
+}
+
+/**
+ * Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'.
+ */
+export interface float8_comparison_exp {
+  _eq?: any | null;
+  _gt?: any | null;
+  _gte?: any | null;
+  _in?: any[] | null;
+  _is_null?: boolean | null;
+  _lt?: any | null;
+  _lte?: any | null;
+  _neq?: any | null;
+  _nin?: any[] | null;
+}
+
+/**
+ * input type for inserting array relation for remote table "hares"
+ */
+export interface hares_arr_rel_insert_input {
+  data: hares_insert_input[];
+  on_conflict?: hares_on_conflict | null;
+}
+
+/**
+ * Boolean expression to filter rows from the table "hares". All fields are combined with a logical 'AND'.
+ */
+export interface hares_bool_exp {
+  _and?: hares_bool_exp[] | null;
+  _not?: hares_bool_exp | null;
+  _or?: hares_bool_exp[] | null;
+  hasher?: Int_comparison_exp | null;
+  hasherInfo?: hashers_bool_exp | null;
+  trail?: Int_comparison_exp | null;
+  trailInfo?: trails_bool_exp | null;
+}
+
+/**
+ * input type for inserting data into table "hares"
+ */
+export interface hares_insert_input {
+  hasher?: number | null;
+  hasherInfo?: hashers_obj_rel_insert_input | null;
+  trail?: number | null;
+  trailInfo?: trails_obj_rel_insert_input | null;
+}
+
+/**
+ * on conflict condition type for table "hares"
+ */
+export interface hares_on_conflict {
+  constraint: hares_constraint;
+  update_columns: hares_update_column[];
+  where?: hares_bool_exp | null;
+}
+
+/**
+ * Boolean expression to filter rows from the table "hashers". All fields are combined with a logical 'AND'.
+ */
+export interface hashers_bool_exp {
+  _and?: hashers_bool_exp[] | null;
+  _not?: hashers_bool_exp | null;
+  _or?: hashers_bool_exp[] | null;
+  email?: String_comparison_exp | null;
+  email_verified?: timestamptz_comparison_exp | null;
+  gm?: kennels_bool_exp | null;
+  hares?: hares_bool_exp | null;
+  id?: Int_comparison_exp | null;
+  login?: String_comparison_exp | null;
+  login_expires?: timestamptz_comparison_exp | null;
+  name?: String_comparison_exp | null;
+}
+
+/**
+ * input type for inserting data into table "hashers"
+ */
+export interface hashers_insert_input {
+  email?: string | null;
+  email_verified?: any | null;
+  gm?: kennels_arr_rel_insert_input | null;
+  hares?: hares_arr_rel_insert_input | null;
+  id?: number | null;
+  login?: string | null;
+  login_expires?: any | null;
+  name?: string | null;
+}
+
+/**
+ * input type for inserting object relation for remote table "hashers"
+ */
+export interface hashers_obj_rel_insert_input {
+  data: hashers_insert_input;
+  on_conflict?: hashers_on_conflict | null;
+}
+
+/**
+ * on conflict condition type for table "hashers"
+ */
+export interface hashers_on_conflict {
+  constraint: hashers_constraint;
+  update_columns: hashers_update_column[];
+  where?: hashers_bool_exp | null;
+}
+
+/**
+ * input type for inserting array relation for remote table "kennels"
+ */
+export interface kennels_arr_rel_insert_input {
+  data: kennels_insert_input[];
+  on_conflict?: kennels_on_conflict | null;
+}
+
+/**
+ * Boolean expression to filter rows from the table "kennels". All fields are combined with a logical 'AND'.
+ */
+export interface kennels_bool_exp {
+  _and?: kennels_bool_exp[] | null;
+  _not?: kennels_bool_exp | null;
+  _or?: kennels_bool_exp[] | null;
+  area?: String_comparison_exp | null;
+  dc_verify?: String_comparison_exp | null;
+  description?: String_comparison_exp | null;
+  frequency?: Int_comparison_exp | null;
+  gm?: hashers_bool_exp | null;
+  gm_email?: String_comparison_exp | null;
+  gm_verify?: String_comparison_exp | null;
+  google_calendar?: String_comparison_exp | null;
+  google_refresh?: String_comparison_exp | null;
+  google_token?: String_comparison_exp | null;
+  id?: Int_comparison_exp | null;
+  name?: String_comparison_exp | null;
+  next?: timestamptz_comparison_exp | null;
+  short_name?: String_comparison_exp | null;
+  timezone?: String_comparison_exp | null;
+  trails?: trails_bool_exp | null;
+  web?: String_comparison_exp | null;
+}
+
+/**
+ * input type for inserting data into table "kennels"
+ */
+export interface kennels_insert_input {
+  area?: string | null;
+  dc_verify?: string | null;
+  description?: string | null;
+  frequency?: number | null;
+  gm?: hashers_obj_rel_insert_input | null;
+  gm_email?: string | null;
+  gm_verify?: string | null;
+  google_calendar?: string | null;
+  google_refresh?: string | null;
+  google_token?: string | null;
+  id?: number | null;
+  name?: string | null;
+  next?: any | null;
+  short_name?: string | null;
+  timezone?: string | null;
+  trails?: trails_arr_rel_insert_input | null;
+  web?: string | null;
+}
+
+/**
+ * input type for inserting object relation for remote table "kennels"
+ */
+export interface kennels_obj_rel_insert_input {
+  data: kennels_insert_input;
+  on_conflict?: kennels_on_conflict | null;
+}
+
+/**
+ * on conflict condition type for table "kennels"
+ */
+export interface kennels_on_conflict {
+  constraint: kennels_constraint;
+  update_columns: kennels_update_column[];
+  where?: kennels_bool_exp | null;
+}
+
+/**
+ * Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'.
+ */
+export interface timestamptz_comparison_exp {
+  _eq?: any | null;
+  _gt?: any | null;
+  _gte?: any | null;
+  _in?: any[] | null;
+  _is_null?: boolean | null;
+  _lt?: any | null;
+  _lte?: any | null;
+  _neq?: any | null;
+  _nin?: any[] | null;
+}
+
+/**
+ * input type for inserting array relation for remote table "trails"
+ */
+export interface trails_arr_rel_insert_input {
+  data: trails_insert_input[];
+  on_conflict?: trails_on_conflict | null;
+}
+
+/**
+ * Boolean expression to filter rows from the table "trails". All fields are combined with a logical 'AND'.
+ */
+export interface trails_bool_exp {
+  _and?: trails_bool_exp[] | null;
+  _not?: trails_bool_exp | null;
+  _or?: trails_bool_exp[] | null;
+  calculated_number?: Int_comparison_exp | null;
+  description?: String_comparison_exp | null;
+  directions?: String_comparison_exp | null;
+  draft?: Int_comparison_exp | null;
+  draftFor?: trails_bool_exp | null;
+  drafts?: trails_bool_exp | null;
+  gcal_dirty?: Boolean_comparison_exp | null;
+  google_calendar?: String_comparison_exp | null;
+  hares?: hares_bool_exp | null;
+  id?: Int_comparison_exp | null;
+  kennel?: Int_comparison_exp | null;
+  kennelInfo?: kennels_bool_exp | null;
+  latitude?: float8_comparison_exp | null;
+  longitude?: float8_comparison_exp | null;
+  name?: String_comparison_exp | null;
+  number?: Int_comparison_exp | null;
+  start?: timestamptz_comparison_exp | null;
+  verification?: String_comparison_exp | null;
+}
+
+/**
+ * input type for inserting data into table "trails"
+ */
+export interface trails_insert_input {
+  calculated_number?: number | null;
+  description?: string | null;
+  directions?: string | null;
+  draft?: number | null;
+  draftFor?: trails_obj_rel_insert_input | null;
+  drafts?: trails_arr_rel_insert_input | null;
+  gcal_dirty?: boolean | null;
+  google_calendar?: string | null;
+  hares?: hares_arr_rel_insert_input | null;
+  id?: number | null;
+  kennel?: number | null;
+  kennelInfo?: kennels_obj_rel_insert_input | null;
+  latitude?: any | null;
+  longitude?: any | null;
+  name?: string | null;
+  number?: number | null;
+  start?: any | null;
+  verification?: string | null;
+}
+
+/**
+ * input type for inserting object relation for remote table "trails"
+ */
+export interface trails_obj_rel_insert_input {
+  data: trails_insert_input;
+  on_conflict?: trails_on_conflict | null;
+}
+
+/**
+ * on conflict condition type for table "trails"
+ */
+export interface trails_on_conflict {
+  constraint: trails_constraint;
+  update_columns: trails_update_column[];
+  where?: trails_bool_exp | null;
+}
 
 //==============================================================
 // END Enums and Input Objects

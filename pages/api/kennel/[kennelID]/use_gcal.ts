@@ -8,7 +8,8 @@ import { GoogleLimit, requireUserEmail } from '../../../../src/func/ServerHelper
 import { ServerClient } from '../../../../src/graph/hasura'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const userEmail = await requireUserEmail(req)
+  const userEmail = await requireUserEmail(req, res)
+  if (!userEmail) return
   const { kennelID, cal, context } = req.query
   if (typeof kennelID !== 'string') { throw Error('Kennel ID not set') }
   await verifyCalendarAdmin(kennelID, userEmail)
