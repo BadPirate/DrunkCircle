@@ -1,4 +1,4 @@
-export function firstString(param: string | string[] | null): string | null {
+export function firstString(param: string | string[] | null | undefined): string | null {
   if (!param) { return null }
   if (Array.isArray(param)) {
     return param.length > 0 ? param[0] : null
@@ -13,8 +13,9 @@ export function requireString(name: string, param: string | string[] | null): st
   return s
 }
 
-export function queryToStrings(params: {
-  [key: string]: string | string[]; }): { [key: string]: string; } {
+type QParams = { [key: string]: string | string[] | undefined; }
+
+export function queryToStrings(params: QParams): { [key: string]: string; } {
   const result: { [key: string]: string; } = {}
   Object.keys(params).forEach((k) => {
     const element = firstString(params[k])
@@ -25,8 +26,7 @@ export function queryToStrings(params: {
   return result
 }
 
-export function queryToFloat(params: {
-  [key: string]: string | string[]; }): { [key: string]: number; } {
+export function queryToFloat(params: QParams): { [key: string]: number; } {
   const result: { [key: string]: number; } = {}
   const strings = queryToStrings(params)
   Object.keys(strings).forEach((k) => {
@@ -34,8 +34,7 @@ export function queryToFloat(params: {
   })
   return result
 }
-export function queryToInt(params: {
-  [key: string]: string | string[]; }): { [key: string]: number; } {
+export function queryToInt(params: QParams): { [key: string]: number; } {
   const result: { [key: string]: number; } = {}
   const strings = queryToStrings(params)
   Object.keys(strings).forEach((k) => {

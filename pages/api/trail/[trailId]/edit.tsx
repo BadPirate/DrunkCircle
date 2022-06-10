@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client'
+import { gql } from '@apollo/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import {
   queryToFloat, queryToInt, queryToStrings, requireAll,
@@ -8,73 +8,15 @@ import { requireKnownUser } from '../../../../src/func/ServerHelpers'
 import { insertTrail } from '../../../../src/func/trail/InsertTrail'
 import { ServerClient } from '../../../../src/graph/hasura'
 import {
-  GQLCalendarUpdate,
   GQLEditTrailInfo, GQLTrailInfoFragment,
   hares_insert_input,
 } from '../../../../src/graph/types'
 import { deleteTrail } from '../../../../src/func/trail/deleteTrail'
 import { fixCalculatedNumbers } from '../../../../src/func/trail/fixCalculatedNumbers'
-import { ProgressResult } from '../../../../src/func/SharedTypes'
-import { insertCalendar, updateCalendar } from '../../../../src/func/calendar/updateGcal'
-import { GQL_KENNEL_INFO_FRAGMENT, GQL_INSERT_FRAGMENT } from '../../../../src/func/calendar/gcalData'
-import { gcal } from '../../../../src/api/google'
+import { updateGoogleCalendar } from '../../../../src/func/calendar/updateGoogleCalendar'
 
-async function updateGoogleCalendar(
-  ac: ApolloClient<NormalizedCacheObject>,
-  kennelId: number,
-  limit: number = 10,
-) : Promise<ProgressResult> {
-  const info = await ac.query<GQLCalendarUpdate>({
-    query: gql`
-${GQL_INSERT_FRAGMENT}
-${GQL_KENNEL_INFO_FRAGMENT}
-query GQLCalendarUpdate($kennelId: Int) {
-  trails(where: {draft: {_is_null: true}, kennel: {_eq: $kennelId}, _and: {google_calendar: {_is_null: true}, gcal_dirty: {_eq: true}, _or: {draft: {_is_null: true}, start: {_is_null: false}, hares: {hasher: {_is_null: false}}}}}) {
-    ...GQLInsertFragment
-    google_calendar
-    gcal_dirty
-    kennelInfo {
-      ...GQLKennelInfoFragment
-    }
-  }
-}
-    `,
-    variables: { kennelId },
-  }).then((r) => {
-    if (!r.data.trails) {
-      throw r.error ?? Error('Unable to fix google calendar information')
-    }
-    return r.data.trails
-  })
-  if (info.length === 0) {
-    return {
-      completed: 0,
-      total: 0,
-      phase: 'Google calendar update complete.',
-    }
-  }
-  let completed = 0
-  const { kennelInfo } = info[0]
-  const cal = gcal(kennelInfo.google_token!, kennelInfo.google_refresh!)
-  const add = info.filter((i) => i.google_calendar === null)
-  for (let index = 0; index < add.length && completed < limit; index += 1) {
-    const trail = add[index]
-    // eslint-disable-next-line no-await-in-loop
-    await insertCalendar(ac, cal, kennelInfo, trail)
-    completed += 1
-  }
-  const update = info.filter((i) => i.google_calendar !== null && i.gcal_dirty)
-  for (let index = 0; index < update.length && completed < limit; index += 1) {
-    const trail = add[index]
-    // eslint-disable-next-line no-await-in-loop
-    await updateCalendar(ac, cal, kennelInfo, trail)
-    completed += 1
-  }
-  return {
-    completed,
-    total: info.length,
-    phase: info.length === completed ? 'Google calendar update complete.' : 'Updating google calendar...',
-  }
+function encodeQueryString(params: {[key: string] : string | number}) {
+  return Object.keys(params).map((k) => `${k}=${encodeURIComponent(params[k])}`).join('&')
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -141,6 +83,13 @@ query GQLEditTrailInfo($trailId: Int) {
   const ot : GQLTrailInfoFragment = info.draftFor ?? info
   const isAuthorized = !ot.hares || ot.hares.length === 0
   || ot.hares.map((h) => h.hasher).includes(user.id)
+
+  let progress = {
+    completed: 0,
+    total: 0,
+    phase: 'Draft updated.',
+  }
+
   if (isAuthorized) {
     // Make edit directly
     await deleteTrail(sc, ot.id) // Delete original trail
@@ -163,14 +112,16 @@ query GQLEditTrailInfo($trailId: Int) {
       await deleteTrail(sc, info.id) // Delete draft
     }
     fixCalculatedNumbers(sc, ot.kennel)
-    const updateProgress = await updateGoogleCalendar(sc, ot.kennel)
-    res.json(updateProgress)
+    progress = await updateGoogleCalendar(sc, ot.kennel)
+  }
+
+  if (progress.completed === progress.total) {
+    res.redirect(`/trail/${ot.id}?message="Trail updated."`)
     return
   }
 
-  res.json({
-    completed: 0,
-    total: 0,
-    phase: 'Draft updated.',
-  })
+  res.redirect(`/trail/${ot.id}/updating?${encodeQueryString({
+    ...progress,
+    ...req.query,
+  })}`)
 }
