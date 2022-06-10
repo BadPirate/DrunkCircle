@@ -14,10 +14,7 @@ import {
 import { deleteTrail } from '../../../../src/func/trail/deleteTrail'
 import { fixCalculatedNumbers } from '../../../../src/func/trail/fixCalculatedNumbers'
 import { updateGoogleCalendar } from '../../../../src/func/calendar/updateGoogleCalendar'
-
-function encodeQueryString(params: {[key: string] : string | number}) {
-  return Object.keys(params).map((k) => `${k}=${encodeURIComponent(params[k])}`).join('&')
-}
+import { encodeQueryString } from '../../../../src/func/encodeQueryString'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await requireKnownUser(req, res)
@@ -25,6 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     trailId,
     number,
+    ajax,
   } = queryToInt(req.query)
   const {
     description,
@@ -112,7 +110,12 @@ query GQLEditTrailInfo($trailId: Int) {
       await deleteTrail(sc, info.id) // Delete draft
     }
     fixCalculatedNumbers(sc, ot.kennel)
-    progress = await updateGoogleCalendar(sc, ot.kennel)
+    progress = await updateGoogleCalendar(sc, ot.kennel, ajax ? 10 : 1)
+  }
+
+  if (ajax) {
+    res.json(progress)
+    return
   }
 
   if (progress.completed === progress.total) {

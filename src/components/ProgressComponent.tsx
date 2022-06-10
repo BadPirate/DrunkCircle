@@ -5,16 +5,18 @@ import { BodyError } from './ErrorBanner'
 import LoadSpinner from './LoadSpinner'
 import { BodyCard } from './PageCard'
 
-export default ({
+const ProgressComponent = ({
   action,
   api,
   complete,
+  initialProgress,
 } : {
     action: string,
     api: string,
-    complete: string
+    complete: string,
+    initialProgress?: ProgressResult | null
 }) => {
-  const [progress, setProgress] = useState<ProgressResult>({
+  const [progress, setProgress] = useState<ProgressResult>(initialProgress ?? {
     completed: 0,
     total: 0,
     phase: action,
@@ -61,3 +63,9 @@ export default ({
     </BodyCard>
   )
 }
+
+ProgressComponent.defaultProps = {
+  initialProgress: null,
+}
+
+export default ProgressComponent
