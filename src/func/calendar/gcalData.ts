@@ -35,22 +35,30 @@ export function gcalData(kennel: GQLKennelInfoFragment, trail: GQLInsertFragment
   const summary = `${kennel.short_name}${trail.calculated_number ? ` #${trail.calculated_number}` : ''}: ${trail.name}`
   const end = new Date(trail.start)
   const location = trail.latitude && trail.longitude ? `${trail.latitude}, ${trail.longitude}` : 'TBD'
-  const htmlLink = `${process.env.NEXT_PUBLIC_URL}/trail/${trail.id}`
+  const htmlLink = `${process.env.NEXT_PUBLIC_CALENDAR_URL ?? process.env.NEXT_PUBLIC_URL}/trail/${trail.id}`
   let description = ''
   if (trail.hares.length < 1) {
     description = `You could Hare this trail! <a href=${htmlLink}>Signup!</a>`
   } else {
+    description = `${htmlLink}
+`
     if (trail.description) {
-      description += `<h3>Description</h3>
+      description += `
+--- Description ---
+
 ${trail.description}
 `
     }
     if (trail.directions) {
-      description += `<h3>Directions</h3>
+      description += `
+--- Directions ---
+
 ${trail.directions}
 `
     }
-    description += `<h3>Hares</h3>
+    description += `
+--- Hares ---
+
 ${trail.hares.map((hare) => hare.hasherInfo.name).join(', ')}`
   }
   end.setHours(end.getHours() + 4)

@@ -2,6 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client'
 import { GQLInsertTrail, hares_insert_input } from '../../graph/types'
+import { ilog } from '../Logging'
 
 type TrailInfoVariables = {
   id: number | null;
@@ -72,7 +73,8 @@ mutation GQLInsertTrailDraft(
     draft: $draft, 
     google_calendar: $google_calendar, 
     hares: {data: $hares}, 
-    kennel: $kennel, 
+    kennel: $kennel,
+    gcal_dirty: true,
     latitude: $latitude, longitude: $longitude, 
     name: $name, 
     number: $number, 
@@ -92,6 +94,7 @@ export async function insertTrail(
     if (!r.data?.insert_trails_one?.id) {
       throw Error(`Unable to insert: ${r.errors?.map((e) => e.message).join(', ')}`)
     }
+    ilog(`Inserted trail ${r.data.insert_trails_one.id}`)
     return r.data.insert_trails_one.id
   })
 }

@@ -2,7 +2,6 @@ import {
   Button, ButtonGroup, Card, Form,
 } from 'react-bootstrap'
 import dateFormat from 'dateformat'
-import GoogleMapReact from 'google-map-react'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -129,11 +128,6 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
     return <ErrorBanner error="NEXT_PUBLIC_GOOGLE_MAP_KEY not set" />
   }
 
-  const start = {
-    lat: trail.latitude,
-    lng: trail.longitude,
-  }
-
   const rows: Array<DataRow> = editing ? [
     {
       title: 'Trail Name',
@@ -219,27 +213,33 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
               {trail.directions}
             </Card.Text>
             {showMap ? (
-              <div style={{ height: '300px', width: '100%' }} key="map">
-                <GoogleMapReact
-                  bootstrapURLKeys={{ key: mapKey }}
-                  defaultCenter={start}
-                  defaultZoom={18}
-                >
-                  <TrailStart
-                    lat={trail.latitude}
-                    lng={trail.longitude}
-                  />
-                </GoogleMapReact>
-              </div>
-            ) : null}
-            {showMap ? (
-              <Button
-                key="google"
-                href={`https://www.google.com/maps/dir//${trail.latitude},${trail.longitude}/`}
-                target="google"
-              >
-                Google Directions
-              </Button>
+              <>
+                <GMapify
+                  appKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY!}
+                  customMarkers={
+                    [
+                      [trail.latitude, trail.longitude, 'Start'],
+                    ]
+                  }
+                />
+                <ButtonGroup>
+                  <Button
+                    key="google"
+                    href={`https://www.google.com/maps/dir//${trail.latitude},${trail.longitude}/`}
+                    target="google"
+                  >
+                    Google Directions
+                  </Button>
+                  <Button
+                    key="apple"
+                    href={`http://maps.apple.com/?daddr=${trail.latitude},${trail.longitude}&dirflg=d`}
+                    target="apple"
+                  >
+                    Apple Directions
+                  </Button>
+                </ButtonGroup>
+              </>
+
             ) : null}
           </div>
         ),
@@ -252,10 +252,18 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
       <Form
         method="GET"
         action={`/api/trail/${trail.id}/edit`}
-        onKeyPress={(e : React.KeyboardEvent<HTMLFormElement>) => (e.key === 'Enter' && e.preventDefault())}
       >
         {body}
         <div className="mt-3">
+          {/* Disable implicit submission of form */}
+          <Button
+            type="submit"
+            disabled
+            style={{
+              display: 'none',
+            }}
+            aria-hidden="true"
+          />
           <Button type="submit" variant="success">Update</Button>
         </div>
       </Form>
@@ -283,8 +291,8 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
           ? (
             <div className="mt-3">
               <ButtonGroup>
-                <Button variant="danger">Delete Trail</Button>
-                <Button variant="danger">Un-Claim Trail</Button>
+                <Button variant="danger" href={`/api/trail/${trail.id}/delete`}>Delete Trail</Button>
+                {/* <Button variant="danger">Un-Claim Trail</Button> */}
               </ButtonGroup>
             </div>
           )

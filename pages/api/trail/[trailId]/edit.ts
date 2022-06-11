@@ -15,6 +15,7 @@ import { deleteTrail } from '../../../../src/func/trail/deleteTrail'
 import { fixCalculatedNumbers } from '../../../../src/func/trail/fixCalculatedNumbers'
 import { updateGoogleCalendar } from '../../../../src/func/calendar/updateGoogleCalendar'
 import { encodeQueryString } from '../../../../src/func/encodeQueryString'
+import { GQL_HARE_CHECK_FRAGMENT, hareAuthorized } from '../../../../src/func/trail/hareCheck'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await requireKnownUser(req, res)
@@ -22,7 +23,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     trailId,
     number,
-    ajax,
   } = queryToInt(req.query)
   const {
     description,
@@ -50,15 +50,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const sc = ServerClient()
   const info = await sc.query<GQLEditTrailInfo>({
     query: gql`
-
+${GQL_HARE_CHECK_FRAGMENT}
 fragment GQLTrailInfoFragment on trails {
   id
   draft
   google_calendar
   kennel
-  hares {
-    hasher
-  }
+  ...GQLHareCheckFragment
 }
 
 query GQLEditTrailInfo($trailId: Int) {
@@ -79,8 +77,7 @@ query GQLEditTrailInfo($trailId: Int) {
   })
 
   const ot : GQLTrailInfoFragment = info.draftFor ?? info
-  const isAuthorized = !ot.hares || ot.hares.length === 0
-  || ot.hares.map((h) => h.hasher).includes(user.id)
+  const isAuthorized = hareAuthorized(ot, user)
 
   let progress = {
     completed: 0,
@@ -110,21 +107,16 @@ query GQLEditTrailInfo($trailId: Int) {
       await deleteTrail(sc, info.id) // Delete draft
     }
     fixCalculatedNumbers(sc, ot.kennel)
-    progress = await updateGoogleCalendar(sc, ot.kennel, ajax ? 10 : 1)
-  }
-
-  if (ajax) {
-    res.json(progress)
-    return
+    progress = await updateGoogleCalendar(sc, ot.kennel, 1)
   }
 
   if (progress.completed === progress.total) {
-    res.redirect(`/trail/${ot.id}?message="Trail updated."`)
+    res.redirect(`/trail/${ot.id}?message=Trail updated.`)
     return
   }
 
   res.redirect(`/trail/${ot.id}/updating?${encodeQueryString({
     ...progress,
-    ...req.query,
+    kennelId: ot.kennel,
   })}`)
 }

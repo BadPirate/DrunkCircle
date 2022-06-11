@@ -16,7 +16,7 @@ export async function updateGoogleCalendar(
 ${GQL_INSERT_FRAGMENT}
 ${GQL_KENNEL_INFO_FRAGMENT}
 query GQLCalendarUpdate($kennelId: Int) {
-  trails(where: {draft: {_is_null: true}, kennel: {_eq: $kennelId}, _and: {google_calendar: {_is_null: true}, gcal_dirty: {_eq: true}, _or: {draft: {_is_null: true}, start: {_is_null: false}, hares: {hasher: {_is_null: false}}}}}) {
+  trails(where: {draft: {_is_null: true}, kennel: {_eq: $kennelId}, _and: {gcal_dirty: {_eq: true}}, hares: {hasher: {_is_null: false}}}) {
     ...GQLInsertFragment
     google_calendar
     gcal_dirty
@@ -52,7 +52,7 @@ query GQLCalendarUpdate($kennelId: Int) {
   }
   const update = info.filter((i) => i.google_calendar !== null && i.gcal_dirty)
   for (let index = 0; index < update.length && completed < limit; index += 1) {
-    const trail = add[index]
+    const trail = update[index]
     // eslint-disable-next-line no-await-in-loop
     await updateCalendar(ac, cal, kennelInfo, trail)
     completed += 1

@@ -119,63 +119,43 @@ export interface GQLSetCalendarIdVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GQLCalendarUpdate
+// GraphQL query operation: GQLDeleteVerify
 // ====================================================
 
-export interface GQLCalendarUpdate_trails_hares_hasherInfo {
-  __typename: "hashers";
-  name: string | null;
-}
-
-export interface GQLCalendarUpdate_trails_hares {
+export interface GQLDeleteVerify_trails_hares {
   __typename: "hares";
-  /**
-   * An object relationship
-   */
-  hasherInfo: GQLCalendarUpdate_trails_hares_hasherInfo;
+  hasher: number;
 }
 
-export interface GQLCalendarUpdate_trails_kennelInfo {
+export interface GQLDeleteVerify_trails_kennelInfo {
   __typename: "kennels";
-  google_calendar: string | null;
-  short_name: string | null;
   google_refresh: string | null;
   google_token: string | null;
-  id: number;
-  name: string | null;
 }
 
-export interface GQLCalendarUpdate_trails {
+export interface GQLDeleteVerify_trails {
   __typename: "trails";
-  calculated_number: number | null;
-  id: number;
-  name: string;
-  start: any;
-  latitude: any | null;
-  longitude: any | null;
-  directions: string | null;
-  google_calendar: string | null;
-  description: string | null;
   /**
    * An array relationship
    */
-  hares: GQLCalendarUpdate_trails_hares[];
-  gcal_dirty: boolean;
+  hares: GQLDeleteVerify_trails_hares[];
+  google_calendar: string | null;
+  kennel: number;
   /**
    * An object relationship
    */
-  kennelInfo: GQLCalendarUpdate_trails_kennelInfo;
+  kennelInfo: GQLDeleteVerify_trails_kennelInfo;
 }
 
-export interface GQLCalendarUpdate {
+export interface GQLDeleteVerify {
   /**
    * An array relationship
    */
-  trails: GQLCalendarUpdate_trails[];
+  trails: GQLDeleteVerify_trails[];
 }
 
-export interface GQLCalendarUpdateVariables {
-  kennelId?: number | null;
+export interface GQLDeleteVerifyVariables {
+  trailId?: number | null;
 }
 
 /* tslint:disable */
@@ -893,6 +873,34 @@ export interface GQLClearCalendarInfoFromTrailVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: GQLMarkClean
+// ====================================================
+
+export interface GQLMarkClean_update_trails {
+  __typename: "trails_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLMarkClean {
+  /**
+   * update data of the table: "trails"
+   */
+  update_trails: GQLMarkClean_update_trails | null;
+}
+
+export interface GQLMarkCleanVariables {
+  trailId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: GQLUpdateTrailGID
 // ====================================================
 
@@ -922,8 +930,89 @@ export interface GQLUpdateTrailGIDVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLCalendarUpdate
+// ====================================================
+
+export interface GQLCalendarUpdate_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLCalendarUpdate_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLCalendarUpdate_trails_hares_hasherInfo;
+}
+
+export interface GQLCalendarUpdate_trails_kennelInfo {
+  __typename: "kennels";
+  google_calendar: string | null;
+  short_name: string | null;
+  google_refresh: string | null;
+  google_token: string | null;
+  id: number;
+  name: string | null;
+}
+
+export interface GQLCalendarUpdate_trails {
+  __typename: "trails";
+  calculated_number: number | null;
+  id: number;
+  name: string;
+  start: any;
+  latitude: any | null;
+  longitude: any | null;
+  directions: string | null;
+  google_calendar: string | null;
+  description: string | null;
+  /**
+   * An array relationship
+   */
+  hares: GQLCalendarUpdate_trails_hares[];
+  gcal_dirty: boolean;
+  /**
+   * An object relationship
+   */
+  kennelInfo: GQLCalendarUpdate_trails_kennelInfo;
+}
+
+export interface GQLCalendarUpdate {
+  /**
+   * An array relationship
+   */
+  trails: GQLCalendarUpdate_trails[];
+}
+
+export interface GQLCalendarUpdateVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: GQLDeleteTrail
 // ====================================================
+
+export interface GQLDeleteTrail_delete_trails_returning_kennelInfo {
+  __typename: "kennels";
+  google_refresh: string | null;
+  google_token: string | null;
+  google_calendar: string | null;
+}
+
+export interface GQLDeleteTrail_delete_trails_returning {
+  __typename: "trails";
+  google_calendar: string | null;
+  /**
+   * An object relationship
+   */
+  kennelInfo: GQLDeleteTrail_delete_trails_returning_kennelInfo;
+}
 
 export interface GQLDeleteTrail_delete_trails {
   __typename: "trails_mutation_response";
@@ -931,6 +1020,10 @@ export interface GQLDeleteTrail_delete_trails {
    * number of rows affected by the mutation
    */
   affected_rows: number;
+  /**
+   * data from the rows affected by the mutation
+   */
+  returning: GQLDeleteTrail_delete_trails_returning[];
 }
 
 export interface GQLDeleteTrail {
@@ -953,11 +1046,29 @@ export interface GQLDeleteTrailVariables {
 // GraphQL query operation: GQLFixTrailNumberInfo
 // ====================================================
 
+export interface GQLFixTrailNumberInfo_trails_hares_hasherInfo {
+  __typename: "hashers";
+  id: number;
+}
+
+export interface GQLFixTrailNumberInfo_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLFixTrailNumberInfo_trails_hares_hasherInfo;
+}
+
 export interface GQLFixTrailNumberInfo_trails {
   __typename: "trails";
   number: number | null;
   calculated_number: number | null;
   id: number;
+  start: any;
+  /**
+   * An array relationship
+   */
+  hares: GQLFixTrailNumberInfo_trails_hares[];
 }
 
 export interface GQLFixTrailNumberInfo {
@@ -1675,6 +1786,28 @@ export interface GQLKennelInfoFragment {
   google_token: string | null;
   id: number;
   name: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL fragment: GQLHareCheckFragment
+// ====================================================
+
+export interface GQLHareCheckFragment_hares {
+  __typename: "hares";
+  hasher: number;
+}
+
+export interface GQLHareCheckFragment {
+  __typename: "trails";
+  /**
+   * An array relationship
+   */
+  hares: GQLHareCheckFragment_hares[];
 }
 
 /* tslint:disable */

@@ -14,6 +14,12 @@ query GQLFixTrailNumberInfo($kennelId: Int) {
     number
     calculated_number
     id
+    start
+    hares {
+      hasherInfo {
+        id
+      }
+    }
   }
 }
     `,
@@ -24,7 +30,12 @@ query GQLFixTrailNumberInfo($kennelId: Int) {
     return []
   }
   let on = 0
+  const now = new Date()
   const promises = fixInfo.data.trails.flatMap((t) => {
+    const startDate = new Date(t.start)
+    if (t.hares.length < 1 && startDate < now) {
+      return null
+    }
     on += 1
     if (t.number) {
       on = t.number

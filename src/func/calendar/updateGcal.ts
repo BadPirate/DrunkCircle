@@ -12,6 +12,7 @@ export async function updateCalendar(
   kennel: GQLKennelInfoFragment,
   trail: GQLInsertFragment,
 ) {
+  console.log('updateCalendar', trail)
   const updateData = gcalData(kennel, trail)
   if (!trail.google_calendar) {
     return insertCalendar(ac, cal, kennel, trail)
@@ -28,7 +29,7 @@ export async function updateCalendar(
     return id
   }).then(() => ac.mutate({
     mutation: gql`
-mutation GQLMarkClean($gid: String, $trailId: Int) {
+mutation GQLMarkClean($trailId: Int) {
 update_trails(where: {id: {_eq: $trailId}}, _set: {gcal_dirty: false}) {
   affected_rows
 }
@@ -49,6 +50,7 @@ export async function insertCalendar(
   kennel: GQLKennelInfoFragment,
   trail: GQLInsertFragment,
 ) {
+  console.log('insertCalendar', trail)
   const insertData = gcalData(kennel, trail)
   return apiBackOff(`Inserting GCAL ${trail.id}`, cal.events.insert(insertData))
     .then((r) => {

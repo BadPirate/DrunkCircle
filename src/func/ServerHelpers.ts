@@ -19,14 +19,14 @@ export async function requireSession(
   return session
 }
 
-type DCUser = {
+export type DCUser = {
     name?: string | null
     email?: string | null
     image?: string | null
     id?: string | null
 }
 
-type DCKnownUser = {
+export type DCKnownUser = {
   name?: string | null
   email: string
   image?: string | null
