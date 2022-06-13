@@ -111,7 +111,7 @@ query GQLEditTrailInfo($trailId: Int) {
   }
 
   if (progress.completed === progress.total) {
-    res.redirect(`/trail/${ot.id}?message=Trail updated.`)
+    res.redirect(`/api/trail/${ot.id}/revalidate?message=Trail updated.`)
     return
   }
 

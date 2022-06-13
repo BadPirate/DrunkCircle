@@ -12,7 +12,6 @@ export async function updateCalendar(
   kennel: GQLKennelInfoFragment,
   trail: GQLInsertFragment,
 ) {
-  console.log('updateCalendar', trail)
   const updateData = gcalData(kennel, trail)
   if (!trail.google_calendar) {
     return insertCalendar(ac, cal, kennel, trail)
@@ -50,7 +49,6 @@ export async function insertCalendar(
   kennel: GQLKennelInfoFragment,
   trail: GQLInsertFragment,
 ) {
-  console.log('insertCalendar', trail)
   const insertData = gcalData(kennel, trail)
   return apiBackOff(`Inserting GCAL ${trail.id}`, cal.events.insert(insertData))
     .then((r) => {
