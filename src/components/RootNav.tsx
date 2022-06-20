@@ -8,7 +8,7 @@ import Head from 'next/head'
 import { NextSeo } from 'next-seo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUserSlash } from '@fortawesome/free-solid-svg-icons'
-import BrandImage from '../../public/banner_svg.svg'
+import Image from 'next/image'
 
 export interface RootNavProps {
   children : React.ReactNode,
@@ -56,13 +56,13 @@ const RootNav = ({
       <Navbar key="navbar" variant="dark" bg="secondary" style={{ marginBottom: '1em' }}>
         <Container>
           <Navbar.Brand href="/" key="brand" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
-            <BrandImage height="45px" width="85px" alt={process.env.NEXT_PUBLIC_APP_VERSION} />
+            <Image src="/banner_svg.svg" height="45px" width="85px" alt={process.env.NEXT_PUBLIC_APP_VERSION} />
           </Navbar.Brand>
           <Navbar.Toggle key="toggle" />
           <Nav key="links" className="me-auto">
             <Nav.Link href="/trail">Trails</Nav.Link>
             <Nav.Link href="/kennel">Kennels</Nav.Link>
-            <Nav.Link href="/calendar">Calendar</Nav.Link>
+            {/* <Nav.Link href="/calendar">Calendar</Nav.Link> */}
           </Nav>
           <Navbar.Text className="ms-auto" key="spacer" />
           { !session?.user

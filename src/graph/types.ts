@@ -119,6 +119,76 @@ export interface GQLSetCalendarIdVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLAcceptVerify
+// ====================================================
+
+export interface GQLAcceptVerify_trails_draftFor_hares {
+  __typename: "hares";
+  hasher: number;
+}
+
+export interface GQLAcceptVerify_trails_draftFor {
+  __typename: "trails";
+  id: number;
+  /**
+   * An array relationship
+   */
+  hares: GQLAcceptVerify_trails_draftFor_hares[];
+}
+
+export interface GQLAcceptVerify_trails {
+  __typename: "trails";
+  draft: number | null;
+  kennel: number;
+  /**
+   * An object relationship
+   */
+  draftFor: GQLAcceptVerify_trails_draftFor | null;
+}
+
+export interface GQLAcceptVerify {
+  /**
+   * An array relationship
+   */
+  trails: GQLAcceptVerify_trails[];
+}
+
+export interface GQLAcceptVerifyVariables {
+  trailId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLAcceptDraftMutation
+// ====================================================
+
+export interface GQLAcceptDraftMutation_update_trails_by_pk {
+  __typename: "trails";
+  id: number;
+}
+
+export interface GQLAcceptDraftMutation {
+  /**
+   * update single row of the table: "trails"
+   */
+  update_trails_by_pk: GQLAcceptDraftMutation_update_trails_by_pk | null;
+}
+
+export interface GQLAcceptDraftMutationVariables {
+  draftId: number;
+  originalId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLDeleteVerify
 // ====================================================
 
@@ -134,6 +204,7 @@ export interface GQLDeleteVerify_trails {
    */
   hares: GQLDeleteVerify_trails_hares[];
   kennel: number;
+  draft: number | null;
 }
 
 export interface GQLDeleteVerify {
@@ -603,6 +674,11 @@ export interface GQLPageTrailId_trails_kennelInfo {
   id: number;
 }
 
+export interface GQLPageTrailId_trails_drafts {
+  __typename: "trails";
+  id: number;
+}
+
 export interface GQLPageTrailId_trails_hares_hasherInfo {
   __typename: "hashers";
   name: string | null;
@@ -631,6 +707,11 @@ export interface GQLPageTrailId_trails {
   longitude: any | null;
   name: string;
   start: any;
+  draft: number | null;
+  /**
+   * An array relationship
+   */
+  drafts: GQLPageTrailId_trails_drafts[];
   /**
    * An array relationship
    */
@@ -1710,6 +1791,11 @@ export interface PublicFragmentTrail_kennelInfo {
   id: number;
 }
 
+export interface PublicFragmentTrail_drafts {
+  __typename: "trails";
+  id: number;
+}
+
 export interface PublicFragmentTrail_hares_hasherInfo {
   __typename: "hashers";
   name: string | null;
@@ -1738,6 +1824,11 @@ export interface PublicFragmentTrail {
   longitude: any | null;
   name: string;
   start: any;
+  draft: number | null;
+  /**
+   * An array relationship
+   */
+  drafts: PublicFragmentTrail_drafts[];
   /**
    * An array relationship
    */

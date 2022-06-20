@@ -23,6 +23,7 @@ query GQLDeleteVerify($trailId: Int) {
   trails(where: {id: {_eq: $trailId}}) {
     ...GQLHareCheckFragment
     kennel
+    draft
   }
 }
       `,
@@ -33,7 +34,7 @@ query GQLDeleteVerify($trailId: Int) {
     }
     return r.data.trails[0]
   })
-  const { kennel } = verifyInfo
+  const { kennel, draft } = verifyInfo
 
   if (!hareAuthorized(verifyInfo, user)) {
     throw new Error('User does not have permission to delete this trail.  Speak with a Hare.')
@@ -41,5 +42,5 @@ query GQLDeleteVerify($trailId: Int) {
   await deleteTrail(ac, trailId)
   await fixCalculatedNumbers(ac, kennel)
   updateGoogleCalendar(ac, kennel) // Fire and forget
-  res.redirect(`/kennel/${kennel}?message=Trail Deleted.`)
+  res.redirect(draft ? `/trail/${draft}?message=Draft Deleted.` : `/kennel/${kennel}?message=Trail Deleted.`)
 }

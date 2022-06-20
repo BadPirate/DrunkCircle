@@ -1,11 +1,10 @@
 import {
-  Button, ButtonGroup, Card, Form,
+  Alert,
+  Button, ButtonGroup, Card, Form, ListGroup,
 } from 'react-bootstrap'
 import dateFormat from 'dateformat'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBeer } from '@fortawesome/free-solid-svg-icons'
 import { gql } from '@apollo/client'
 import DateTimeField from 'react-datetime'
 import React, { useState } from 'react'
@@ -37,6 +36,10 @@ fragment PublicFragmentTrail on trails {
   longitude
   name
   start
+  draft
+  drafts {
+    id
+  }
   hares {
     hasherInfo {
       ...PublicHasherInfo
@@ -50,11 +53,6 @@ query GQLPageTrailId($trailId: Int) {
   }
 }
 `
-
-// eslint-disable-next-line no-unused-vars
-const TrailStart = ({ lat, lng } : { lat: number, lng: number}) => (
-  <FontAwesomeIcon icon={faBeer} size="3x" />
-)
 
 type TrailCardProps = {
   trail: PublicFragmentTrail,
@@ -246,6 +244,22 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
     },
   ])
 
+  if (!editing && trail.drafts.length > 0) {
+    rows.push(
+      {
+        title: 'Drafts',
+        row: (
+          <ListGroup>
+            { trail.drafts.map((d) => (
+              <ListGroup.Item action href={`/trail/${d.id}`} key={d.id}>
+                {`Draft #${d.id}`}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        ),
+      },
+    )
+  }
   let body = <InfoTable rows={rows} />
   if (editing) {
     body = (
@@ -272,8 +286,8 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
 
   return (
     <BodyCard
-      title={editing ? `Editing trail for ${trail.kennelInfo.short_name}...` : `#${trail.calculated_number} ${trail.name}`}
-      editLink={editing ? undefined : `/trail/${trail.id}/edit`}
+      title={editing ? `Editing trail for ${trail.kennelInfo.short_name}...` : `${trail.calculated_number ? ` #${trail.calculated_number}` : ''} ${trail.name}`}
+      editLink={editing || trail.draft ? undefined : `/trail/${trail.id}/edit`}
       preamble={(
         editing ? null
           : (
@@ -285,6 +299,20 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
           )
       )}
     >
+      { trail.draft ? (
+        <Alert variant="info">
+          <p>
+            This trail is a DRAFT, and will only show this way to everyone once it has been
+            accepted.
+          </p>
+          <ButtonGroup>
+            <Button href={`/trail/${trail.draft}`}>See Original</Button>
+            <Button variant="danger" href={`/api/trail/${trail.draft}/delete`}>Delete</Button>
+            <Button variant="success" href={`/api/trail/${trail.draft}/accept_draft`}>Accept</Button>
+          </ButtonGroup>
+        </Alert>
+      )
+        : null}
       {body}
       {
         user?.id && trail.hares.map((h) => h.hasherInfo.id).includes(parseInt(user.id, 10))

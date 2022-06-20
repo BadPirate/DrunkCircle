@@ -16,13 +16,18 @@ interface CardInfo extends RootNavProps {
 export const BodyCard = ({
   title, children, preamble, editLink,
 } : CardInfo) => {
-  const { message } = queryToStrings(useRouter().query)
+  const { message, warning } = queryToStrings(useRouter().query)
 
   return (
     <>
       { message ? (
         <Alert variant="info">
           {message}
+        </Alert>
+      ) : null }
+      { warning ? (
+        <Alert variant="warning">
+          {warning}
         </Alert>
       ) : null }
       <Card>
