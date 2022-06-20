@@ -122,9 +122,18 @@ export interface GQLSetCalendarIdVariables {
 // GraphQL query operation: GQLAcceptVerify
 // ====================================================
 
+export interface GQLAcceptVerify_trails_draftFor_hares_hasherInfo {
+  __typename: "hashers";
+  email: string | null;
+}
+
 export interface GQLAcceptVerify_trails_draftFor_hares {
   __typename: "hares";
   hasher: number;
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLAcceptVerify_trails_draftFor_hares_hasherInfo;
 }
 
 export interface GQLAcceptVerify_trails_draftFor {
@@ -192,9 +201,18 @@ export interface GQLAcceptDraftMutationVariables {
 // GraphQL query operation: GQLDeleteVerify
 // ====================================================
 
+export interface GQLDeleteVerify_trails_hares_hasherInfo {
+  __typename: "hashers";
+  email: string | null;
+}
+
 export interface GQLDeleteVerify_trails_hares {
   __typename: "hares";
   hasher: number;
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLDeleteVerify_trails_hares_hasherInfo;
 }
 
 export interface GQLDeleteVerify_trails {
@@ -227,19 +245,38 @@ export interface GQLDeleteVerifyVariables {
 // GraphQL query operation: GQLEditTrailInfo
 // ====================================================
 
+export interface GQLEditTrailInfo_trails_hares_hasherInfo {
+  __typename: "hashers";
+  email: string | null;
+}
+
 export interface GQLEditTrailInfo_trails_hares {
   __typename: "hares";
   hasher: number;
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLEditTrailInfo_trails_hares_hasherInfo;
+}
+
+export interface GQLEditTrailInfo_trails_draftFor_hares_hasherInfo {
+  __typename: "hashers";
+  email: string | null;
 }
 
 export interface GQLEditTrailInfo_trails_draftFor_hares {
   __typename: "hares";
   hasher: number;
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLEditTrailInfo_trails_draftFor_hares_hasherInfo;
 }
 
 export interface GQLEditTrailInfo_trails_draftFor {
   __typename: "trails";
   id: number;
+  name: string;
   draft: number | null;
   google_calendar: string | null;
   kennel: number;
@@ -252,6 +289,7 @@ export interface GQLEditTrailInfo_trails_draftFor {
 export interface GQLEditTrailInfo_trails {
   __typename: "trails";
   id: number;
+  name: string;
   draft: number | null;
   google_calendar: string | null;
   kennel: number;
@@ -1728,14 +1766,24 @@ export interface GQLUpdateCalendarTokenVariables {
 // GraphQL fragment: GQLTrailInfoFragment
 // ====================================================
 
+export interface GQLTrailInfoFragment_hares_hasherInfo {
+  __typename: "hashers";
+  email: string | null;
+}
+
 export interface GQLTrailInfoFragment_hares {
   __typename: "hares";
   hasher: number;
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLTrailInfoFragment_hares_hasherInfo;
 }
 
 export interface GQLTrailInfoFragment {
   __typename: "trails";
   id: number;
+  name: string;
   draft: number | null;
   google_calendar: string | null;
   kennel: number;
@@ -1902,9 +1950,18 @@ export interface GQLKennelInfoFragment {
 // GraphQL fragment: GQLHareCheckFragment
 // ====================================================
 
+export interface GQLHareCheckFragment_hares_hasherInfo {
+  __typename: "hashers";
+  email: string | null;
+}
+
 export interface GQLHareCheckFragment_hares {
   __typename: "hares";
   hasher: number;
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLHareCheckFragment_hares_hasherInfo;
 }
 
 export interface GQLHareCheckFragment {

@@ -6,6 +6,9 @@ export const GQL_HARE_CHECK_FRAGMENT = gql`
 fragment GQLHareCheckFragment on trails {
   hares {
     hasher
+    hasherInfo {
+      email
+    }
   }
 }
 `
