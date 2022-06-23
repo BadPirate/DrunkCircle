@@ -31,6 +31,7 @@
     "g-mapify": "^2.3.1",
     "googleapis": "^100.0.0",
     "graphql": "15.5.3",
+    "graphql-ws": "^5.9.0",
     "jquery": "^3.6.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.3",

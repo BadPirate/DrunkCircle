@@ -1,18 +1,34 @@
+/* eslint-disable camelcase */
 import { gql } from '@apollo/client'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { BodyError } from '../../../src/components/ErrorBanner'
 import HareCount from '../../../src/components/HareCount'
 import KennelList, { GQL_KENNEL_LIST_FRAGMENT } from '../../../src/components/KennelList'
-import { DataRow, DataTable } from '../../../src/components/ListTable'
+import ListTable, { DataRow, DataTable } from '../../../src/components/ListTable'
 import PageCard from '../../../src/components/PageCard'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
-import { GQLHasherInfo } from '../../../src/graph/types'
+import { GQLHasherInfo, GQLHasherInfo_hashers_management } from '../../../src/graph/types'
 
 interface ServerSideProps {
     data?: GQLHasherInfo | null | undefined,
     error?: any | undefined
 }
+
+const MismanagementRolesPart = ({ roles } : { roles: GQLHasherInfo_hashers_management[] }) => (
+  <ListTable
+    columns={['Kennel', 'Title']}
+    rows={roles.map((r) => ([
+      {
+        row: r.kennelInfo.short_name,
+        link: `/kennel/${r.kennelInfo.id}`,
+      },
+      {
+        row: r.title,
+      },
+    ]))}
+  />
+)
 
 const HasherInfoPage = (props : ServerSideProps) => {
   const { data, error } = props
@@ -26,6 +42,12 @@ const HasherInfoPage = (props : ServerSideProps) => {
       row: hasher.name,
     },
   ]
+  if (hasher.management.length > 0) {
+    rows.push({
+      title: 'Mismanagement',
+      row: <MismanagementRolesPart roles={hasher.management} />,
+    })
+  }
   if (hasher.gm.length > 0) {
     rows.push({
       title: 'GM',
@@ -62,8 +84,16 @@ query GQLHasherInfo($hasherId: Int) {
     gm {
       ...GQLKennelListFragment
     }
+    management {
+      kennelInfo {
+        id
+        short_name
+      }
+      title
+    }
   }
-}`,
+}
+`,
     variables: { hasherId },
   })
     .catch((error) => { props.error = error })

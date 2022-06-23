@@ -5,6 +5,10 @@ import { useRouter } from 'next/router'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import { DefaultSeo } from 'next-seo'
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+
+config.autoAddCss = false
 
 // eslint-disable-next-line react/jsx-props-no-spreading
 const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => (

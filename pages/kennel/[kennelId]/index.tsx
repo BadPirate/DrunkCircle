@@ -1,18 +1,22 @@
+/* eslint-disable camelcase */
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
-import { Button } from 'react-bootstrap'
+import { Button, Tab, Tabs } from 'react-bootstrap'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
 import LoadSpinner from '../../../src/components/LoadSpinner'
 import PageCard from '../../../src/components/PageCard'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
-import { GQLGetKennelPage, GQLHareRank } from '../../../src/graph/types'
+import {
+  GQLGetKennelPage, GQLGetKennelPage_kennels, GQLHareRank, GQLMismanagementView,
+} from '../../../src/graph/types'
 import FormattedDate, { MobileAlt } from '../../../src/components/FormattedDate'
+import { queryToStrings } from '../../../src/func/queryParsing'
 
-const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
+const HareRank = ({ kennelId }: { kennelId: string | string[] }) => {
   const { data, loading, error } = useQuery<GQLHareRank>(
     gql`
    query GQLHareRank($kennelId: Int) {
@@ -53,12 +57,105 @@ const HareRank = ({ kennelId } : { kennelId : string | string[] }) => {
 }
 
 interface ServerSideProps {
-    error? : any | undefined,
-    data? : GQLGetKennelPage | null | undefined
+  error?: any | undefined,
+  data?: GQLGetKennelPage | null | undefined
 }
 
-const KennelPage = ({ error: kennelError, data: kennelData } : ServerSideProps) => {
-  const { kennelId } = useRouter().query
+const TrailsPart = ({ kennel: { trails, id: kennelId } } : { kennel: GQLGetKennelPage_kennels}) => (
+  <MobileAlt
+    mobile={(
+      <>
+        <ListTable
+          key="desktop"
+          className="d-none d-sm-block"
+          columns={['#', 'Date', 'Name', 'Hare']}
+          rows={trails.map((t) => {
+            const link = `/trail/${t.id}`
+            return [{
+              row: `#${t.calculated_number}`,
+              link,
+            }, {
+              row: <FormattedDate date={t.start} />,
+              link,
+            }, {
+              row: t.name,
+              link,
+              wrap: true,
+            }, {
+              row: t.hares.length > 0 ? t.hares.map((h) => h.hasherInfo.name).join(', ') : 'Could be you!',
+              link,
+            }]
+          })}
+        />
+        <Button variant="success" href={`/api/kennel/${kennelId}/create_draft`}>
+          Add a trail
+        </Button>
+      </>
+    )}
+    desktop={
+      (
+        <>
+          <ListTable
+            key="mobile"
+            className=".d-none d-sm-block .d-md-none"
+            columns={['Date', 'Name']}
+            rows={trails.map((t) => {
+              const link = `/trail/${t.id}`
+              return [{
+                row: <FormattedDate date={t.start} />,
+                link,
+              }, {
+                row: `#${t.calculated_number}: ${t.name}`,
+                link,
+                wrap: true,
+              }]
+            })}
+          />
+          <Button variant="success" href={`/api/kennel/${kennelId}/create_draft`}>
+            Add a trail
+          </Button>
+        </>
+      )
+    }
+  />
+)
+
+const MismanagementPart = ({ kennelId } : { kennelId : number }) => {
+  const { loading, data, error } = useQuery<GQLMismanagementView>(gql`
+query GQLMismanagementView($kennelId: Int) {
+  management(where: {kennel: {_eq: $kennelId}}) {
+    hasherInfo {
+      name
+      id
+    }
+    title
+  }
+}
+  `, {
+    variables: { kennelId },
+    client: PublicClientHasura,
+  })
+  if (loading) return <LoadSpinner />
+  if (error) return <ErrorBanner error={error} />
+  if (!data) return <p>No Mismanagement listed</p>
+  return (
+    <ListTable
+      columns={['Hasher', 'Title']}
+      rows={data.management.map((m) => ([
+        {
+          row: m.hasherInfo.name,
+          link: `/hasher/${m.hasherInfo.id}`,
+        },
+        {
+          row: m.title,
+        },
+      ]))}
+    />
+  )
+}
+
+const KennelPage = ({ error: kennelError, data: kennelData }: ServerSideProps) => {
+  const { kennelId } = queryToStrings(useRouter().query)
 
   if (!kennelId) return <BodyError error="Kennel ID not set" />
   if (kennelError) return <BodyError error={kennelError} />
@@ -67,7 +164,7 @@ const KennelPage = ({ error: kennelError, data: kennelData } : ServerSideProps) 
   const kennel = kennelData.kennels[0]
   if (!kennel) { return <BodyError error="Unable to retrieve Kennel" /> }
 
-  const rows : DataRow[] = [
+  const rows: DataRow[] = [
     {
       title: kennel.short_name || 'Description',
       row: <ReactMarkdown>{kennel.description || 'New kennel.'}</ReactMarkdown>,
@@ -88,67 +185,6 @@ const KennelPage = ({ error: kennelError, data: kennelData } : ServerSideProps) 
     })
   }
 
-  rows.push({
-    title: 'Trails',
-    row: <MobileAlt
-      mobile={(
-        <>
-          <ListTable
-            key="desktop"
-            className="d-none d-sm-block"
-            columns={['#', 'Date', 'Name', 'Hare']}
-            rows={
-              kennel.trails.map((t) => {
-                const link = `/trail/${t.id}`
-                return [
-                  { row: `#${t.calculated_number}`, link },
-                  { row: <FormattedDate date={t.start} />, link },
-                  { row: t.name, link, wrap: true },
-                  { row: t.hares.length > 0 ? t.hares.map((h) => h.hasherInfo.name).join(', ') : 'Could be you!', link },
-                ]
-              })
-            }
-          />
-          <Button
-            variant="success"
-            href={`/api/kennel/${kennelId}/create_draft`}
-          >
-            Add a trail
-          </Button>
-        </>
-      )}
-      desktop={(
-        <>
-          <ListTable
-            key="mobile"
-            className=".d-none d-sm-block .d-md-none"
-            columns={['Date', 'Name']}
-            rows={
-              kennel.trails.map((t) => {
-                const link = `/trail/${t.id}`
-                return [
-                  { row: <FormattedDate date={t.start} />, link },
-                  { row: `#${t.calculated_number}: ${t.name}`, link, wrap: true },
-                ]
-              })
-            }
-          />
-          <Button
-            variant="success"
-            href={`/api/kennel/${kennelId}/create_draft`}
-          >
-            Add a trail
-          </Button>
-        </>
-      )}
-    />,
-  })
-
-  rows.push({
-    title: 'Top Hares',
-    row: <HareRank kennelId={kennelId} />,
-  })
-
   return (
     <PageCard
       title={kennel.name || 'DrunkCircle Kennel'}
@@ -156,6 +192,17 @@ const KennelPage = ({ error: kennelError, data: kennelData } : ServerSideProps) 
       editLink={`/kennel/${kennelId}/edit`}
     >
       <InfoTable rows={rows} />
+      <Tabs className="mt-3">
+        <Tab eventKey="trails" title="Trails">
+          <TrailsPart kennel={kennel} />
+        </Tab>
+        <Tab eventKey="hares" title="Top Hares">
+          <HareRank kennelId={kennelId} />
+        </Tab>
+        <Tab eventKey="mismanagement" title="Mismanagement">
+          <MismanagementPart kennelId={parseInt(kennelId, 10)} />
+        </Tab>
+      </Tabs>
     </PageCard>
   )
 }
@@ -166,7 +213,7 @@ KennelPage.defaultProps = {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query: { kennelId } }) => {
-  let props : ServerSideProps = {}
+  let props: ServerSideProps = {}
   const after = new Date()
   after.setHours(after.getHours() - 8)
   await PublicClientHasura.query<GQLGetKennelPage>({

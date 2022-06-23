@@ -59,6 +59,65 @@ export interface GQLUpdateAccessTokenVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: GQLAddRolePermission
+// ====================================================
+
+export interface GQLAddRolePermission_insert_permissions {
+  __typename: "permissions_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLAddRolePermission {
+  /**
+   * insert data into the table: "permissions"
+   */
+  insert_permissions: GQLAddRolePermission_insert_permissions | null;
+}
+
+export interface GQLAddRolePermissionVariables {
+  role?: number | null;
+  permission?: permission_enum_enum | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLAddMismanagement
+// ====================================================
+
+export interface GQLAddMismanagement_insert_management {
+  __typename: "management_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLAddMismanagement {
+  /**
+   * insert data into the table: "management"
+   */
+  insert_management: GQLAddMismanagement_insert_management | null;
+}
+
+export interface GQLAddMismanagementVariables {
+  hasher?: number | null;
+  title?: string | null;
+  kennelID?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: GQLUpdateSelfDraft
 // ====================================================
 
@@ -76,6 +135,64 @@ export interface GQLUpdateSelfDraft {
 
 export interface GQLUpdateSelfDraftVariables {
   trailId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLDeleteRole
+// ====================================================
+
+export interface GQLDeleteRole_delete_management {
+  __typename: "management_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLDeleteRole {
+  /**
+   * delete data from the table: "management"
+   */
+  delete_management: GQLDeleteRole_delete_management | null;
+}
+
+export interface GQLDeleteRoleVariables {
+  role?: number | null;
+  kennelID?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLDeleteRolePermission
+// ====================================================
+
+export interface GQLDeleteRolePermission_delete_permissions {
+  __typename: "permissions_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLDeleteRolePermission {
+  /**
+   * delete data from the table: "permissions"
+   */
+  delete_permissions: GQLDeleteRolePermission_delete_permissions | null;
+}
+
+export interface GQLDeleteRolePermissionVariables {
+  role?: number | null;
+  permission?: permission_enum_enum | null;
 }
 
 /* tslint:disable */
@@ -354,6 +471,21 @@ export interface GQLHasherInfo_hashers_gm {
   name: string | null;
 }
 
+export interface GQLHasherInfo_hashers_management_kennelInfo {
+  __typename: "kennels";
+  id: number;
+  short_name: string | null;
+}
+
+export interface GQLHasherInfo_hashers_management {
+  __typename: "management";
+  /**
+   * An object relationship
+   */
+  kennelInfo: GQLHasherInfo_hashers_management_kennelInfo;
+  title: string | null;
+}
+
 export interface GQLHasherInfo_hashers {
   __typename: "hashers";
   name: string | null;
@@ -361,6 +493,10 @@ export interface GQLHasherInfo_hashers {
    * An array relationship
    */
   gm: GQLHasherInfo_hashers_gm[];
+  /**
+   * An array relationship
+   */
+  management: GQLHasherInfo_hashers_management[];
 }
 
 export interface GQLHasherInfo {
@@ -409,6 +545,90 @@ export interface GQLPageHasher {
 
 export interface GQLPageHasherVariables {
   hasherId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLPermissionsEnum
+// ====================================================
+
+export interface GQLPermissionsEnum_permission_enum {
+  __typename: "permission_enum";
+  description: string;
+  permission: string;
+}
+
+export interface GQLPermissionsEnum {
+  /**
+   * fetch data from the table: "permission_enum"
+   */
+  permission_enum: GQLPermissionsEnum_permission_enum[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL subscription operation: GQLKennelRolesEditView
+// ====================================================
+
+export interface GQLKennelRolesEditView_kennels_management_hasherInfo {
+  __typename: "hashers";
+  id: number;
+  name: string | null;
+}
+
+export interface GQLKennelRolesEditView_kennels_management_permissions_permissionInfo {
+  __typename: "permission_enum";
+  description: string;
+  permission: string;
+}
+
+export interface GQLKennelRolesEditView_kennels_management_permissions {
+  __typename: "permissions";
+  /**
+   * An object relationship
+   */
+  permissionInfo: GQLKennelRolesEditView_kennels_management_permissions_permissionInfo;
+}
+
+export interface GQLKennelRolesEditView_kennels_management {
+  __typename: "management";
+  id: number;
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLKennelRolesEditView_kennels_management_hasherInfo;
+  /**
+   * An array relationship
+   */
+  permissions: GQLKennelRolesEditView_kennels_management_permissions[];
+  title: string | null;
+}
+
+export interface GQLKennelRolesEditView_kennels {
+  __typename: "kennels";
+  /**
+   * An array relationship
+   */
+  management: GQLKennelRolesEditView_kennels_management[];
+}
+
+export interface GQLKennelRolesEditView {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLKennelRolesEditView_kennels[];
+}
+
+export interface GQLKennelRolesEditViewVariables {
+  kennelId?: number | null;
 }
 
 /* tslint:disable */
@@ -478,6 +698,41 @@ export interface GQLHareRank {
 }
 
 export interface GQLHareRankVariables {
+  kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLMismanagementView
+// ====================================================
+
+export interface GQLMismanagementView_management_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+  id: number;
+}
+
+export interface GQLMismanagementView_management {
+  __typename: "management";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLMismanagementView_management_hasherInfo;
+  title: string | null;
+}
+
+export interface GQLMismanagementView {
+  /**
+   * An array relationship
+   */
+  management: GQLMismanagementView_management[];
+}
+
+export interface GQLMismanagementViewVariables {
   kennelId?: number | null;
 }
 
@@ -1120,6 +1375,33 @@ export interface GQLCalendarUpdate {
 
 export interface GQLCalendarUpdateVariables {
   kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLKennelPermissionCheck
+// ====================================================
+
+export interface GQLKennelPermissionCheck_management {
+  __typename: "management";
+  id: number;
+}
+
+export interface GQLKennelPermissionCheck {
+  /**
+   * An array relationship
+   */
+  management: GQLKennelPermissionCheck_management[];
+}
+
+export interface GQLKennelPermissionCheckVariables {
+  kennelID?: number | null;
+  permission?: permission_enum_enum | null;
+  userId?: number | null;
 }
 
 /* tslint:disable */
@@ -2046,6 +2328,59 @@ export enum kennels_update_column {
 }
 
 /**
+ * unique or primary key constraints on table "management"
+ */
+export enum management_constraint {
+  management_pkey = "management_pkey",
+}
+
+/**
+ * update columns of table "management"
+ */
+export enum management_update_column {
+  hasher = "hasher",
+  id = "id",
+  kennel = "kennel",
+  role = "role",
+  title = "title",
+}
+
+/**
+ * unique or primary key constraints on table "permission_enum"
+ */
+export enum permission_enum_constraint {
+  permission_enum_pkey = "permission_enum_pkey",
+}
+
+export enum permission_enum_enum {
+  mismanage = "mismanage",
+  update_trails = "update_trails",
+}
+
+/**
+ * update columns of table "permission_enum"
+ */
+export enum permission_enum_update_column {
+  description = "description",
+  permission = "permission",
+}
+
+/**
+ * unique or primary key constraints on table "permissions"
+ */
+export enum permissions_constraint {
+  permissions_pkey = "permissions_pkey",
+}
+
+/**
+ * update columns of table "permissions"
+ */
+export enum permissions_update_column {
+  permission = "permission",
+  role = "role",
+}
+
+/**
  * unique or primary key constraints on table "trails"
  */
 export enum trails_constraint {
@@ -2128,6 +2463,21 @@ export interface String_comparison_exp {
 }
 
 /**
+ * Boolean expression to compare columns of type "bit". All fields are combined with logical 'AND'.
+ */
+export interface bit_comparison_exp {
+  _eq?: any | null;
+  _gt?: any | null;
+  _gte?: any | null;
+  _in?: any[] | null;
+  _is_null?: boolean | null;
+  _lt?: any | null;
+  _lte?: any | null;
+  _neq?: any | null;
+  _nin?: any[] | null;
+}
+
+/**
  * Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'.
  */
 export interface float8_comparison_exp {
@@ -2196,6 +2546,7 @@ export interface hashers_bool_exp {
   id?: Int_comparison_exp | null;
   login?: String_comparison_exp | null;
   login_expires?: timestamptz_comparison_exp | null;
+  management?: management_bool_exp | null;
   name?: String_comparison_exp | null;
 }
 
@@ -2210,6 +2561,7 @@ export interface hashers_insert_input {
   id?: number | null;
   login?: string | null;
   login_expires?: any | null;
+  management?: management_arr_rel_insert_input | null;
   name?: string | null;
 }
 
@@ -2256,6 +2608,7 @@ export interface kennels_bool_exp {
   google_refresh?: String_comparison_exp | null;
   google_token?: String_comparison_exp | null;
   id?: Int_comparison_exp | null;
+  management?: management_bool_exp | null;
   name?: String_comparison_exp | null;
   next?: timestamptz_comparison_exp | null;
   short_name?: String_comparison_exp | null;
@@ -2279,6 +2632,7 @@ export interface kennels_insert_input {
   google_refresh?: string | null;
   google_token?: string | null;
   id?: number | null;
+  management?: management_arr_rel_insert_input | null;
   name?: string | null;
   next?: any | null;
   short_name?: string | null;
@@ -2302,6 +2656,149 @@ export interface kennels_on_conflict {
   constraint: kennels_constraint;
   update_columns: kennels_update_column[];
   where?: kennels_bool_exp | null;
+}
+
+/**
+ * input type for inserting array relation for remote table "management"
+ */
+export interface management_arr_rel_insert_input {
+  data: management_insert_input[];
+  on_conflict?: management_on_conflict | null;
+}
+
+/**
+ * Boolean expression to filter rows from the table "management". All fields are combined with a logical 'AND'.
+ */
+export interface management_bool_exp {
+  _and?: management_bool_exp[] | null;
+  _not?: management_bool_exp | null;
+  _or?: management_bool_exp[] | null;
+  hasher?: Int_comparison_exp | null;
+  hasherInfo?: hashers_bool_exp | null;
+  id?: Int_comparison_exp | null;
+  kennel?: Int_comparison_exp | null;
+  kennelInfo?: kennels_bool_exp | null;
+  permissions?: permissions_bool_exp | null;
+  role?: bit_comparison_exp | null;
+  title?: String_comparison_exp | null;
+}
+
+/**
+ * input type for inserting data into table "management"
+ */
+export interface management_insert_input {
+  hasher?: number | null;
+  hasherInfo?: hashers_obj_rel_insert_input | null;
+  id?: number | null;
+  kennel?: number | null;
+  kennelInfo?: kennels_obj_rel_insert_input | null;
+  permissions?: permissions_arr_rel_insert_input | null;
+  role?: any | null;
+  title?: string | null;
+}
+
+/**
+ * input type for inserting object relation for remote table "management"
+ */
+export interface management_obj_rel_insert_input {
+  data: management_insert_input;
+  on_conflict?: management_on_conflict | null;
+}
+
+/**
+ * on conflict condition type for table "management"
+ */
+export interface management_on_conflict {
+  constraint: management_constraint;
+  update_columns: management_update_column[];
+  where?: management_bool_exp | null;
+}
+
+/**
+ * Boolean expression to filter rows from the table "permission_enum". All fields are combined with a logical 'AND'.
+ */
+export interface permission_enum_bool_exp {
+  _and?: permission_enum_bool_exp[] | null;
+  _not?: permission_enum_bool_exp | null;
+  _or?: permission_enum_bool_exp[] | null;
+  description?: String_comparison_exp | null;
+  permission?: String_comparison_exp | null;
+}
+
+/**
+ * Boolean expression to compare columns of type "permission_enum_enum". All fields are combined with logical 'AND'.
+ */
+export interface permission_enum_enum_comparison_exp {
+  _eq?: permission_enum_enum | null;
+  _in?: permission_enum_enum[] | null;
+  _is_null?: boolean | null;
+  _neq?: permission_enum_enum | null;
+  _nin?: permission_enum_enum[] | null;
+}
+
+/**
+ * input type for inserting data into table "permission_enum"
+ */
+export interface permission_enum_insert_input {
+  description?: string | null;
+  permission?: string | null;
+}
+
+/**
+ * input type for inserting object relation for remote table "permission_enum"
+ */
+export interface permission_enum_obj_rel_insert_input {
+  data: permission_enum_insert_input;
+  on_conflict?: permission_enum_on_conflict | null;
+}
+
+/**
+ * on conflict condition type for table "permission_enum"
+ */
+export interface permission_enum_on_conflict {
+  constraint: permission_enum_constraint;
+  update_columns: permission_enum_update_column[];
+  where?: permission_enum_bool_exp | null;
+}
+
+/**
+ * input type for inserting array relation for remote table "permissions"
+ */
+export interface permissions_arr_rel_insert_input {
+  data: permissions_insert_input[];
+  on_conflict?: permissions_on_conflict | null;
+}
+
+/**
+ * Boolean expression to filter rows from the table "permissions". All fields are combined with a logical 'AND'.
+ */
+export interface permissions_bool_exp {
+  _and?: permissions_bool_exp[] | null;
+  _not?: permissions_bool_exp | null;
+  _or?: permissions_bool_exp[] | null;
+  permission?: permission_enum_enum_comparison_exp | null;
+  permissionInfo?: permission_enum_bool_exp | null;
+  role?: Int_comparison_exp | null;
+  roleInfo?: management_bool_exp | null;
+}
+
+/**
+ * input type for inserting data into table "permissions"
+ */
+export interface permissions_insert_input {
+  permission?: permission_enum_enum | null;
+  permissionInfo?: permission_enum_obj_rel_insert_input | null;
+  role?: number | null;
+  roleInfo?: management_obj_rel_insert_input | null;
+}
+
+/**
+ * on conflict condition type for table "permissions"
+ */
+export interface permissions_on_conflict {
+  constraint: permissions_constraint;
+  update_columns: permissions_update_column[];
+  where?: permissions_bool_exp | null;
 }
 
 /**

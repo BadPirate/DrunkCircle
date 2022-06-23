@@ -16,10 +16,14 @@ fragment PublicHasherInfo on hashers {
 }
 `
 
-export const HasherPicker = ({ addName, initialValue, formName }: {
-  addName?: string;
-  formName: string;
+export const HasherPicker = ({
+  addName, initialValue, formName, onSelect,
+}: {
+  addName?: string | undefined;
+  formName?: string;
   initialValue?: PublicHasherInfo[];
+  // eslint-disable-next-line no-unused-vars
+  onSelect?: (hasher: PublicHasherInfo) => void
 }) => {
   const [hashers, setHashers] = useState<PublicHasherInfo[]>(initialValue ?? [])
   const [value, setValue] = useState<string>('')
@@ -43,7 +47,7 @@ query GQLGetHasherNames {
   const items: PublicHasherInfo[] = data?.hashers ?? []
   const hasherIds = hashers.map((f) => f.id)
   return (
-    <Form.Group>
+    <Form.Group style={{ zIndex: 100 }}>
       {
         hashers.length > 0 ? (
           <>
@@ -81,16 +85,21 @@ query GQLGetHasherNames {
         )}
         value={value}
         onChange={(e) => {
+          const s = items.find((h) => h.name?.toLowerCase() === e.target.value.toLocaleLowerCase())
           setValue(e.target.value)
-          setHasher(
-            items.find((h) => h.name?.toLowerCase() === e.target.value.toLocaleLowerCase()),
-          )
+          if (onSelect && s) {
+            onSelect(s)
+          }
+          setHasher(s)
         }}
         onSelect={(v) => {
           const selected = items.find((h) => h.name === v)
           if (!selected) {
             setValue(v)
             return
+          }
+          if (onSelect && selected) {
+            onSelect(selected)
           }
           setHashers([
             ...hashers,
@@ -100,27 +109,33 @@ query GQLGetHasherNames {
           setHasher(undefined)
         }}
       />
-      <Button
-        variant="success"
-        onClick={() => {
-          setHashers([
-            ...hashers,
+      {
+        addName !== undefined ? (
+          <Button
+            variant="success"
+            onClick={() => {
+              setHashers([
+                ...hashers,
             hasher!,
-          ])
-          setValue('')
-          setHasher(undefined)
-        }}
-        disabled={!hasher || hashers.map((h) => h.id).includes(hasher.id)}
-      >
-        {addName}
-      </Button>
+              ])
+              setValue('')
+              setHasher(undefined)
+            }}
+            disabled={!hasher || hashers.map((h) => h.id).includes(hasher.id)}
+          >
+            {addName}
+          </Button>
+        ) : null
+      }
     </Form.Group>
   )
 }
 
 HasherPicker.defaultProps = {
-  addName: 'Select',
+  addName: undefined,
+  formName: 'hasher-picker',
   initialValue: [],
+  onSelect: null,
 }
 
 export default HasherPicker
