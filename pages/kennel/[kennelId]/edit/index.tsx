@@ -21,8 +21,8 @@ import { gcal, getMe } from '../../../../src/api/google'
 import PublicClientHasura from '../../../../src/graph/PublicClientHasura'
 import LoadSpinner from '../../../../src/components/LoadSpinner'
 import ListTable from '../../../../src/components/ListTable'
-import { ilogError } from '../../../../src/func/Logging'
 import { HasherPicker } from '../../../../src/components/HasherPicker'
+import { liveMutate } from '../../../../src/func/liveMutate'
 
 type CalendarOption = {
   id : string,
@@ -125,18 +125,6 @@ CalendarEditPart.defaultProps = {
   credentialUser: undefined,
   accessTokenURL: undefined,
   calendarOptions: undefined,
-}
-
-async function liveMutate(
-  endpoint: string,
-) {
-  return fetch(endpoint).then((d) => d.json()).then((j) => {
-    if (j.error) {
-      // eslint-disable-next-line no-alert
-      alert(j.error)
-    }
-  })
-    .catch((e) => ilogError('ERROR', e))
 }
 
 const PermissionAddPart = ({

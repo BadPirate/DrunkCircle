@@ -9,6 +9,7 @@ import {
 import {
   CallbacksOptions, Profile, Account, Session,
 } from 'next-auth'
+import { randomBytes } from 'crypto'
 import {
   GQLCheckVerificationToken, GQLCreateSession, GQLCreateUser, GQLCreateVerificationToken,
   GQLDeleteSession, GQLGetSessionAndUser, GQLGetUser, GQLGetUserByAccount, GQLGetUserByEmail,
@@ -99,6 +100,39 @@ const adapterClient = HasuraClient(hasuraToken(
   MAX_AGE,
 ))
 
+export const emailToken = async (email: string, daysValid: number = 7) => {
+  const expires = new Date()
+  expires.setDate(expires.getDate() + daysValid)
+  return createVerificationToken({
+    identifier: email,
+    expires,
+    token: randomBytes(32).toString('hex'),
+  })
+}
+
+export const createVerificationToken = async (verificationToken: VerificationToken) => {
+  const { identifier: email, token, expires } = verificationToken
+  ilog('createVerficationToken...', verificationToken)
+  return adapterClient.mutate<GQLCreateVerificationToken>({
+    mutation: gql`
+mutation GQLCreateVerificationToken($token: String, $expires: timestamptz, $email: String) {
+  update_hashers(where: {email: {_eq: $email}}, _set: {login: $token, login_expires: $expires}) {
+    returning {
+      id
+    }
+  }
+}`,
+    variables: { email, token, expires },
+  }).then((result) => {
+    if (!result.data
+      || !result.data.update_hashers || result.data.update_hashers.returning.length < 0) {
+      throw Error('Unable to set verification token')
+    }
+    ilog('createVerficationToken:', verificationToken)
+    return <VerificationToken>verificationToken
+  })
+}
+
 export function HasuraAdapter() {
   return <Adapter>{
     getUserByEmail: async (email: string) => {
@@ -129,28 +163,7 @@ export function HasuraAdapter() {
       })
     },
 
-    createVerificationToken: async (verificationToken: VerificationToken) => {
-      const { identifier: email, token, expires } = verificationToken
-      ilog('createVerficationToken...', verificationToken)
-      return adapterClient.mutate<GQLCreateVerificationToken>({
-        mutation: gql`
-mutation GQLCreateVerificationToken($token: String = "", $expires: timestamptz = "", $email: String = "") {
-  update_hashers(where: {email: {_eq: $email}}, _set: {login: $token, login_expires: $expires}) {
-    returning {
-      id
-    }
-  }
-}`,
-        variables: { email, token, expires },
-      }).then((result) => {
-        if (!result.data
-          || !result.data.update_hashers || result.data.update_hashers.returning.length < 0) {
-          throw Error('Unable to set verification token')
-        }
-        ilog('createVerficationToken:', verificationToken)
-        return <VerificationToken>verificationToken
-      })
-    },
+    createVerificationToken,
 
     useVerificationToken: async (params: {
       identifier: string;

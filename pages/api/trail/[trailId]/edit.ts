@@ -16,7 +16,7 @@ import { fixCalculatedNumbers } from '../../../../src/func/trail/fixCalculatedNu
 import { updateGoogleCalendar } from '../../../../src/func/calendar/updateGoogleCalendar'
 import { encodeQueryString } from '../../../../src/func/encodeQueryString'
 import { GQL_HARE_CHECK_FRAGMENT, hareAuthorized } from '../../../../src/func/trail/hareCheck'
-import { sendEmails } from '../../../../src/func/email'
+import { loginRedirectLink, loginVerificationToken, sendEmails } from '../../../../src/func/email'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await requireKnownUser(req, res)
@@ -120,19 +120,26 @@ query GQLEditTrailInfo($trailId: Int) {
       id: null,
       draft: ot.id,
     })
-    const personalizations = ot.hares.map((h) => {
+    const personalizations = []
+    for (let x = 0; x < ot.hares.length; x += 1) {
+      const h = ot.hares[x]
       const to = h.hasherInfo.email!
-      return {
+      const subject = `${user.name || 'Some wanker'} has suggested some changes to your trail`
+      // eslint-disable-next-line no-await-in-loop
+      const token = await loginVerificationToken(to)
+      personalizations.push({
         to,
-        subject: `${user.name || 'Some wanker'} has suggested some changes to your trail`,
-        text: `${user.name} has suggested some changes to your trail "${ot.name}". Please review the changes, and accept or decline them on the DrunkCircle website.`,
-        url: `${process.env.NEXT_PUBLIC_URL}/trail/${draftId}`,
-      }
-    })
+        subject,
+        dynamicTemplateData: {
+          text: `${user.name} has suggested some changes to your trail "${ot.name}". Please review the changes, and accept or decline them on the DrunkCircle website.`,
+          url: loginRedirectLink(`/trail/${draftId}`, to, token),
+        },
+      })
+    }
     await sendEmails(
       personalizations,
+      'action',
       'draft',
-      'Review Changes',
     )
     res.unstable_revalidate(`/trail/${ot.id}`) // Show the draft on trail page if cached
     res.redirect(`/trail/${draftId}?warning=You don't have permission to edit this trail, but a request has been sent to the hares with your changes, once they've approved it will update.`)

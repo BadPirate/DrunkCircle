@@ -1,9 +1,9 @@
-import { faPenSquare } from '@fortawesome/free-solid-svg-icons'
+import { faPen } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/router'
 import {
   Alert,
-  Button, Card, Col, Container, Row,
+  Button, Card, Container,
 } from 'react-bootstrap'
 import { queryToStrings } from '../func/queryParsing'
 import RootNav, { RootNavProps } from './RootNav'
@@ -33,16 +33,14 @@ export const BodyCard = ({
       <Card>
         <Card.Body>
           {preamble || null}
-          <Row>
-            <Col xs key="title"><h2>{title}</h2></Col>
+          <Card.Title>
+            <span>{title}</span>
             {editLink ? (
-              <Col xs="auto" key="edit">
-                <Button href={editLink} variant="link">
-                  <FontAwesomeIcon icon={faPenSquare} height="30" width="30" />
-                </Button>
-              </Col>
+              <Button href={editLink} className="float-end">
+                <FontAwesomeIcon icon={faPen} />
+              </Button>
             ) : null}
-          </Row>
+          </Card.Title>
           {children}
         </Card.Body>
       </Card>

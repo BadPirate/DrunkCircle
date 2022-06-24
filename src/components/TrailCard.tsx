@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   Alert,
   Button, ButtonGroup, Card, Form, ListGroup,
@@ -19,6 +20,7 @@ import { DataRow, InfoTable } from './ListTable'
 import 'react-datetime/css/react-datetime.css'
 import { GQL_PUBLIC_HASHER_INFO, HasherPicker } from './HasherPicker'
 import 'g-mapify/dist/index.css'
+import AttendancePart from './AttendancePart'
 
 export const GQL_TRAIL_ID = gql`
 ${GQL_PUBLIC_HASHER_INFO}
@@ -220,7 +222,7 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
                     ]
                   }
                 />
-                <ButtonGroup>
+                <ButtonGroup className="mt-3 mb-3">
                   <Button
                     key="google"
                     href={`https://www.google.com/maps/dir//${trail.latitude},${trail.longitude}/`}
@@ -243,6 +245,13 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
         ),
     },
   ])
+
+  if (!editing && !trail.draft) {
+    rows.push({
+      title: "Who's coming?",
+      row: <AttendancePart trailId={trail.id} />,
+    })
+  }
 
   if (!editing && trail.drafts.length > 0) {
     rows.push(
@@ -286,7 +295,7 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
 
   return (
     <BodyCard
-      title={editing ? `Editing trail for ${trail.kennelInfo.short_name}...` : `${trail.calculated_number ? ` #${trail.calculated_number}` : ''} ${trail.name}`}
+      title={editing ? `Editing ${trail.draft ? 'draft' : 'trail'} for ${trail.kennelInfo.short_name}...` : `${trail.calculated_number ? ` #${trail.calculated_number}` : ''} ${trail.name}`}
       editLink={editing || trail.draft ? undefined : `/trail/${trail.id}/edit`}
       preamble={(
         editing ? null
@@ -299,7 +308,7 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
           )
       )}
     >
-      { trail.draft ? (
+      { trail.draft && !editing ? (
         <Alert variant="info">
           <p>
             This trail is a DRAFT, and will only show this way to everyone once it has been
@@ -307,8 +316,9 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
           </p>
           <ButtonGroup>
             <Button href={`/trail/${trail.draft}`}>See Original</Button>
-            <Button variant="danger" href={`/api/trail/${trail.draft}/delete`}>Delete</Button>
-            <Button variant="success" href={`/api/trail/${trail.draft}/accept_draft`}>Accept</Button>
+            <Button variant="danger" href={`/api/trail/${trail.id}/delete`}>Delete</Button>
+            <Button variant="success" href={`/api/trail/${trail.id}/accept_draft`}>Accept</Button>
+            <Button href={`/trail/${trail.id}/edit`}>Edit</Button>
           </ButtonGroup>
         </Alert>
       )

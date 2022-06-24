@@ -11,12 +11,14 @@ import LoadSpinner from '../../../src/components/LoadSpinner'
 import PageCard from '../../../src/components/PageCard'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
 import {
-  GQLGetKennelPage, GQLGetKennelPage_kennels, GQLHareRank, GQLMismanagementView,
+  GQLGetKennelPage, GQLGetKennelPage_kennels, GQLHareRank,
+  GQLMismanagementView, permission_enum_enum,
 } from '../../../src/graph/types'
 import FormattedDate, { MobileAlt } from '../../../src/components/FormattedDate'
-import { queryToStrings } from '../../../src/func/queryParsing'
+import { queryToInt } from '../../../src/func/queryParsing'
+import { useUserPermissions } from '../../../src/func/useUserPerms'
 
-const HareRank = ({ kennelId }: { kennelId: string | string[] }) => {
+const HareRank = ({ kennelId }: { kennelId: number }) => {
   const { data, loading, error } = useQuery<GQLHareRank>(
     gql`
    query GQLHareRank($kennelId: Int) {
@@ -155,8 +157,8 @@ query GQLMismanagementView($kennelId: Int) {
 }
 
 const KennelPage = ({ error: kennelError, data: kennelData }: ServerSideProps) => {
-  const { kennelId } = queryToStrings(useRouter().query)
-
+  const { kennelId } = queryToInt(useRouter().query)
+  const perms = useUserPermissions(kennelId)
   if (!kennelId) return <BodyError error="Kennel ID not set" />
   if (kennelError) return <BodyError error={kennelError} />
   if (!kennelData) return <BodyError error="Unknown Kennel" />
@@ -189,7 +191,7 @@ const KennelPage = ({ error: kennelError, data: kennelData }: ServerSideProps) =
     <PageCard
       title={kennel.name || 'DrunkCircle Kennel'}
       description={kennel.description || undefined}
-      editLink={`/kennel/${kennelId}/edit`}
+      editLink={perms.includes(permission_enum_enum.mismanage) ? `/kennel/${kennelId}/edit` : undefined}
     >
       <InfoTable rows={rows} />
       <Tabs className="mt-3">
@@ -200,7 +202,7 @@ const KennelPage = ({ error: kennelError, data: kennelData }: ServerSideProps) =
           <HareRank kennelId={kennelId} />
         </Tab>
         <Tab eventKey="mismanagement" title="Mismanagement">
-          <MismanagementPart kennelId={parseInt(kennelId, 10)} />
+          <MismanagementPart kennelId={kennelId} />
         </Tab>
       </Tabs>
     </PageCard>

@@ -27,7 +27,6 @@ const PublicClientHasura = new ApolloClient({
     wsLink,
     httpLink,
   ) : httpLink,
-
 })
 
 export default PublicClientHasura

@@ -17,11 +17,13 @@ fragment PublicHasherInfo on hashers {
 `
 
 export const HasherPicker = ({
-  addName, initialValue, formName, onSelect,
+  addName, initialValue, formName, onSelect, hideHashers, allowMultiple,
 }: {
-  addName?: string | undefined;
-  formName?: string;
-  initialValue?: PublicHasherInfo[];
+  addName?: string | undefined
+  formName?: string
+  initialValue?: PublicHasherInfo[]
+  hideHashers?: number[]
+  allowMultiple?: boolean
   // eslint-disable-next-line no-unused-vars
   onSelect?: (hasher: PublicHasherInfo) => void
 }) => {
@@ -44,12 +46,14 @@ query GQLGetHasherNames {
   if (error) {
     return <ErrorBanner error={error} />
   }
-  const items: PublicHasherInfo[] = data?.hashers ?? []
+  const items: PublicHasherInfo[] = data?.hashers.filter(
+    (h) => !(hideHashers || []).includes(h.id),
+  ) ?? []
   const hasherIds = hashers.map((f) => f.id)
   return (
     <Form.Group style={{ zIndex: 100 }}>
       {
-        hashers.length > 0 ? (
+        hashers.length > 0 && allowMultiple ? (
           <>
             { hashers.map((h) => (
               <InputGroup key={h.id}>
@@ -136,6 +140,6 @@ HasherPicker.defaultProps = {
   formName: 'hasher-picker',
   initialValue: [],
   onSelect: null,
+  hideHashers: [],
+  allowMultiple: true,
 }
-
-export default HasherPicker

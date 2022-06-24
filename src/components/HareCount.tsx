@@ -5,7 +5,7 @@ import { GQLPageHasherHares } from '../graph/types'
 import ErrorBanner from './ErrorBanner'
 import LoadSpinner from './LoadSpinner'
 
-const HareCount = ({ hasherId } : {hasherId : string}) => {
+const HareCount = ({ hasherId } : {hasherId : number}) => {
   const { error, data, loading } = useQuery<GQLPageHasherHares>(gql`
 query GQLPageHasherHares($hasherId: Int) {
   kennels(order_by: {trails_aggregate: {count: desc}}) {

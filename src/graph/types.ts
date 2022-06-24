@@ -118,6 +118,36 @@ export interface GQLAddMismanagementVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: GQLUpdateRoleHasher
+// ====================================================
+
+export interface GQLUpdateRoleHasher_update_management {
+  __typename: "management_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLUpdateRoleHasher {
+  /**
+   * update data of the table: "management"
+   */
+  update_management: GQLUpdateRoleHasher_update_management | null;
+}
+
+export interface GQLUpdateRoleHasherVariables {
+  role?: number | null;
+  kennelID?: number | null;
+  hasher?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: GQLUpdateSelfDraft
 // ====================================================
 
@@ -437,6 +467,83 @@ export interface GQLEditTrailInfoVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLHasherEmail
+// ====================================================
+
+export interface GQLHasherEmail_hashers {
+  __typename: "hashers";
+  email: string | null;
+}
+
+export interface GQLHasherEmail {
+  /**
+   * fetch data from the table: "hashers"
+   */
+  hashers: GQLHasherEmail_hashers[];
+}
+
+export interface GQLHasherEmailVariables {
+  hasher?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLInviteTrailInfo
+// ====================================================
+
+export interface GQLInviteTrailInfo_trails_kennelInfo {
+  __typename: "kennels";
+  name: string | null;
+}
+
+export interface GQLInviteTrailInfo_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLInviteTrailInfo_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLInviteTrailInfo_trails_hares_hasherInfo;
+}
+
+export interface GQLInviteTrailInfo_trails {
+  __typename: "trails";
+  /**
+   * An object relationship
+   */
+  kennelInfo: GQLInviteTrailInfo_trails_kennelInfo;
+  name: string;
+  start: any;
+  /**
+   * An array relationship
+   */
+  hares: GQLInviteTrailInfo_trails_hares[];
+}
+
+export interface GQLInviteTrailInfo {
+  /**
+   * An array relationship
+   */
+  trails: GQLInviteTrailInfo_trails[];
+}
+
+export interface GQLInviteTrailInfoVariables {
+  trailId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLKennelIdForTrail
 // ====================================================
 
@@ -462,88 +569,22 @@ export interface GQLKennelIdForTrailVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GQLHasherInfo
+// GraphQL query operation: GQLHasherInfoServer
 // ====================================================
 
-export interface GQLHasherInfo_hashers_gm {
-  __typename: "kennels";
-  id: number;
-  name: string | null;
-}
-
-export interface GQLHasherInfo_hashers_management_kennelInfo {
-  __typename: "kennels";
-  id: number;
-  short_name: string | null;
-}
-
-export interface GQLHasherInfo_hashers_management {
-  __typename: "management";
-  /**
-   * An object relationship
-   */
-  kennelInfo: GQLHasherInfo_hashers_management_kennelInfo;
-  title: string | null;
-}
-
-export interface GQLHasherInfo_hashers {
+export interface GQLHasherInfoServer_hashers {
   __typename: "hashers";
   name: string | null;
-  /**
-   * An array relationship
-   */
-  gm: GQLHasherInfo_hashers_gm[];
-  /**
-   * An array relationship
-   */
-  management: GQLHasherInfo_hashers_management[];
 }
 
-export interface GQLHasherInfo {
+export interface GQLHasherInfoServer {
   /**
    * fetch data from the table: "hashers"
    */
-  hashers: GQLHasherInfo_hashers[];
+  hashers: GQLHasherInfoServer_hashers[];
 }
 
-export interface GQLHasherInfoVariables {
-  hasherId?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL query operation: GQLPageHasher
-// ====================================================
-
-export interface GQLPageHasher_hashers_gm {
-  __typename: "kennels";
-  id: number;
-  name: string | null;
-  short_name: string | null;
-}
-
-export interface GQLPageHasher_hashers {
-  __typename: "hashers";
-  name: string | null;
-  email: string | null;
-  /**
-   * An array relationship
-   */
-  gm: GQLPageHasher_hashers_gm[];
-}
-
-export interface GQLPageHasher {
-  /**
-   * fetch data from the table: "hashers"
-   */
-  hashers: GQLPageHasher_hashers[];
-}
-
-export interface GQLPageHasherVariables {
+export interface GQLHasherInfoServerVariables {
   hasherId?: number | null;
 }
 
@@ -805,12 +846,26 @@ export interface GQLGetKennelPageVariables {
 // GraphQL query operation: GQLGetKennels
 // ====================================================
 
+export interface GQLGetKennels_kennels_trails_aggregate_aggregate {
+  __typename: "trails_aggregate_fields";
+  count: number;
+}
+
+export interface GQLGetKennels_kennels_trails_aggregate {
+  __typename: "trails_aggregate";
+  aggregate: GQLGetKennels_kennels_trails_aggregate_aggregate | null;
+}
+
 export interface GQLGetKennels_kennels {
   __typename: "kennels";
   short_name: string | null;
   name: string | null;
   id: number;
   description: string | null;
+  /**
+   * An aggregate relationship
+   */
+  trails_aggregate: GQLGetKennels_kennels_trails_aggregate;
 }
 
 export interface GQLGetKennels {
@@ -895,6 +950,68 @@ export interface GQLUpdateGoogleTokensVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: GQLUpdateAttendance
+// ====================================================
+
+export interface GQLUpdateAttendance_insert_attendance_one {
+  __typename: "attendance";
+  attended: boolean | null;
+}
+
+export interface GQLUpdateAttendance {
+  /**
+   * insert a single row into the table: "attendance"
+   */
+  insert_attendance_one: GQLUpdateAttendance_insert_attendance_one | null;
+}
+
+export interface GQLUpdateAttendanceVariables {
+  attended?: boolean | null;
+  hasher?: number | null;
+  trail?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL subscription operation: GQLAttendanceView
+// ====================================================
+
+export interface GQLAttendanceView_attendance_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+  id: number;
+}
+
+export interface GQLAttendanceView_attendance {
+  __typename: "attendance";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLAttendanceView_attendance_hasherInfo;
+  attended: boolean | null;
+}
+
+export interface GQLAttendanceView {
+  /**
+   * An array relationship
+   */
+  attendance: GQLAttendanceView_attendance[];
+}
+
+export interface GQLAttendanceViewVariables {
+  trailId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLPageHasherHares
 // ====================================================
 
@@ -926,6 +1043,74 @@ export interface GQLPageHasherHares {
 }
 
 export interface GQLPageHasherHaresVariables {
+  hasherId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLHasherInfoClient
+// ====================================================
+
+export interface GQLHasherInfoClient_hashers_gm {
+  __typename: "kennels";
+  id: number;
+  name: string | null;
+}
+
+export interface GQLHasherInfoClient_hashers_management_kennelInfo {
+  __typename: "kennels";
+  id: number;
+  short_name: string | null;
+}
+
+export interface GQLHasherInfoClient_hashers_management {
+  __typename: "management";
+  /**
+   * An object relationship
+   */
+  kennelInfo: GQLHasherInfoClient_hashers_management_kennelInfo;
+  title: string | null;
+}
+
+export interface GQLHasherInfoClient_hashers_attendance_aggregate_aggregate {
+  __typename: "attendance_aggregate_fields";
+  count: number;
+}
+
+export interface GQLHasherInfoClient_hashers_attendance_aggregate {
+  __typename: "attendance_aggregate";
+  aggregate: GQLHasherInfoClient_hashers_attendance_aggregate_aggregate | null;
+}
+
+export interface GQLHasherInfoClient_hashers {
+  __typename: "hashers";
+  name: string | null;
+  /**
+   * An array relationship
+   */
+  gm: GQLHasherInfoClient_hashers_gm[];
+  /**
+   * An array relationship
+   */
+  management: GQLHasherInfoClient_hashers_management[];
+  /**
+   * An aggregate relationship
+   */
+  attendance_aggregate: GQLHasherInfoClient_hashers_attendance_aggregate;
+}
+
+export interface GQLHasherInfoClient {
+  /**
+   * fetch data from the table: "hashers"
+   */
+  hashers: GQLHasherInfoClient_hashers[];
+}
+
+export interface GQLHasherInfoClientVariables {
   hasherId?: number | null;
 }
 
@@ -1602,26 +1787,32 @@ export interface GQLInsertTrailDraftVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GQLGetUserByEmail
+// GraphQL query operation: GQLUserPerms
 // ====================================================
 
-export interface GQLGetUserByEmail_hashers {
-  __typename: "hashers";
-  id: number;
-  email: string | null;
-  name: string | null;
-  email_verified: any | null;
+export interface GQLUserPerms_management_permissions {
+  __typename: "permissions";
+  permission: permission_enum_enum;
 }
 
-export interface GQLGetUserByEmail {
+export interface GQLUserPerms_management {
+  __typename: "management";
   /**
-   * fetch data from the table: "hashers"
+   * An array relationship
    */
-  hashers: GQLGetUserByEmail_hashers[];
+  permissions: GQLUserPerms_management_permissions[];
 }
 
-export interface GQLGetUserByEmailVariables {
-  email?: string | null;
+export interface GQLUserPerms {
+  /**
+   * An array relationship
+   */
+  management: GQLUserPerms_management[];
+}
+
+export interface GQLUserPermsVariables {
+  hasherId?: number | null;
+  kennelId?: number | null;
 }
 
 /* tslint:disable */
@@ -1656,6 +1847,34 @@ export interface GQLCreateVerificationToken {
 export interface GQLCreateVerificationTokenVariables {
   token?: string | null;
   expires?: any | null;
+  email?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLGetUserByEmail
+// ====================================================
+
+export interface GQLGetUserByEmail_hashers {
+  __typename: "hashers";
+  id: number;
+  email: string | null;
+  name: string | null;
+  email_verified: any | null;
+}
+
+export interface GQLGetUserByEmail {
+  /**
+   * fetch data from the table: "hashers"
+   */
+  hashers: GQLGetUserByEmail_hashers[];
+}
+
+export interface GQLGetUserByEmailVariables {
   email?: string | null;
 }
 
@@ -2264,6 +2483,23 @@ export interface GQLHareCheckFragment {
 //==============================================================
 
 /**
+ * unique or primary key constraints on table "attendance"
+ */
+export enum attendance_constraint {
+  attendance_pkey = "attendance_pkey",
+}
+
+/**
+ * update columns of table "attendance"
+ */
+export enum attendance_update_column {
+  attended = "attended",
+  hasher = "hasher",
+  paid = "paid",
+  trail = "trail",
+}
+
+/**
  * unique or primary key constraints on table "hares"
  */
 export enum hares_constraint {
@@ -2353,6 +2589,7 @@ export enum permission_enum_constraint {
 }
 
 export enum permission_enum_enum {
+  cash = "cash",
   mismanage = "mismanage",
   update_trails = "update_trails",
 }
@@ -2463,6 +2700,48 @@ export interface String_comparison_exp {
 }
 
 /**
+ * input type for inserting array relation for remote table "attendance"
+ */
+export interface attendance_arr_rel_insert_input {
+  data: attendance_insert_input[];
+  on_conflict?: attendance_on_conflict | null;
+}
+
+/**
+ * Boolean expression to filter rows from the table "attendance". All fields are combined with a logical 'AND'.
+ */
+export interface attendance_bool_exp {
+  _and?: attendance_bool_exp[] | null;
+  _not?: attendance_bool_exp | null;
+  _or?: attendance_bool_exp[] | null;
+  attended?: Boolean_comparison_exp | null;
+  hasher?: Int_comparison_exp | null;
+  hasherInfo?: hashers_bool_exp | null;
+  paid?: Boolean_comparison_exp | null;
+  trail?: Int_comparison_exp | null;
+}
+
+/**
+ * input type for inserting data into table "attendance"
+ */
+export interface attendance_insert_input {
+  attended?: boolean | null;
+  hasher?: number | null;
+  hasherInfo?: hashers_obj_rel_insert_input | null;
+  paid?: boolean | null;
+  trail?: number | null;
+}
+
+/**
+ * on conflict condition type for table "attendance"
+ */
+export interface attendance_on_conflict {
+  constraint: attendance_constraint;
+  update_columns: attendance_update_column[];
+  where?: attendance_bool_exp | null;
+}
+
+/**
  * Boolean expression to compare columns of type "bit". All fields are combined with logical 'AND'.
  */
 export interface bit_comparison_exp {
@@ -2539,6 +2818,7 @@ export interface hashers_bool_exp {
   _and?: hashers_bool_exp[] | null;
   _not?: hashers_bool_exp | null;
   _or?: hashers_bool_exp[] | null;
+  attendance?: attendance_bool_exp | null;
   email?: String_comparison_exp | null;
   email_verified?: timestamptz_comparison_exp | null;
   gm?: kennels_bool_exp | null;
@@ -2554,6 +2834,7 @@ export interface hashers_bool_exp {
  * input type for inserting data into table "hashers"
  */
 export interface hashers_insert_input {
+  attendance?: attendance_arr_rel_insert_input | null;
   email?: string | null;
   email_verified?: any | null;
   gm?: kennels_arr_rel_insert_input | null;
