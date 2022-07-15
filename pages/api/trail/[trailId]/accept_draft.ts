@@ -4,7 +4,9 @@ import { updateGoogleCalendar } from '../../../../src/func/calendar/updateGoogle
 import { queryToInt, requireAll } from '../../../../src/func/queryParsing'
 import { requireKnownUser } from '../../../../src/func/ServerHelpers'
 import { deleteTrail } from '../../../../src/func/trail/deleteTrail'
+import { fixCalculatedNumbers } from '../../../../src/func/trail/fixCalculatedNumbers'
 import { GQL_HARE_CHECK_FRAGMENT, hareAuthorized } from '../../../../src/func/trail/hareCheck'
+import moveAttendance, { reidentifyTrail } from '../../../../src/func/trail/moveAttendance'
 import { ServerClient } from '../../../../src/graph/hasura'
 import { GQLAcceptVerify } from '../../../../src/graph/types'
 
@@ -44,20 +46,20 @@ query GQLAcceptVerify($trailId: Int) {
   if (!hareAuthorized(info.draftFor!, user)) {
     throw Error('You are not authorized to accept this trail.')
   }
-  deleteTrail(sc, originalId) // Delete the trail
+  await moveAttendance(sc, originalId, trailId)
   await sc.mutate({
     mutation: gql`
-mutation GQLAcceptDraftMutation($draftId: Int!, $originalId: Int!) {
-  update_trails_by_pk(pk_columns: {id: $draftId}, _set: {id: $originalId, gcal_dirty: true}) {
+mutation GQLClearDraftMutation($trailId: Int!) {
+  update_trails_by_pk(pk_columns: {id: $trailId}, _set: {draft: null}) {
     id
   }
 }
-      `,
-    variables: {
-      draftId: trailId,
-      originalId,
-    },
+    `,
+    variables: { trailId },
   })
+  await deleteTrail(sc, originalId) // Delete the original trail
+  await reidentifyTrail(sc, trailId, originalId)
+  await fixCalculatedNumbers(sc, info.kennel)
   await updateGoogleCalendar(sc, info.kennel)
   res.unstable_revalidate(`/trail/${originalId}`)
   res.unstable_revalidate(`/kennel/${info.kennel}`)

@@ -319,32 +319,6 @@ export interface GQLAcceptVerifyVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: GQLAcceptDraftMutation
-// ====================================================
-
-export interface GQLAcceptDraftMutation_update_trails_by_pk {
-  __typename: "trails";
-  id: number;
-}
-
-export interface GQLAcceptDraftMutation {
-  /**
-   * update single row of the table: "trails"
-   */
-  update_trails_by_pk: GQLAcceptDraftMutation_update_trails_by_pk | null;
-}
-
-export interface GQLAcceptDraftMutationVariables {
-  draftId: number;
-  originalId: number;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
 // GraphQL query operation: GQLDeleteVerify
 // ====================================================
 
@@ -942,33 +916,6 @@ export interface GQLUpdateGoogleTokensVariables {
   accessToken?: string | null;
   refreshToken?: string | null;
   kennelID?: number | null;
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL mutation operation: GQLUpdateAttendance
-// ====================================================
-
-export interface GQLUpdateAttendance_insert_attendance_one {
-  __typename: "attendance";
-  attended: boolean | null;
-}
-
-export interface GQLUpdateAttendance {
-  /**
-   * insert a single row into the table: "attendance"
-   */
-  insert_attendance_one: GQLUpdateAttendance_insert_attendance_one | null;
-}
-
-export interface GQLUpdateAttendanceVariables {
-  attended?: boolean | null;
-  hasher?: number | null;
-  trail?: number | null;
 }
 
 /* tslint:disable */
@@ -1787,6 +1734,61 @@ export interface GQLInsertTrailDraftVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: GQLMoveAttendance
+// ====================================================
+
+export interface GQLMoveAttendance_update_attendance {
+  __typename: "attendance_mutation_response";
+  /**
+   * number of rows affected by the mutation
+   */
+  affected_rows: number;
+}
+
+export interface GQLMoveAttendance {
+  /**
+   * update data of the table: "attendance"
+   */
+  update_attendance: GQLMoveAttendance_update_attendance | null;
+}
+
+export interface GQLMoveAttendanceVariables {
+  from?: number | null;
+  to?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLAcceptDraftMutation
+// ====================================================
+
+export interface GQLAcceptDraftMutation_update_trails_by_pk {
+  __typename: "trails";
+  id: number;
+}
+
+export interface GQLAcceptDraftMutation {
+  /**
+   * update single row of the table: "trails"
+   */
+  update_trails_by_pk: GQLAcceptDraftMutation_update_trails_by_pk | null;
+}
+
+export interface GQLAcceptDraftMutationVariables {
+  from: number;
+  to: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLUserPerms
 // ====================================================
 
@@ -1813,6 +1815,33 @@ export interface GQLUserPerms {
 export interface GQLUserPermsVariables {
   hasherId?: number | null;
   kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLUpdateAttendance
+// ====================================================
+
+export interface GQLUpdateAttendance_insert_attendance_one {
+  __typename: "attendance";
+  attended: boolean | null;
+}
+
+export interface GQLUpdateAttendance {
+  /**
+   * insert a single row into the table: "attendance"
+   */
+  insert_attendance_one: GQLUpdateAttendance_insert_attendance_one | null;
+}
+
+export interface GQLUpdateAttendanceVariables {
+  attended?: boolean | null;
+  hasher?: number | null;
+  trail?: number | null;
 }
 
 /* tslint:disable */

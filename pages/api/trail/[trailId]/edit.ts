@@ -17,6 +17,7 @@ import { updateGoogleCalendar } from '../../../../src/func/calendar/updateGoogle
 import { encodeQueryString } from '../../../../src/func/encodeQueryString'
 import { GQL_HARE_CHECK_FRAGMENT, hareAuthorized } from '../../../../src/func/trail/hareCheck'
 import { loginRedirectLink, loginVerificationToken, sendEmails } from '../../../../src/func/email'
+import moveAttendance, { reidentifyTrail } from '../../../../src/func/trail/moveAttendance'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await requireKnownUser(req, res)
@@ -104,15 +105,15 @@ query GQLEditTrailInfo($trailId: Int) {
 
   if (isAuthorized) {
     // Make edit directly
-    await deleteTrail(sc, ot.id) // Delete original trail
-    await insertTrail(sc, {
+    // Insert new trail
+    const tempId = await insertTrail(sc, {
       ...trailInfo,
-      id: ot.id,
+      id: null,
     })
-    if (ot.id !== info.id) {
-      await deleteTrail(sc, info.id) // Delete draft
-    }
-    fixCalculatedNumbers(sc, ot.kennel)
+    await moveAttendance(sc, ot.id, tempId)
+    await deleteTrail(sc, ot.id) // Delete original trail
+    await reidentifyTrail(sc, tempId, ot.id) // Reidentify
+    await fixCalculatedNumbers(sc, ot.kennel)
     progress = await updateGoogleCalendar(sc, ot.kennel, 1)
   } else {
     const draftId = await insertTrail(sc, {
@@ -131,8 +132,10 @@ query GQLEditTrailInfo($trailId: Int) {
         to,
         subject,
         dynamicTemplateData: {
-          text: `${user.name} has suggested some changes to your trail "${ot.name}". Please review the changes, and accept or decline them on the DrunkCircle website.`,
+          subject,
+          body: `${user.name} has suggested some changes to your trail "${ot.name}". Please review the changes, and accept or decline them on the DrunkCircle website.`,
           url: loginRedirectLink(`/trail/${draftId}`, to, token),
+          action: 'Review Changes',
         },
       })
     }
