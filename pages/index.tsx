@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import {
+  Alert,
   Card,
 } from 'react-bootstrap'
 import ReactMarkdown from 'react-markdown'
@@ -65,6 +66,13 @@ to get started.
       title="DrunkCircle"
       description="A site for finding trail and kennel information for the Hash House Harriers drinking and running club"
     >
+      <Alert variant="info">
+        Looking for the old site?
+        {' '}
+        <a href="https://crusty.drunkcircle.com">crusty.drunkcircle.com</a>
+        .
+        But why not give the update site a chance while you&apos;re here.
+      </Alert>
       <Card.Text>
         Welcome to the DrunkCircle website.  A free resource for Hash House Harriers.
       </Card.Text>
