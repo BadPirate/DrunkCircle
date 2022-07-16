@@ -319,6 +319,31 @@ export interface GQLAcceptVerifyVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL mutation operation: GQLClearDraftMutation
+// ====================================================
+
+export interface GQLClearDraftMutation_update_trails_by_pk {
+  __typename: "trails";
+  id: number;
+}
+
+export interface GQLClearDraftMutation {
+  /**
+   * update single row of the table: "trails"
+   */
+  update_trails_by_pk: GQLClearDraftMutation_update_trails_by_pk | null;
+}
+
+export interface GQLClearDraftMutationVariables {
+  trailId: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL query operation: GQLDeleteVerify
 // ====================================================
 
@@ -535,6 +560,43 @@ export interface GQLKennelIdForTrail {
 
 export interface GQLKennelIdForTrailVariables {
   trailId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLFeedPageLazy
+// ====================================================
+
+export interface GQLFeedPageLazy_trails_kennelInfo {
+  __typename: "kennels";
+  short_name: string | null;
+}
+
+export interface GQLFeedPageLazy_trails {
+  __typename: "trails";
+  name: string;
+  id: number;
+  /**
+   * An object relationship
+   */
+  kennelInfo: GQLFeedPageLazy_trails_kennelInfo;
+  start: any;
+}
+
+export interface GQLFeedPageLazy {
+  /**
+   * An array relationship
+   */
+  trails: GQLFeedPageLazy_trails[];
+}
+
+export interface GQLFeedPageLazyVariables {
+  limit?: number | null;
+  kennels?: string[] | null;
 }
 
 /* tslint:disable */
