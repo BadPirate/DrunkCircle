@@ -89,9 +89,9 @@ query GQLAllSetCalendarEntries($kennelId: Int, $limit: Int) {
       eventId: c.google_calendar!,
     }).catch((e) => {
       if (e.code === '410' || e.code === 410) {
-        ilog(c.id, 'Already deleted')
+        ilog('Calendar event already deleted', c.id)
       } else if (e.code === '404' || e.code === 404) {
-        ilog(c.id, 'Not found')
+        ilog('Calendar event not found', c.id)
       } else {
         ilog(c.id, 'THREW', e.code)
         throw e

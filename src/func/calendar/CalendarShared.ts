@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { ServerClient } from '../../graph/hasura'
 import { GQLVerifyCalendarAdmin } from '../../graph/types'
-import { ilog } from '../Logging'
+import { ilog, ilogError } from '../Logging'
 
 export type LabeledPromise<T> = {
   label: string,
@@ -21,20 +21,17 @@ export async function backoffAll<T>(promises: LabeledPromise<T>[], timeout = 100
 
 export async function apiBackOff<T>(label: string, request: Promise<T>, timeout = 100): Promise<T> {
   return new Promise((resolveRD, failRD) => {
-    ilog(label, 'Initiating with timeout...', timeout)
     setTimeout(() => {
-      ilog(label, 'Triggering...')
       request.catch((e) => {
         if (e.code === '403' || e.code === 403) {
-          ilog(label, 'BACKOFF', e.code, timeout)
+          ilog(label, 'API Backoff', e.code, timeout)
           if (timeout > 60000) {
             ilog(label, 'Fully timed out, skipping')
             return null
           }
-          ilog(label, 'RETRYING')
           return apiBackOff(label, request, timeout * 2)
         }
-        ilog(label, 'Unhandled error code', e.code)
+        ilogError(label, 'Unhandled error code', e.code)
         throw e
       }).then((r) => {
         resolveRD(<T>r)

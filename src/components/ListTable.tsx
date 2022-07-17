@@ -14,7 +14,10 @@ export interface DataRow extends ListRow {
 }
 
 type ListParams = {
-    columns : string[],
+    columns : ({
+      key: string,
+      row: React.ReactNode | string
+    } | string)[],
     rows : ListRow[][],
     className?: string | undefined,
 }
@@ -52,26 +55,32 @@ const ListTable = ({ columns, rows, className } : ListParams) => (
   <Table responsive striped bordered hover className={className}>
     <thead>
       <tr>
-        {columns.map((c) => <th key={c}>{c}</th>)}
+        {columns.map((c) => {
+          if (typeof c === 'string') return <th key={c}>{c}</th>
+          return <th key={c.key}>{c.row}</th>
+        })}
       </tr>
     </thead>
     <tbody>
       { rows.map((r, ri) => (
         <tr key={ri}>
-          {r.map((c, i) => (
-            <td
-              key={columns[i]}
-              style={{
-                whiteSpace: c.wrap ? 'normal' : 'nowrap',
-              }}
-              onClick={() => {
-                if (!c.link) return
-                window.location.href = c.link
-              }}
-            >
-              {c.row}
-            </td>
-          ))}
+          {r.map((c, i) => {
+            const columnVal = columns[i]
+            return (
+              <td
+                key={typeof columnVal === 'string' ? columnVal : columnVal.key}
+                style={{
+                  whiteSpace: c.wrap ? 'normal' : 'nowrap',
+                }}
+                onClick={() => {
+                  if (!c.link) return
+                  window.location.href = c.link
+                }}
+              >
+                {c.row}
+              </td>
+            )
+          })}
         </tr>
       )) }
     </tbody>

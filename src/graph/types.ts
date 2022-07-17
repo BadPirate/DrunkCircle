@@ -926,6 +926,19 @@ export interface GQLPageTrails_trails_kennelInfo {
   id: number;
 }
 
+export interface GQLPageTrails_trails_hares_hasherInfo {
+  __typename: "hashers";
+  name: string | null;
+}
+
+export interface GQLPageTrails_trails_hares {
+  __typename: "hares";
+  /**
+   * An object relationship
+   */
+  hasherInfo: GQLPageTrails_trails_hares_hasherInfo;
+}
+
 export interface GQLPageTrails_trails {
   __typename: "trails";
   calculated_number: number | null;
@@ -935,6 +948,10 @@ export interface GQLPageTrails_trails {
    * An object relationship
    */
   kennelInfo: GQLPageTrails_trails_kennelInfo;
+  /**
+   * An array relationship
+   */
+  hares: GQLPageTrails_trails_hares[];
   id: number;
 }
 
@@ -948,6 +965,33 @@ export interface GQLPageTrails {
 export interface GQLPageTrailsVariables {
   after?: any | null;
   limit?: number | null;
+  filters?: number[] | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: GQLTrailIndexPreload
+// ====================================================
+
+export interface GQLTrailIndexPreload_kennels {
+  __typename: "kennels";
+  google_calendar: string | null;
+  short_name: string | null;
+  google_refresh: string | null;
+  google_token: string | null;
+  id: number;
+  name: string | null;
+}
+
+export interface GQLTrailIndexPreload {
+  /**
+   * fetch data from the table: "kennels"
+   */
+  kennels: GQLTrailIndexPreload_kennels[];
 }
 
 /* tslint:disable */
@@ -2391,6 +2435,25 @@ export interface GQLTrailInfoFragment {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL fragment: GQLKennelInfoFragment
+// ====================================================
+
+export interface GQLKennelInfoFragment {
+  __typename: "kennels";
+  google_calendar: string | null;
+  short_name: string | null;
+  google_refresh: string | null;
+  google_token: string | null;
+  id: number;
+  name: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL fragment: PublicHasherInfo
 // ====================================================
 
@@ -2512,25 +2575,6 @@ export interface GQLInsertFragment {
    * An array relationship
    */
   hares: GQLInsertFragment_hares[];
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
-// ====================================================
-// GraphQL fragment: GQLKennelInfoFragment
-// ====================================================
-
-export interface GQLKennelInfoFragment {
-  __typename: "kennels";
-  google_calendar: string | null;
-  short_name: string | null;
-  google_refresh: string | null;
-  google_token: string | null;
-  id: number;
-  name: string | null;
 }
 
 /* tslint:disable */

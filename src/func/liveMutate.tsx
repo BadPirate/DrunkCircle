@@ -10,5 +10,5 @@ export async function liveMutate(
       alert(j.error)
     }
   })
-    .catch((e) => ilogError('ERROR', e))
+    .catch((e) => ilogError('Live Mutate Error', e))
 }
