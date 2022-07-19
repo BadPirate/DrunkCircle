@@ -43,7 +43,7 @@ query GQLAcceptVerify($trailId: Int) {
   if (!originalId) {
     throw Error('Trail is not a draft')
   }
-  if (!hareAuthorized(info.draftFor!, user)) {
+  if (!await hareAuthorized(sc, req, res, info.draftFor!, user)) {
     throw Error('You are not authorized to accept this trail.')
   }
   await moveAttendance(sc, originalId, trailId)

@@ -36,7 +36,7 @@ query GQLDeleteVerify($trailId: Int) {
   })
   const { kennel, draft } = verifyInfo
 
-  if (!hareAuthorized(verifyInfo, user)) {
+  if (!await hareAuthorized(ac, req, res, verifyInfo, user)) {
     throw new Error('User does not have permission to delete this trail.  Speak with a Hare.')
   }
   await deleteTrail(ac, trailId)

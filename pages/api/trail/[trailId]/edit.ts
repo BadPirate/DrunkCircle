@@ -80,7 +80,7 @@ query GQLEditTrailInfo($trailId: Int) {
   })
 
   const ot : GQLTrailInfoFragment = info.draftFor ?? info
-  const isAuthorized = hareAuthorized(ot, user)
+  const isAuthorized = await hareAuthorized(sc, req, res, ot, user)
 
   let progress = {
     completed: 0,
