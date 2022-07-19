@@ -24,7 +24,14 @@ export async function hareAuthorized(
   hareCheck: GQLHareCheckFragment,
   user: DCKnownUser,
 ) {
+  if (!hareCheck.hares || hareCheck.hares.length < 1) { return true } // Yours if you want it
   if (hareCheck.hares && hareCheck.hares.map((h) => h.hasher).includes(user.id)) { return true }
-  return requireUserWithKennelPermission(sc, req, res, permission_enum_enum.update_trails)
+  return requireUserWithKennelPermission(
+    sc,
+    req,
+    res,
+    permission_enum_enum.update_trails,
+    hareCheck.kennel,
+  )
     .then((u) => (!!u))
 }

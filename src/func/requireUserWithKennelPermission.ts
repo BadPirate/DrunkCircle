@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { queryToInt, requireAll } from './queryParsing'
+import { queryToInt } from './queryParsing'
 import { requireKnownUser } from './ServerHelpers'
 import { GQLKennelPermissionCheck, permission_enum_enum } from '../graph/types'
 
@@ -11,9 +11,12 @@ export async function requireUserWithKennelPermission(
   req: NextApiRequest,
   res: NextApiResponse,
   permission: permission_enum_enum,
+  kennelId: number | null = null,
 ) {
   const { kennelID } = queryToInt(req.query)
-  requireAll({ kennelID })
+  if (!kennelID && !kennelId) {
+    throw Error('Kennel ID not provided requireUser')
+  }
   const user = await requireKnownUser(req, res)
   if (!user) { return null }
   return sc.query<GQLKennelPermissionCheck>({
@@ -24,7 +27,7 @@ query GQLKennelPermissionCheck($kennelID: Int, $permission: permission_enum_enum
   }
 }
         `,
-    variables: { kennelID, userId: user.id, permission },
+    variables: { kennelID: kennelId || kennelID, userId: user.id, permission },
   }).then((r) => {
     if (!r.data.management || r.data.management.length < 1) {
       return null

@@ -312,6 +312,7 @@ export interface GQLAcceptVerify_trails_draftFor_hares {
 export interface GQLAcceptVerify_trails_draftFor {
   __typename: "trails";
   id: number;
+  kennel: number;
   /**
    * An array relationship
    */
@@ -389,11 +390,11 @@ export interface GQLDeleteVerify_trails_hares {
 
 export interface GQLDeleteVerify_trails {
   __typename: "trails";
+  kennel: number;
   /**
    * An array relationship
    */
   hares: GQLDeleteVerify_trails_hares[];
-  kennel: number;
   draft: number | null;
 }
 
@@ -2665,6 +2666,7 @@ export interface GQLHareCheckFragment_hares {
 
 export interface GQLHareCheckFragment {
   __typename: "trails";
+  kennel: number;
   /**
    * An array relationship
    */
