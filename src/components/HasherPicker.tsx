@@ -8,6 +8,8 @@ import ErrorBanner from './ErrorBanner'
 import { GQLGetHasherNames, PublicHasherInfo } from '../graph/types'
 import PublicClientHasura from '../graph/PublicClientHasura'
 import LoadSpinner from './LoadSpinner'
+import { liveMutate } from '../func/liveMutate'
+import { queryToInt, queryToStrings } from '../func/queryParsing'
 
 export const GQL_PUBLIC_HASHER_INFO = gql`
 fragment PublicHasherInfo on hashers {
@@ -15,6 +17,10 @@ fragment PublicHasherInfo on hashers {
   id
 }
 `
+
+// eslint-disable-next-line no-control-regex
+const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/gm
+const isValidEmail = (s: string) => emailRegex.test(s)
 
 export const HasherPicker = ({
   addName, initialValue, formName, onSelect, hideHashers, allowMultiple,
@@ -49,7 +55,25 @@ query GQLGetHasherNames {
   const items: PublicHasherInfo[] = data?.hashers.filter(
     (h) => !(hideHashers || []).includes(h.id),
   ) ?? []
+
   const hasherIds = hashers.map((f) => f.id)
+  const isEmail = value.match('@') !== null
+  const validHasher = hasher && hashers.map((h) => h.id).includes(hasher.id)
+  const validEmail = isEmail && isValidEmail(value)
+
+  const appendHasher = (h: PublicHasherInfo) => {
+    if (onSelect) {
+      onSelect(h)
+    } else {
+      setHashers([
+        ...hashers,
+        h,
+      ])
+    }
+    setValue('')
+    setHasher(undefined)
+  }
+
   return (
     <Form.Group style={{ zIndex: 100 }}>
       {
@@ -81,6 +105,7 @@ query GQLGetHasherNames {
         getItemValue={(i) => i.name}
         inputProps={{
           className: 'form-control',
+          placeholder: 'Hash name or Email',
         }}
         renderItem={(item, isHighlighted) => (
           <div key={item.id} style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
@@ -89,11 +114,8 @@ query GQLGetHasherNames {
         )}
         value={value}
         onChange={(e) => {
-          const s = items.find((h) => h.name?.toLowerCase() === e.target.value.toLocaleLowerCase())
           setValue(e.target.value)
-          if (onSelect && s) {
-            onSelect(s)
-          }
+          const s = items.find((h) => h.name?.toLowerCase() === e.target.value.toLocaleLowerCase())
           setHasher(s)
         }}
         onSelect={(v) => {
@@ -102,15 +124,7 @@ query GQLGetHasherNames {
             setValue(v)
             return
           }
-          if (onSelect && selected) {
-            onSelect(selected)
-          }
-          setHashers([
-            ...hashers,
-            selected,
-          ])
-          setValue('')
-          setHasher(undefined)
+          appendHasher(selected)
         }}
       />
       {
@@ -118,16 +132,34 @@ query GQLGetHasherNames {
           <Button
             variant="success"
             onClick={() => {
-              setHashers([
-                ...hashers,
-            hasher!,
-              ])
-              setValue('')
-              setHasher(undefined)
+              if (validEmail) {
+                const email = value
+                liveMutate(`/api/hasher/from_email?email=${email}`)
+                  .then((j) => {
+                    if (!j) { throw Error('Unexpected non-JSON response from_email') }
+                    const { id } = queryToInt(j)
+                    const { name, error: retrieveError } = queryToStrings(j)
+                    if (!id) {
+                      // eslint-disable-next-line no-alert
+                      alert(retrieveError || 'Unable to add / invite')
+                      return
+                    }
+                    const existing = items.find((h) => h.id === id)
+                    appendHasher(existing || {
+                      __typename: 'hashers',
+                      name,
+                      id,
+                    })
+                  })
+                return
+              }
+              if (hasher) {
+                appendHasher(hasher)
+              }
             }}
-            disabled={!hasher || hashers.map((h) => h.id).includes(hasher.id)}
+            disabled={!validHasher && !validEmail}
           >
-            {addName}
+            {isEmail ? `${addName} by email` : addName}
           </Button>
         ) : null
       }

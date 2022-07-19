@@ -59,6 +59,32 @@ export interface GQLUpdateAccessTokenVariables {
 // This file was automatically generated and should not be edited.
 
 // ====================================================
+// GraphQL query operation: GQLHasherFromEmail
+// ====================================================
+
+export interface GQLHasherFromEmail_hashers {
+  __typename: "hashers";
+  id: number;
+  name: string | null;
+}
+
+export interface GQLHasherFromEmail {
+  /**
+   * fetch data from the table: "hashers"
+   */
+  hashers: GQLHasherFromEmail_hashers[];
+}
+
+export interface GQLHasherFromEmailVariables {
+  email?: string | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
 // GraphQL mutation operation: GQLAddRolePermission
 // ====================================================
 
@@ -1227,6 +1253,7 @@ export interface GQLPageTrailId_trails_hares {
 export interface GQLPageTrailId_trails {
   __typename: "trails";
   calculated_number: number | null;
+  number: number | null;
   description: string | null;
   directions: string | null;
   /**
@@ -1613,6 +1640,41 @@ export interface GQLCalendarUpdate {
 
 export interface GQLCalendarUpdateVariables {
   kennelId?: number | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: GQLInsertHasher
+// ====================================================
+
+export interface GQLInsertHasher_insert_hashers_returning {
+  __typename: "hashers";
+  name: string | null;
+  id: number;
+}
+
+export interface GQLInsertHasher_insert_hashers {
+  __typename: "hashers_mutation_response";
+  /**
+   * data from the rows affected by the mutation
+   */
+  returning: GQLInsertHasher_insert_hashers_returning[];
+}
+
+export interface GQLInsertHasher {
+  /**
+   * insert data into the table: "hashers"
+   */
+  insert_hashers: GQLInsertHasher_insert_hashers | null;
+}
+
+export interface GQLInsertHasherVariables {
+  email: string;
+  name?: string | null;
 }
 
 /* tslint:disable */
@@ -2516,6 +2578,7 @@ export interface PublicFragmentTrail_hares {
 export interface PublicFragmentTrail {
   __typename: "trails";
   calculated_number: number | null;
+  number: number | null;
   description: string | null;
   directions: string | null;
   /**

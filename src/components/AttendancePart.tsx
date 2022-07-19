@@ -111,7 +111,7 @@ subscription GQLAttendanceView($trailId: Int) {
             {
               data.attendance.map((a) => (
                 <ListGroup.Item key={a.hasherInfo.id} action href={`/hasher/${a.hasherInfo.id}`}>
-                  {a.hasherInfo.name}
+                  {a.hasherInfo.name || `Unnamed hasher #${a.hasherInfo.id}`}
                   {' '}
                   <AttendingBadge attending={a.attended} />
                 </ListGroup.Item>

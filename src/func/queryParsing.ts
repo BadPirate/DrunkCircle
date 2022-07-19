@@ -13,7 +13,7 @@ export function requireString(name: string, param: string | string[] | null): st
   return s
 }
 
-type QParams = { [key: string]: string | string[] | undefined; }
+export type QParams = { [key: string]: string | string[] | undefined; }
 
 export function queryToStrings(params: QParams): { [key: string]: string; } {
   const result: { [key: string]: string; } = {}

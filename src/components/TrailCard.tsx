@@ -26,6 +26,7 @@ export const GQL_TRAIL_ID = gql`
 ${GQL_PUBLIC_HASHER_INFO}
 fragment PublicFragmentTrail on trails {
   calculated_number
+  number
   description
   directions
   kennelInfo {
@@ -134,10 +135,10 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
       row: <InputText label="Trail Name" name="name" initialValue={trail.name !== 'Hare needed!' ? trail.name : undefined} />,
     },
     {
-      title: 'Trail Number',
+      title: `Custom Trail Number${trail.calculated_number && !trail.number ? `: #${trail.calculated_number} (auto)` : ''}`,
       row: (
         <>
-          <InputText label="Trail Number" name="calculated_number" initialValue={trail.calculated_number} required={false} />
+          <InputText label="Trail Number" name="number" initialValue={trail.number} required={false} />
           <Form.Text className="text-muted">WARNING: Changing this value will effect the values of future trails as well</Form.Text>
         </>
       ),

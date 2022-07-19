@@ -77,6 +77,7 @@ export const HasuraCallbacks = <Partial<CallbacksOptions<Profile, Account>>>{
     }
     return token
   },
+  redirect: async ({ url }) => `${url}`, // Whatever
   session: async ({ user: { email, name, id }, session: sessionIm, token }) => {
     const session = sessionIm
     ilog('session:', email, token)

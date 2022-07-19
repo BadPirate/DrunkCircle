@@ -61,11 +61,12 @@ query GQLInviteTrailInfo($trailId: Int) {
     const {
       kennelInfo: { name: kennelName }, hares, name: trailName, start,
     } = trailInfo
-    const subject = `${user.name} is wondering if you'll be at ${trailName}?`
+    const subject = `${user.name} is wondering if you will be at ${trailName}?`
     const token = await loginVerificationToken(to)
     await updateAttendance(sc, { attended: null, hasher, trail: trailId })
     const dynamicTemplateData = {
       title: subject,
+      subject,
       body: `${hares.length > 0
         ? `${hares.map((h) => h.hasherInfo.name).join(', ')} ${hares.length === 1 ? 'is' : 'are'} haring`
         : 'There is a trail'} "${trailName}" 
