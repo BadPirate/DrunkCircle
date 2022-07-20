@@ -19,7 +19,7 @@ import { queryToInt } from '../../../src/func/queryParsing'
 import { useUserPermissions } from '../../../src/func/useUserPerms'
 
 const HareRank = ({ kennelId }: { kennelId: number }) => {
-  const { data, loading, error } = useQuery<GQLHareRank>(
+  const { data, error } = useQuery<GQLHareRank>(
     gql`
    query GQLHareRank($kennelId: Int) {
   hashers(where: {name: {_is_null: false}, hares: {trailInfo: {kennel: {_eq: $kennelId}}}}, limit: 50) {
@@ -35,8 +35,8 @@ const HareRank = ({ kennelId }: { kennelId: number }) => {
 `,
     { variables: { kennelId }, client: PublicClientHasura },
   )
-  if (loading || !data) return <LoadSpinner />
   if (error) return <ErrorBanner error={error} />
+  if (!data) return <LoadSpinner />
 
   let hareCounts = [...data.hashers]
   hareCounts.sort((a, b) => b.hares_aggregate.aggregate!.count - a.hares_aggregate.aggregate!.count)
