@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ProgressBar } from 'react-bootstrap'
 import { BodyError } from '../../../../src/components/ErrorBanner'
-import LoadSpinner from '../../../../src/components/LoadSpinner'
+import { LoadSpinner } from '../../../../src/components/LoadSpinner'
 import { BodyCard } from '../../../../src/components/PageCard'
 
 export default () => {

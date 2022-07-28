@@ -19,7 +19,7 @@ import {
 import { ServerClient } from '../../../../src/graph/hasura'
 import { gcal, getMe } from '../../../../src/api/google'
 import PublicClientHasura from '../../../../src/graph/PublicClientHasura'
-import LoadSpinner from '../../../../src/components/LoadSpinner'
+import { LoadSpinner } from '../../../../src/components/LoadSpinner'
 import ListTable from '../../../../src/components/ListTable'
 import { HasherPicker } from '../../../../src/components/HasherPicker'
 import { liveMutate } from '../../../../src/func/liveMutate'

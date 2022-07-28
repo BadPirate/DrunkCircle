@@ -10,7 +10,7 @@ import { GQLAttendanceView } from '../graph/types'
 import ErrorBanner from './ErrorBanner'
 import { GQL_UPDATE_ATTENDANCE } from '../graph/GQL_UPDATE_ATTENDANCE'
 import { HasherPicker } from './HasherPicker'
-import LoadSpinner from './LoadSpinner'
+import { LoadSpinner } from './LoadSpinner'
 import UserRequired from './UserRequired'
 
 const AttendingBadge = ({ attending } : {attending : boolean|null }) => {
@@ -91,7 +91,7 @@ export default ({ trailId }: { trailId: number; }) => {
   const user = sessionData?.user
   const { loading, data, error } = useSubscription<GQLAttendanceView>(gql`
 subscription GQLAttendanceView($trailId: Int) {
-  attendance(where: {trail: {_eq: $trailId}}) {
+  attendance(where: {trail: {_eq: $trailId}}, order_by: {attended: asc}) {
     hasherInfo {
       name
       id

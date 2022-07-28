@@ -1,8 +1,4 @@
-import { Container, Spinner } from 'react-bootstrap'
-import RootNav from './RootNav'
+import { Spinner } from 'react-bootstrap'
 
-const LoadSpinner = () => <Spinner animation="grow" />
-
-export const BodySpinner = () => <RootNav title="Loading"><Container><LoadSpinner /></Container></RootNav>
-
-export default LoadSpinner
+// eslint-disable-next-line import/prefer-default-export
+export const LoadSpinner = () => <Spinner animation="grow" />

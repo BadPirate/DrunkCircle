@@ -14,6 +14,7 @@ config.autoAddCss = false
 // eslint-disable-next-line react/jsx-props-no-spreading
 const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
   const CPT : any = Component
+  const url = useRouter().asPath
   return (
     <SSRProvider>
       <SessionProvider session={session}>
@@ -22,7 +23,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
             type: 'website',
             locale: 'en_US',
             site_name: 'DrunkCircle',
-            url: `${process.env.NEXT_PUBLIC_URL}${useRouter().asPath}`,
+            url,
             images: [{
               url: `${process.env.NEXT_PUBLIC_URL}/og_dc.png`,
               width: 1200,

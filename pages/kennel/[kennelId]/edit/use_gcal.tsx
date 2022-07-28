@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { BodySpinner } from '../../../../src/components/LoadSpinner'
+import { BodySpinner } from '../../../../src/components/BodySpinner'
 import ProgressComponent from '../../../../src/components/ProgressComponent'
 
 export default () => {

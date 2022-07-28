@@ -5,7 +5,7 @@ import ErrorBanner from './ErrorBanner'
 import HareCount from './HareCount'
 import KennelList, { GQL_KENNEL_LIST_FRAGMENT } from './KennelList'
 import ListTable, { DataRow, DataTable } from './ListTable'
-import LoadSpinner from './LoadSpinner'
+import { LoadSpinner } from './LoadSpinner'
 import PublicClientHasura from '../graph/PublicClientHasura'
 import { GQLHasherInfoClient, GQLHasherInfoClient_hashers_management } from '../graph/types'
 

@@ -61,7 +61,7 @@ mutation GQLClearDraftMutation($trailId: Int!) {
   await reidentifyTrail(sc, trailId, originalId)
   await fixCalculatedNumbers(sc, info.kennel)
   await updateGoogleCalendar(sc, info.kennel)
-  res.unstable_revalidate(`/trail/${originalId}`)
-  res.unstable_revalidate(`/kennel/${info.kennel}`)
+  res.revalidate(`/trail/${originalId}`)
+  res.revalidate(`/kennel/${info.kennel}`)
   res.redirect(`/trail/${originalId}?message=Draft accepted.`)
 }

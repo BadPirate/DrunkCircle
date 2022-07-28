@@ -13,7 +13,7 @@ import {
 } from '../../src/graph/types'
 import PublicClientHasura from '../../src/graph/PublicClientHasura'
 import ListTable from '../../src/components/ListTable'
-import LoadSpinner from '../../src/components/LoadSpinner'
+import { LoadSpinner } from '../../src/components/LoadSpinner'
 import { trailDateFormat } from '../../src/func/dateFormats'
 import { ilogError } from '../../src/func/Logging'
 

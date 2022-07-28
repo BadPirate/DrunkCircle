@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap'
 import PublicClientHasura from '../graph/PublicClientHasura'
 import { GQLPageHasherHares } from '../graph/types'
 import ErrorBanner from './ErrorBanner'
-import LoadSpinner from './LoadSpinner'
+import { LoadSpinner } from './LoadSpinner'
 
 const HareCount = ({ hasherId } : {hasherId : number}) => {
   const { error, data, loading } = useQuery<GQLPageHasherHares>(gql`

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { ProgressBar } from 'react-bootstrap'
 import { ProgressResult } from '../func/SharedTypes'
 import { BodyError } from './ErrorBanner'
-import LoadSpinner from './LoadSpinner'
+import { LoadSpinner } from './LoadSpinner'
 import { BodyCard } from './PageCard'
 
 const ProgressComponent = ({

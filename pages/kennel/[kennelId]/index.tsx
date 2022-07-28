@@ -7,7 +7,7 @@ import { GetServerSideProps } from 'next'
 import { Button, Tab, Tabs } from 'react-bootstrap'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
-import LoadSpinner from '../../../src/components/LoadSpinner'
+import { LoadSpinner } from '../../../src/components/LoadSpinner'
 import PageCard from '../../../src/components/PageCard'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
 import {

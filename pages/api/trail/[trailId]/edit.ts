@@ -144,7 +144,7 @@ query GQLEditTrailInfo($trailId: Int) {
       'action',
       'draft',
     )
-    res.unstable_revalidate(`/trail/${ot.id}`) // Show the draft on trail page if cached
+    res.revalidate(`/trail/${ot.id}`) // Show the draft on trail page if cached
     res.redirect(`/trail/${draftId}?warning=You don't have permission to edit this trail, but a request has been sent to the hares with your changes, once they've approved it will update.`)
     return
   }

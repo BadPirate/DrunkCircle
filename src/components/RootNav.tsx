@@ -9,6 +9,7 @@ import { NextSeo } from 'next-seo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUserSlash } from '@fortawesome/free-solid-svg-icons'
 import Image from 'next/image'
+import { LoadSpinner } from './LoadSpinner'
 
 export interface RootNavProps {
   children : React.ReactNode,
@@ -26,6 +27,7 @@ const RootNav = ({
   children, title, type, image, description, imageSize,
 } : RootNavProps) => {
   const { data: session } = useSession()
+  if (session === undefined) return <LoadSpinner />
   return (
     <>
       <NextSeo

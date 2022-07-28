@@ -7,7 +7,7 @@ import AutoComplete from 'react-autocomplete'
 import ErrorBanner from './ErrorBanner'
 import { GQLGetHasherNames, PublicHasherInfo } from '../graph/types'
 import PublicClientHasura from '../graph/PublicClientHasura'
-import LoadSpinner from './LoadSpinner'
+import { LoadSpinner } from './LoadSpinner'
 import { liveMutate } from '../func/liveMutate'
 import { queryToInt, queryToStrings } from '../func/queryParsing'
 
