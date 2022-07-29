@@ -1,6 +1,7 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import {
   Alert,
   Button, Card, Container,
@@ -16,8 +17,12 @@ interface CardInfo extends RootNavProps {
 export const BodyCard = ({
   title, children, preamble, editLink,
 } : CardInfo) => {
-  const { message, warning } = queryToStrings(useRouter().query)
-
+  const { query } = useRouter()
+  const { message, warning } = queryToStrings(query)
+  useEffect(() => {
+    if (!message && !warning) return
+    window.history.pushState('', '', window.location.pathname)
+  }, [message, warning])
   return (
     <>
       { message ? (
