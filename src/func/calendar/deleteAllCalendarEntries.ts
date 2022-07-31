@@ -1,11 +1,13 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable import/prefer-default-export */
-import { gql } from '@apollo/client'
 import { gcal } from '../../api/google'
 import { ServerClient } from '../../graph/hasura'
 import {
-  GQLAllSetCalendarEntries, GQLClearCalendarInfoFromTrail, GQLCountSetCalendarEntries,
-  GQLGetGoogleCalendarId,
+  GqlAllSetCalendarEntriesDocument, GqlAllSetCalendarEntriesQuery,
+  GqlClearCalendarInfoFromTrailDocument,
+  GqlClearCalendarInfoFromTrailMutation, GqlCountSetCalendarEntriesDocument,
+  GqlCountSetCalendarEntriesQuery,
+  GqlGetGoogleCalendarIdDocument, GqlGetGoogleCalendarIdQuery,
 } from '../../graph/types'
 import { ilog } from '../Logging'
 import { GoogleLimit } from '../ServerHelpers'
@@ -23,16 +25,8 @@ export async function deleteAllCalendarEntries(
   }
 
   const ac = ServerClient()
-  const calendarInfo = await ac.query<GQLGetGoogleCalendarId>({
-    query: gql`
-query GQLGetGoogleCalendarId($kennelId: Int) {
-  kennels(where: {id: {_eq: $kennelId}}, limit: 1) {
-    google_calendar
-    google_refresh
-    google_token
-  }
-}
-    `,
+  const calendarInfo = await ac.query<GqlGetGoogleCalendarIdQuery>({
+    query: GqlGetGoogleCalendarIdDocument,
     variables: { kennelId },
   }).then((r) => (r.data.kennels.length > 0 ? r.data.kennels[0] : null))
 
@@ -45,15 +39,8 @@ query GQLGetGoogleCalendarId($kennelId: Int) {
     return progressResult
   }
 
-  const total = await ac.query<GQLCountSetCalendarEntries>({
-    query: gql`
-    query GQLCountSetCalendarEntries($kennelId: Int) {
-      trails_aggregate(where: {kennel: {_eq: $kennelId}, google_calendar: {_is_null: false}}) {
-        aggregate {
-          count
-        }
-      }
-    }`,
+  const total = await ac.query<GqlCountSetCalendarEntriesQuery>({
+    query: GqlCountSetCalendarEntriesDocument,
     variables: { kennelId },
   }).then((r) => r.data.trails_aggregate.aggregate?.count || 0)
 
@@ -63,15 +50,8 @@ query GQLGetGoogleCalendarId($kennelId: Int) {
 
   progressResult.total = total
 
-  const entries = await ac.query<GQLAllSetCalendarEntries>({
-    query: gql`
-query GQLAllSetCalendarEntries($kennelId: Int, $limit: Int) {
-  trails(where: {kennel: {_eq: $kennelId}, google_calendar: {_is_null: false}}, limit: $limit) {
-    google_calendar
-    id
-  }
-}
-        `,
+  const entries = await ac.query<GqlAllSetCalendarEntriesQuery>({
+    query: GqlAllSetCalendarEntriesDocument,
     variables: { kennelId, limit },
   }).then((r) => {
     if (r.error) { throw r.error }
@@ -99,14 +79,8 @@ query GQLAllSetCalendarEntries($kennelId: Int, $limit: Int) {
     }))
       .then(() => {
         ilog(c.id, 'Clearing...')
-        return ac.mutate<GQLClearCalendarInfoFromTrail>({
-          mutation: gql`
-mutation GQLClearCalendarInfoFromTrail($trailIds: [Int!]) {
-  update_trails(where: {id: {_in: $trailIds}}, _set: {google_calendar: null}) {
-    affected_rows
-  }
-}
-          `,
+        return ac.mutate<GqlClearCalendarInfoFromTrailMutation>({
+          mutation: GqlClearCalendarInfoFromTrailDocument,
           variables: { trailIds: [c.id] },
         })
       })

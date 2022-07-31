@@ -1,9 +1,8 @@
 /* eslint-disable camelcase */
-import { gql } from '@apollo/client'
 import { Credentials } from 'google-auth-library'
 import { calendar_v3, google } from 'googleapis'
 import { ServerClient } from '../graph/hasura'
-import { GQLUpdateGoogleTokens } from '../graph/types'
+import { GqlUpdateGoogleTokensDocument, GqlUpdateGoogleTokensMutation } from '../graph/types'
 
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_PUBLIC_URL } = process.env
 
@@ -25,14 +24,8 @@ export async function storeTokenForKennel(kennelID: number, token: Credentials) 
   if (!token.access_token || !token.refresh_token) {
     return Promise.reject(Error('Access or refresh token not set'))
   }
-  return ServerClient().mutate<GQLUpdateGoogleTokens>({
-    mutation: gql`
-mutation GQLUpdateGoogleTokens($accessToken: String, $refreshToken: String,  $kennelID: Int) {
-  update_kennels(_set: {google_refresh: $refreshToken, google_token: $accessToken}, where: {id: {_eq: $kennelID}}) {
-    affected_rows
-  }
-}
-        `,
+  return ServerClient().mutate<GqlUpdateGoogleTokensMutation>({
+    mutation: GqlUpdateGoogleTokensDocument,
     variables: {
       accessToken: token.access_token,
       refreshToken: token.refresh_token,

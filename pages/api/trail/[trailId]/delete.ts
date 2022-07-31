@@ -1,14 +1,13 @@
 /* eslint-disable camelcase */
-import { gql } from '@apollo/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { updateGoogleCalendar } from '../../../../src/func/calendar/updateGoogleCalendar'
 import { queryToInt, requireAll } from '../../../../src/func/queryParsing'
 import { requireKnownUser } from '../../../../src/func/ServerHelpers'
 import { deleteTrail } from '../../../../src/func/trail/deleteTrail'
 import { fixCalculatedNumbers } from '../../../../src/func/trail/fixCalculatedNumbers'
-import { GQL_HARE_CHECK_FRAGMENT, hareAuthorized } from '../../../../src/func/trail/hareCheck'
+import { hareAuthorized } from '../../../../src/func/trail/hareCheck'
 import { ServerClient } from '../../../../src/graph/hasura'
-import { GQLDeleteVerify } from '../../../../src/graph/types'
+import { GqlDeleteVerifyDocument, GqlDeleteVerifyQuery } from '../../../../src/graph/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await requireKnownUser(req, res)
@@ -16,17 +15,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { trailId } = queryToInt(req.query)
   requireAll({ trailId })
   const ac = ServerClient()
-  const verifyInfo = await ac.query<GQLDeleteVerify>({
-    query: gql`
-${GQL_HARE_CHECK_FRAGMENT}
-query GQLDeleteVerify($trailId: Int) {
-  trails(where: {id: {_eq: $trailId}}) {
-    ...GQLHareCheckFragment
-    kennel
-    draft
-  }
-}
-      `,
+  const verifyInfo = await ac.query<GqlDeleteVerifyQuery>({
+    query: GqlDeleteVerifyDocument,
     variables: { trailId },
   }).then((r) => {
     if (!r.data.trails || r.data.trails.length < 1) {

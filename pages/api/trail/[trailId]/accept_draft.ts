@@ -1,14 +1,15 @@
-import { gql } from '@apollo/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { updateGoogleCalendar } from '../../../../src/func/calendar/updateGoogleCalendar'
 import { queryToInt, requireAll } from '../../../../src/func/queryParsing'
 import { requireKnownUser } from '../../../../src/func/ServerHelpers'
 import { deleteTrail } from '../../../../src/func/trail/deleteTrail'
 import { fixCalculatedNumbers } from '../../../../src/func/trail/fixCalculatedNumbers'
-import { GQL_HARE_CHECK_FRAGMENT, hareAuthorized } from '../../../../src/func/trail/hareCheck'
+import { hareAuthorized } from '../../../../src/func/trail/hareCheck'
 import moveAttendance, { reidentifyTrail } from '../../../../src/func/trail/moveAttendance'
 import { ServerClient } from '../../../../src/graph/hasura'
-import { GQLAcceptVerify } from '../../../../src/graph/types'
+import {
+  GqlAcceptVerifyDocument, GqlAcceptVerifyQuery, GqlClearDraftMutationDocument,
+} from '../../../../src/graph/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await requireKnownUser(req, res)
@@ -16,20 +17,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { trailId } = queryToInt(req.query)
   requireAll({ trailId })
   const sc = ServerClient()
-  const info = await sc.query<GQLAcceptVerify>({
-    query: gql`
-${GQL_HARE_CHECK_FRAGMENT}
-query GQLAcceptVerify($trailId: Int) {
-  trails(where: {id: {_eq: $trailId}}, limit: 1) {
-    draft
-    kennel
-    draftFor {
-        id
-      ...GQLHareCheckFragment
-    }
-  }
-}
-      `,
+  const info = await sc.query<GqlAcceptVerifyQuery>({
+    query: GqlAcceptVerifyDocument,
     variables: { trailId },
   }).then((r) => {
     if (!r.data.trails || r.data.trails.length < 1) {
@@ -48,13 +37,7 @@ query GQLAcceptVerify($trailId: Int) {
   }
   await moveAttendance(sc, originalId, trailId)
   await sc.mutate({
-    mutation: gql`
-mutation GQLClearDraftMutation($trailId: Int!) {
-  update_trails_by_pk(pk_columns: {id: $trailId}, _set: {draft: null}) {
-    id
-  }
-}
-    `,
+    mutation: GqlClearDraftMutationDocument,
     variables: { trailId },
   })
   await deleteTrail(sc, originalId) // Delete the original trail

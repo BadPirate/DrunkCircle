@@ -2,22 +2,21 @@
 import {
   Button, Container, Dropdown,
 } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import RootNav from '../../src/components/RootNav'
 import ErrorBanner from '../../src/components/ErrorBanner'
-import {
-  GQLKennelInfoFragment, GQLPageTrails, GQLPageTrails_trails,
-  GQLTrailIndexPreload,
-} from '../../src/graph/types'
 import PublicClientHasura from '../../src/graph/PublicClientHasura'
 import ListTable from '../../src/components/ListTable'
 import { LoadSpinner } from '../../src/components/LoadSpinner'
 import { trailDateFormat } from '../../src/func/dateFormats'
 import { ilogError } from '../../src/func/Logging'
+import {
+  GqlKennelInfoFragment, GqlPageTrailFragment, GqlTrailIndexPreloadDocument,
+  GqlTrailIndexPreloadQuery, useGqlPageTrailsQuery,
+} from '../../src/graph/types'
 
-const Trail = ({ kennels: allKennels } : {kennels : GQLKennelInfoFragment[]}) => {
+const Trail = ({ kennels: allKennels } : {kennels : GqlKennelInfoFragment[]}) => {
   const [limit, setLimit] = useState(10)
   const [showHareless, setShowHareless] = useState<boolean>(true)
   const [after] = useState(() => {
@@ -38,34 +37,17 @@ const Trail = ({ kennels: allKennels } : {kennels : GQLKennelInfoFragment[]}) =>
     if (updatedFilters.length === filters.length) {
       updatedFilters.push(kennelId)
     }
-    console.log('FILTERS', updatedFilters)
     setFilters(updatedFilters)
     localStorage.setItem('kennelFilters', updatedFilters.join(','))
   }
-  const { loading, error, data } = useQuery<GQLPageTrails>(gql`
-query GQLPageTrails($after: timestamptz = "now()", $limit: Int, $filters: [Int!]) {
-  trails(limit: $limit, order_by: {start: asc}, where: {start: {_gt: $after}, draft: {_is_null: true}, kennel: {_nin: $filters}}) {
-    calculated_number
-    name
-    start
-    kennelInfo {
-      short_name
-      id
-    }
-    hares {
-      hasherInfo {
-        name
-      }
-    }
-    id
-  }
-}
-`, { client: PublicClientHasura, variables: { limit, after, filters } })
+  const { loading, error, data } = useGqlPageTrailsQuery(
+    { client: PublicClientHasura, variables: { limit, after, filters } },
+  )
   const kennels : { [key: string] : {
     toggled: boolean,
     id: number
   } } = {}
-  let showTrails : GQLPageTrails_trails[] = []
+  let showTrails : GqlPageTrailFragment[] = []
   if (data) {
     showTrails = data.trails
     if (!showHareless) {
@@ -142,7 +124,7 @@ query GQLPageTrails($after: timestamptz = "now()", $limit: Int, $filters: [Int!]
                       setShowHareless(!showHareless)
                     }}
                   >
-                    <input type="checkbox" readOnly checked className="form-check-input me-1" />
+                    <input type="checkbox" readOnly checked={showHareless} className="form-check-input me-1" />
                     Show trails with no hare
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -182,18 +164,8 @@ query GQLPageTrails($after: timestamptz = "now()", $limit: Int, $filters: [Int!]
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const kennels = await PublicClientHasura.query<GQLTrailIndexPreload>({
-    query: gql`
-fragment GQLKennelInfoFragment on kennels {
-  id
-  short_name
-}
-query GQLTrailIndexPreload {
-  kennels {
-    ...GQLKennelInfoFragment
-  }
-}
-    `,
+  const kennels = await PublicClientHasura.query<GqlTrailIndexPreloadQuery>({
+    query: GqlTrailIndexPreloadDocument,
   }).then((r) => {
     if (!r.data) {
       ilogError('Error preloading kennels', r)

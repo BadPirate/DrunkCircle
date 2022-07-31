@@ -1,21 +1,18 @@
 /* eslint-disable camelcase */
 /* eslint-disable react/jsx-props-no-spreading */
-import { gql, useQuery, useSubscription } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import {
+  Accordion,
   Button, ButtonGroup, Card, Form, InputGroup, ListGroup, OverlayTrigger, Row, Tooltip,
 } from 'react-bootstrap'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faRightLeft, faTrash } from '@fortawesome/free-solid-svg-icons'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ErrorBanner, { BodyError } from '../../../../src/components/ErrorBanner'
 import PageCard from '../../../../src/components/PageCard'
 import { accessURL } from '../../../../src/func/calendar/CalendarAuthFlow'
-import {
-  GQLKennelEditPageSSR, GQLKennelEditPageSSR_kennels, GQLKennelRolesEditView,
-  GQLPermissionsEnum, PublicHasherInfo,
-} from '../../../../src/graph/types'
 import { ServerClient } from '../../../../src/graph/hasura'
 import { gcal, getMe } from '../../../../src/api/google'
 import PublicClientHasura from '../../../../src/graph/PublicClientHasura'
@@ -23,6 +20,16 @@ import { LoadSpinner } from '../../../../src/components/LoadSpinner'
 import ListTable from '../../../../src/components/ListTable'
 import { HasherPicker } from '../../../../src/components/HasherPicker'
 import { liveMutate } from '../../../../src/func/liveMutate'
+import {
+  GqlKennelEditPageKennelFragment,
+  GqlKennelEditPageSsrDocument,
+  GqlKennelEditPageSsrQuery,
+  GqlKennelRolesEditViewDocument,
+  GqlKennelRolesEditViewSubscription,
+  PublicHasherInfoFragment, useGqlKennelEditPartQuery, useGqlPermissionsEnumQuery,
+} from '../../../../src/graph/types'
+import { InputDate } from '../../../../src/components/InputDate'
+import 'react-datetime/css/react-datetime.css'
 
 type CalendarOption = {
   id : string,
@@ -101,11 +108,8 @@ const CalendarEditPart = ({
     })()
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>Google Calendar Sync</Card.Title>
-        Automatically synchronize the r*n calendar with a google calendar.
-      </Card.Body>
+    <div>
+      <p>Automatically synchronize the r*n calendar with a google calendar.</p>
       {body}
       {
         credentialUser ? (
@@ -116,7 +120,7 @@ const CalendarEditPart = ({
           </Button>
         ) : null
       }
-    </Card>
+    </div>
   )
 }
 
@@ -137,16 +141,8 @@ const PermissionAddPart = ({
   hide: string[]
 }) => {
   const [selected, setSelected] = useState<string|null>(null)
-  const { loading, error, data } = useQuery<GQLPermissionsEnum>(gql`
-query GQLPermissionsEnum {
-  permission_enum {
-    description
-    permission
-  }
-}
-  `, {
-    client: PublicClientHasura,
-  })
+  const { loading, error, data } = useGqlPermissionsEnumQuery({ client: PublicClientHasura })
+
   if (loading) return <LoadSpinner />
   if (error) return <ErrorBanner error={error} />
   if (!data?.permission_enum || data.permission_enum.length < 1) { return <ErrorBanner error="No permissions defined" /> }
@@ -182,7 +178,7 @@ query GQLPermissionsEnum {
 
 const RoleAddPart = ({ kennelId } : {kennelId : number}) => {
   const [roleName, setRoleName] = useState('')
-  const [hasher, setHasher] = useState<PublicHasherInfo|null>(null)
+  const [hasher, setHasher] = useState<PublicHasherInfoFragment|null>(null)
   return (
     <InputGroup>
       <Form.Control placeholder="Role Name" onChange={(e : React.ChangeEvent<HTMLInputElement>) => setRoleName(e.target.value)} />
@@ -243,29 +239,13 @@ const RoleEditPart = ({
 } : {
   kennelId : number
 }) => {
-  const { loading, error, data } = useSubscription<GQLKennelRolesEditView>(gql`
-subscription GQLKennelRolesEditView($kennelId: Int) {
-  kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
-    management {
-      id
-      hasherInfo {
-        id
-        name
-      }
-      permissions {
-        permissionInfo {
-          description
-          permission
-        }
-      }
-      title
-    }
-  }
-}
-  `, {
-    variables: { kennelId },
-    client: PublicClientHasura,
-  })
+  const { loading, error, data } = useSubscription<GqlKennelRolesEditViewSubscription>(
+    GqlKennelRolesEditViewDocument,
+    {
+      variables: { kennelId },
+      client: PublicClientHasura,
+    },
+  )
 
   const body = (() => {
     if (loading) {
@@ -355,13 +335,144 @@ subscription GQLKennelRolesEditView($kennelId: Int) {
   })()
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>Edit Mismanagement</Card.Title>
-        { body }
-        <RoleAddPart kennelId={kennelId} />
-      </Card.Body>
-    </Card>
+    <>
+      { body }
+      <RoleAddPart kennelId={kennelId} />
+    </>
+  )
+}
+
+const FormPart = ({
+  name, label, children, help,
+} : {
+  name: string,
+  label: string,
+  children: React.ReactNode,
+  help: string | undefined
+}) => (
+  <Form.Group controlId={name} className="mb-3">
+    <Form.Label>{label}</Form.Label>
+    {children}
+    { help ? <Form.Text className="text-muted">{help}</Form.Text> : null }
+  </Form.Group>
+)
+
+const FormControlPart = ({
+  name, label, options,
+} : {
+  name: string,
+  label: string,
+  options: {[key: string] : any }
+}) => (
+  <Form.Control
+    placeholder={label}
+    name={name}
+    {...options}
+  />
+)
+
+const FormInputPart = ({
+  name, label, value, help, options,
+} : {
+  name: string,
+  label: string,
+  value?: string | null | undefined | number,
+  options?: {[key: string] : any }
+  help?: string | undefined
+}) => (
+  <FormPart name={name} label={label} help={help}>
+    <FormControlPart
+      label={label}
+      name={name}
+      options={{
+        ...options,
+        defaultValue: value,
+      }}
+    />
+  </FormPart>
+)
+
+FormInputPart.defaultProps = {
+  help: undefined,
+  options: [],
+  value: undefined,
+}
+
+const KennelEditPart = ({ kennelId } : {kennelId : number}) => {
+  const { loading, data, error } = useGqlKennelEditPartQuery({
+    client: PublicClientHasura,
+    variables: { kennelId },
+  })
+  const kennel = data && data.kennels.length > 0 ? data.kennels[0] : undefined
+  const [frequency, setFrequency] = useState<number|undefined>(undefined)
+  const kf = kennel ? kennel.frequency : null
+  useEffect(() => {
+    if (!kf || frequency !== undefined) return
+    setFrequency(kf / 7)
+  }, [kf, setFrequency, frequency])
+  if (error) return <ErrorBanner error={error} />
+  if (loading || !data) return <LoadSpinner />
+  if (!kennel) return <ErrorBanner error="Kennel not found" />
+  let next : Date
+  if (kennel.next) {
+    next = kennel.next
+  } else if (kennel.trails.length > 0) {
+    next = kennel.trails[0].start
+  } else {
+    next = new Date()
+    next.setDate(next.getDate() + 1)
+  }
+  while (next < new Date()) {
+    next.setDate(next.getDate() + 7)
+  }
+  return (
+    <Form method="GET" action={`/api/kennel/${kennelId}/edit`}>
+      <FormInputPart name="name" label="Kennel Name" value={kennel.name} options={{ required: 1 }} />
+      <FormInputPart
+        name="short"
+        label="Short Name"
+        help="Short / Acronymn version of hash name, no spaces or special characters please"
+        value={kennel.short_name}
+        options={{ required: 1 }}
+      />
+      <FormInputPart name="area" label="General Area" value={kennel.area} />
+      <FormInputPart name="web" label="Website" value={kennel.web} />
+      <FormInputPart
+        name="description"
+        label="Hash Description"
+        value={kennel.description}
+        options={{
+          as: 'textarea',
+          required: 1,
+        }}
+      />
+      <FormPart
+        name="frequency"
+        label="Trail Frequency"
+        help="Trail should automatically be created every x weeks, set to 0 for adhoc trails only"
+      >
+        <FormControlPart
+          name="frequency"
+          label="Trail Frequency in Weeks"
+          options={{
+            defaultValue: frequency,
+            onChange: (e: React.FormEvent<HTMLInputElement>) => {
+              setFrequency(parseInt(e.currentTarget.value, 10) || 0)
+            },
+          }}
+        />
+        {
+          frequency !== undefined && frequency > 0 && next ? (
+            <Form.Group controlId="next">
+              <Form.Label>Next Trail</Form.Label>
+              <InputDate name="next" initialValue={next} />
+            </Form.Group>
+          ) : null
+        }
+      </FormPart>
+      <FormInputPart name="price" label="Trail Price" value={(kennel.price || 0).toFixed(2)} />
+      <Button type="submit" variant="success">Save Changes</Button>
+    </Form>
   )
 }
 
@@ -375,14 +486,29 @@ const EditKennelPage = ({ error, body } : EditKennelProps) => {
   const { shortName, kennelId } = body
   return (
     <PageCard title={`Edit ${shortName}:`}>
-      <RoleEditPart kennelId={parseInt(kennelId, 10)} />
-      <CalendarEditPart
-        kennelId={kennelId}
-        calendarSummary={body.calendarSummary}
-        credentialUser={body.credentialUser}
-        accessTokenURL={body.accessTokenURL}
-        calendarOptions={body.calendarOptions}
-      />
+      <Accordion>
+        <Accordion.Item eventKey="info">
+          <Accordion.Header>Kennel Info</Accordion.Header>
+          <Accordion.Body><KennelEditPart kennelId={parseInt(kennelId, 10)} /></Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="mismanagement">
+          <Accordion.Header>Mismanagement</Accordion.Header>
+          <Accordion.Body><RoleEditPart kennelId={parseInt(kennelId, 10)} /></Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="calendar">
+          <Accordion.Header>Calendar Sync</Accordion.Header>
+          <Accordion.Body>
+            <CalendarEditPart
+              kennelId={kennelId}
+              calendarSummary={body.calendarSummary}
+              credentialUser={body.credentialUser}
+              accessTokenURL={body.accessTokenURL}
+              calendarOptions={body.calendarOptions}
+            />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+
       <Row className="mt-3">
         <Button href={`/kennel/${kennelId}`} variant="success">Done</Button>
       </Row>
@@ -395,7 +521,7 @@ EditKennelPage.defaultProps = {
   error: undefined,
 }
 
-async function setCalendarEditProps(kennel : GQLKennelEditPageSSR_kennels, bodyFunc: EditKennelProps['body']) {
+async function setCalendarEditProps(kennel : GqlKennelEditPageKennelFragment, bodyFunc: EditKennelProps['body']) {
   const body = bodyFunc
   if (!body) return null
   if (!kennel.google_token || !kennel.google_refresh) {
@@ -442,18 +568,8 @@ export const getServerSideProps: GetServerSideProps<EditKennelProps> = async (co
   const { user: { email } } = session
 
   try {
-    const kennel = await ServerClient().query<GQLKennelEditPageSSR>({
-      query: gql`
-        query GQLKennelEditPageSSR($kennelId: Int, $email: String) {
-          kennels(where: {id: {_eq: $kennelId}, gm: {email: {_eq: $email}}}, limit: 1) {
-            id
-            short_name
-            google_refresh
-            google_token
-            google_calendar
-          }
-        }
-      `,
+    const kennel = await ServerClient().query<GqlKennelEditPageSsrQuery>({
+      query: GqlKennelEditPageSsrDocument,
       variables: { kennelId, email },
     })
       .then((r) => {

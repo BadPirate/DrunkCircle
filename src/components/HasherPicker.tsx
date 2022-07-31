@@ -1,22 +1,15 @@
+/* eslint-disable import/prefer-default-export */
 import {
   Button, Form, FormControl, InputGroup,
 } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
 import { useState } from 'react'
 import AutoComplete from 'react-autocomplete'
 import ErrorBanner from './ErrorBanner'
-import { GQLGetHasherNames, PublicHasherInfo } from '../graph/types'
 import PublicClientHasura from '../graph/PublicClientHasura'
 import { LoadSpinner } from './LoadSpinner'
 import { liveMutate } from '../func/liveMutate'
 import { queryToInt, queryToStrings } from '../func/queryParsing'
-
-export const GQL_PUBLIC_HASHER_INFO = gql`
-fragment PublicHasherInfo on hashers {
-  name
-  id
-}
-`
+import { PublicHasherInfoFragment, useGqlGetHasherNamesQuery } from '../graph/types'
 
 // eslint-disable-next-line no-control-regex
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/gm
@@ -27,23 +20,16 @@ export const HasherPicker = ({
 }: {
   addName?: string | undefined
   formName?: string
-  initialValue?: PublicHasherInfo[]
+  initialValue?: PublicHasherInfoFragment[]
   hideHashers?: number[]
   allowMultiple?: boolean
   // eslint-disable-next-line no-unused-vars
-  onSelect?: (hasher: PublicHasherInfo) => void
+  onSelect?: (hasher: PublicHasherInfoFragment) => void
 }) => {
-  const [hashers, setHashers] = useState<PublicHasherInfo[]>(initialValue ?? [])
+  const [hashers, setHashers] = useState<PublicHasherInfoFragment[]>(initialValue ?? [])
   const [value, setValue] = useState<string>('')
-  const [hasher, setHasher] = useState<PublicHasherInfo | undefined>(undefined)
-  const { loading, data, error } = useQuery<GQLGetHasherNames>(gql`
-${GQL_PUBLIC_HASHER_INFO}
-query GQLGetHasherNames {
-  hashers(where: {name: {_is_null: false}}, order_by: {name: asc}) {
-    ...PublicHasherInfo
-  }
-}
-  `, {
+  const [hasher, setHasher] = useState<PublicHasherInfoFragment | undefined>(undefined)
+  const { loading, data, error } = useGqlGetHasherNamesQuery({
     client: PublicClientHasura,
   })
   if (loading) {
@@ -52,7 +38,7 @@ query GQLGetHasherNames {
   if (error) {
     return <ErrorBanner error={error} />
   }
-  const items: PublicHasherInfo[] = data?.hashers.filter(
+  const items: PublicHasherInfoFragment[] = data?.hashers.filter(
     (h) => !(hideHashers || []).includes(h.id),
   ) ?? []
 
@@ -61,7 +47,7 @@ query GQLGetHasherNames {
   const validHasher = hasher && hashers.map((h) => h.id).includes(hasher.id)
   const validEmail = isEmail && isValidEmail(value)
 
-  const appendHasher = (h: PublicHasherInfo) => {
+  const appendHasher = (h: PublicHasherInfoFragment) => {
     if (onSelect) {
       onSelect(h)
     } else {

@@ -1,23 +1,14 @@
 /* eslint-disable import/prefer-default-export */
-import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client'
-import { GQLInsertHasher } from '../../graph/types'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { GqlInsertHasherDocument, GqlInsertHasherMutation } from '../../graph/types'
 
 export async function insertHasher(
   sc: ApolloClient<NormalizedCacheObject>,
   email: string,
   name: string | null = null,
 ) {
-  return sc.mutate<GQLInsertHasher>({
-    mutation: gql`
-mutation GQLInsertHasher($email: String!, $name: String) {
-  insert_hashers(objects: {email: $email, name: $name}, on_conflict: {constraint: hashers_email_key}) {
-    returning {
-      name
-      id
-    }
-  }
-}
-    `,
+  return sc.mutate<GqlInsertHasherMutation>({
+    mutation: GqlInsertHasherDocument,
     variables: { email, name },
   }).then((r) => {
     if (!r.data?.insert_hashers || r.data.insert_hashers.returning.length < 1) {

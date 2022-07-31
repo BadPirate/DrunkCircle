@@ -6,8 +6,8 @@ import { GetServerSideProps } from 'next'
 import RootNav from '../../../src/components/RootNav'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
 import { BodyError } from '../../../src/components/ErrorBanner'
-import { GQLPageTrailId } from '../../../src/graph/types'
-import TrailCard, { GQL_TRAIL_ID } from '../../../src/components/TrailCard'
+import TrailCard from '../../../src/components/TrailCard'
+import { GqlPageTrailIdDocument, GqlPageTrailIdQuery } from '../../../src/graph/types'
 
 type CardRowProperties = { title: string, children?: React.ReactNode | undefined }
 
@@ -24,7 +24,7 @@ CardRow.defaultProps = { children: null }
 
 interface ServerSideProps {
     error? : any | undefined,
-    data? : GQLPageTrailId | undefined
+    data? : GqlPageTrailIdQuery | undefined
 }
 
 const TrailId = ({ error, data } : ServerSideProps) => {
@@ -61,8 +61,8 @@ TrailId.defaultProps = {
 
 export const getServerSideProps: GetServerSideProps = async ({ query: { trailId } }) => {
   let props : ServerSideProps = {}
-  await PublicClientHasura.query<GQLPageTrailId>({
-    query: GQL_TRAIL_ID,
+  await PublicClientHasura.query<GqlPageTrailIdQuery>({
+    query: GqlPageTrailIdDocument,
     variables: { trailId },
   })
     .catch((error) => { props = { error } })

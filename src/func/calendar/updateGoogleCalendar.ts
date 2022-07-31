@@ -1,9 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client'
-import { GQLCalendarUpdate } from '../../graph/types'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { GqlCalendarUpdateDocument, GqlCalendarUpdateQuery } from '../../graph/types'
 import { ProgressResult } from '../SharedTypes'
 import { insertCalendar, updateCalendar } from './updateGcal'
-import { GQL_KENNEL_INFO_FRAGMENT, GQL_INSERT_FRAGMENT } from './gcalData'
 import { gcal } from '../../api/google'
 
 export async function updateGoogleCalendar(
@@ -11,21 +10,8 @@ export async function updateGoogleCalendar(
   kennelId: number,
   limit: number = 10,
 ): Promise<ProgressResult> {
-  const info = await ac.query<GQLCalendarUpdate>({
-    query: gql`
-${GQL_INSERT_FRAGMENT}
-${GQL_KENNEL_INFO_FRAGMENT}
-query GQLCalendarUpdate($kennelId: Int) {
-  trails(where: {draft: {_is_null: true}, kennel: {_eq: $kennelId}, _and: {gcal_dirty: {_eq: true}}, hares: {hasher: {_is_null: false}}}) {
-    ...GQLInsertFragment
-    google_calendar
-    gcal_dirty
-    kennelInfo {
-      ...GQLKennelInfoFragment
-    }
-  }
-}
-    `,
+  const info = await ac.query<GqlCalendarUpdateQuery>({
+    query: GqlCalendarUpdateDocument,
     variables: { kennelId },
   }).then((r) => {
     if (!r.data.trails) {

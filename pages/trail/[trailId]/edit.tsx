@@ -1,16 +1,16 @@
-import { useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import { Container } from 'react-bootstrap'
 import { BodyError } from '../../../src/components/ErrorBanner'
 import { BodySpinner } from '../../../src/components/BodySpinner'
 import RootNav from '../../../src/components/RootNav'
-import TrailCard, { GQL_TRAIL_ID } from '../../../src/components/TrailCard'
+import TrailCard from '../../../src/components/TrailCard'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
-import { GQLPageTrailId } from '../../../src/graph/types'
+import { useGqlPageTrailIdQuery } from '../../../src/graph/types'
+import { queryToInt } from '../../../src/func/queryParsing'
 
 export default () => {
-  const { trailId } = useRouter().query
-  const { loading, error, data } = useQuery<GQLPageTrailId>(GQL_TRAIL_ID, {
+  const { trailId } = queryToInt(useRouter().query)
+  const { loading, error, data } = useGqlPageTrailIdQuery({
     variables: { trailId },
     client: PublicClientHasura,
   })

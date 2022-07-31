@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import { gql } from '@apollo/client'
 import { GetServerSideProps } from 'next/types'
 import { useState } from 'react'
 import { Button, Container } from 'react-bootstrap'
@@ -9,10 +8,10 @@ import { BodySpinner } from '../../src/components/BodySpinner'
 import RootNav from '../../src/components/RootNav'
 import { catchError } from '../../src/func/catchError'
 import PublicClientHasura from '../../src/graph/PublicClientHasura'
-import { GQLGetKennels, GQLGetKennels_kennels } from '../../src/graph/types'
+import { GqlGetKennelsDocument, GqlGetKennelsKennelFragment, GqlGetKennelsQuery } from '../../src/graph/types'
 
 type ServerSideProps = {
-  kennels?: GQLGetKennels_kennels[],
+  kennels?: GqlGetKennelsKennelFragment[],
   error?: Error
 }
 
@@ -58,22 +57,8 @@ KennelList.defaultProps = {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const info : ServerSideProps = await PublicClientHasura.query<GQLGetKennels>({
-    query: gql`
-    query GQLGetKennels {
-      kennels(order_by: {id: asc}) {
-        short_name
-        name
-        id
-        description
-        trails_aggregate(where: {start: {_gt: "now()"}}) {
-          aggregate {
-            count
-          }
-        }
-      }
-    }
-    `,
+  const info : ServerSideProps = await PublicClientHasura.query<GqlGetKennelsQuery>({
+    query: GqlGetKennelsDocument,
   }).then((r) => ({
     kennels: r.data.kennels,
   })).catch((e) => ({

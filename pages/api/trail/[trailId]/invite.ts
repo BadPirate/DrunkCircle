@@ -1,13 +1,15 @@
-import { gql } from '@apollo/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { catchError } from '../../../../src/func/catchError'
 import { trailDateFormat } from '../../../../src/func/dateFormats'
 import { loginRedirectLink, loginVerificationToken, sendEmail } from '../../../../src/func/email'
 import { queryToInt, requireAll } from '../../../../src/func/queryParsing'
 import { requireKnownUser } from '../../../../src/func/ServerHelpers'
-import { updateAttendance } from '../../../../src/graph/GQL_UPDATE_ATTENDANCE'
+import { updateAttendance } from '../../../../src/graph/update_attendance'
 import { ServerClient } from '../../../../src/graph/hasura'
-import { GQLHasherEmail, GQLInviteTrailInfo } from '../../../../src/graph/types'
+import {
+  GqlHasherEmailDocument, GqlHasherEmailQuery, GqlInviteTrailInfoDocument,
+  GqlInviteTrailInfoQuery,
+} from '../../../../src/graph/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -16,14 +18,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const user = await requireKnownUser(req, res)
     if (!user) return
     const sc = ServerClient()
-    const to = await sc.query<GQLHasherEmail>({
-      query: gql`
-        query GQLHasherEmail($hasher: Int) {
-          hashers(limit: 1, where: {id: {_eq: $hasher}}) {
-            email
-          }
-        }
-            `,
+    const to = await sc.query<GqlHasherEmailQuery>({
+      query: GqlHasherEmailDocument,
       variables: { hasher },
     }).then((r) => {
       if (!r.data.hashers ?? r.data.hashers.length < 1) {
@@ -34,23 +30,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
       return r.data.hashers[0].email
     })
-    const trailInfo = await sc.query<GQLInviteTrailInfo>({
-      query: gql`
-query GQLInviteTrailInfo($trailId: Int) {
-  trails(limit: 1, where: {id: {_eq: $trailId}}) {
-    kennelInfo {
-      name
-    }
-    name
-    start
-    hares {
-      hasherInfo {
-        name
-      }
-    }
-  }
-}
-            `,
+    const trailInfo = await sc.query<GqlInviteTrailInfoQuery>({
+      query: GqlInviteTrailInfoDocument,
       variables: { trailId },
     }).then((r) => {
       if (!r.data.trails || r.data.trails.length < 1) {

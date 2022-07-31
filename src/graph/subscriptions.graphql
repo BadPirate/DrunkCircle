@@ -1,0 +1,28 @@
+subscription GQLKennelRolesEditView($kennelId: Int) {
+  kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
+    management {
+      id
+      hasherInfo {
+        id
+        name
+      }
+      permissions {
+        permissionInfo {
+          description
+          permission
+        }
+      }
+      title
+    }
+  }
+}
+
+subscription GQLAttendanceView($trailId: Int) {
+  attendance(where: {trail: {_eq: $trailId}}, order_by: {attended: asc}) {
+    hasherInfo {
+      name
+      id
+    }
+    attended
+  }
+}

@@ -1,28 +1,17 @@
 /* eslint-disable import/prefer-default-export */
-import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client'
-import { GQLFixTrailNumberInfo, GQLUpdateCalculatedNumber } from '../../graph/types'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import {
+  GqlFixTrailNumberInfoDocument, GqlFixTrailNumberInfoQuery,
+  GqlUpdateCalculatedNumberDocument, GqlUpdateCalculatedNumberMutation,
+} from '../../graph/types'
 import { ilog, ilogError } from '../Logging'
 
 export async function fixCalculatedNumbers(
   sc: ApolloClient<NormalizedCacheObject>,
   kennelId: number,
 ): Promise<number[]> {
-  const fixInfo = await sc.query<GQLFixTrailNumberInfo>({
-    query: gql`
-query GQLFixTrailNumberInfo($kennelId: Int) {
-  trails(where: {draft: {_is_null: true}, kennel: {_eq: $kennelId}}, order_by: {start: asc}) {
-    number
-    calculated_number
-    id
-    start
-    hares {
-      hasherInfo {
-        id
-      }
-    }
-  }
-}
-    `,
+  const fixInfo = await sc.query<GqlFixTrailNumberInfoQuery>({
+    query: GqlFixTrailNumberInfoDocument,
     variables: { kennelId },
   })
   if (!fixInfo.data.trails) {
@@ -44,14 +33,8 @@ query GQLFixTrailNumberInfo($kennelId: Int) {
       return null
     }
     const to = on
-    return sc.mutate<GQLUpdateCalculatedNumber>({
-      mutation: gql`
-mutation GQLUpdateCalculatedNumber($id: Int!, $calculated_number: Int) {
-  update_trails_by_pk(pk_columns: {id: $id}, _set: {calculated_number: $calculated_number, gcal_dirty: true}) {
-    id
-  }
-}
-      `,
+    return sc.mutate<GqlUpdateCalculatedNumberMutation>({
+      mutation: GqlUpdateCalculatedNumberDocument,
       variables: {
         id: t.id,
         calculated_number: to,

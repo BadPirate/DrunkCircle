@@ -1,4 +1,3 @@
-import { gql, useMutation, useSubscription } from '@apollo/client'
 import { Session } from 'next-auth'
 import { signIn, useSession } from 'next-auth/react'
 import {
@@ -6,14 +5,13 @@ import {
 } from 'react-bootstrap'
 import { liveMutate } from '../func/liveMutate'
 import PublicClientHasura from '../graph/PublicClientHasura'
-import { GQLAttendanceView } from '../graph/types'
+import { useGqlAttendanceViewSubscription, useGqlUpdateAttendanceMutation } from '../graph/types'
 import ErrorBanner from './ErrorBanner'
-import { GQL_UPDATE_ATTENDANCE } from '../graph/GQL_UPDATE_ATTENDANCE'
 import { HasherPicker } from './HasherPicker'
 import { LoadSpinner } from './LoadSpinner'
 import UserRequired from './UserRequired'
 
-const AttendingBadge = ({ attending } : {attending : boolean|null }) => {
+const AttendingBadge = ({ attending } : {attending : boolean|null|undefined }) => {
   let variant = 'warning'
   let text = 'Invited (Maybe)'
   if (attending) {
@@ -27,9 +25,10 @@ const AttendingBadge = ({ attending } : {attending : boolean|null }) => {
 }
 
 const AttendingRequestPart = ({ user, trailId, attending } : {user: Session['user'], trailId: number, attending: boolean }) => {
-  const [update, { error, loading: disabled }] = useMutation(GQL_UPDATE_ATTENDANCE)
+  const [update, { error, loading: disabled }] = useGqlUpdateAttendanceMutation()
   if (error) return <ErrorBanner error={error} />
   if (!user) return <ErrorBanner error="User not available" />
+  const hasher = parseInt(user.id, 10)
   return (
     <>
       <InputGroup className="mb-3">
@@ -41,7 +40,7 @@ const AttendingRequestPart = ({ user, trailId, attending } : {user: Session['use
           disabled={disabled}
           onClick={() => update({
             variables: {
-              hasher: user.id,
+              hasher,
               attended: true,
               trail: trailId,
             },
@@ -54,7 +53,7 @@ const AttendingRequestPart = ({ user, trailId, attending } : {user: Session['use
           disabled={disabled}
           onClick={() => update({
             variables: {
-              hasher: user.id,
+              hasher,
               attended: false,
               trail: trailId,
             },
@@ -67,7 +66,7 @@ const AttendingRequestPart = ({ user, trailId, attending } : {user: Session['use
           disabled={disabled}
           onClick={() => update({
             variables: {
-              hasher: user.id,
+              hasher,
               attended: null,
               trail: trailId,
             },
@@ -89,17 +88,9 @@ const AttendingRequestPart = ({ user, trailId, attending } : {user: Session['use
 export default ({ trailId }: { trailId: number; }) => {
   const { data: sessionData } = useSession()
   const user = sessionData?.user
-  const { loading, data, error } = useSubscription<GQLAttendanceView>(gql`
-subscription GQLAttendanceView($trailId: Int) {
-  attendance(where: {trail: {_eq: $trailId}}, order_by: {attended: asc}) {
-    hasherInfo {
-      name
-      id
-    }
-    attended
-  }
-}
-  `, { variables: { trailId }, client: PublicClientHasura })
+  const { loading, data, error } = useGqlAttendanceViewSubscription(
+    { variables: { trailId }, client: PublicClientHasura },
+  )
   if (loading) { return <LoadSpinner /> }
   if (error) { return <ErrorBanner error={error} /> }
   if (!data) { return <ErrorBanner error="No data." /> }

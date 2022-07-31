@@ -1,0 +1,270 @@
+mutation GQLUpdateAccessToken($accessToken: String, $urt: String, $uat: String) {
+  update_kennels(_set: {google_refresh: $urt, google_token: $uat}, where: {google_token: {_eq: $accessToken}}) {
+    affected_rows
+  }
+}
+
+mutation GQLAddRolePermission($role: Int, $permission: permission_enum_enum) {
+  insert_permissions(objects: {role: $role, permission: $permission}) {
+    affected_rows
+  }
+}
+
+mutation GQLAddMismanagement($hasher: Int, $title: String, $kennelID: Int) {
+  insert_management(objects: {hasher: $hasher, title: $title, kennel: $kennelID}) {
+    affected_rows
+  }
+}
+
+mutation GQLUpdateRoleHasher($role: Int, $kennelID: Int, $hasher: Int) {
+  update_management(where: {id: {_eq: $role}, kennel: {_eq: $kennelID}}, _set: {hasher: $hasher}) {
+    affected_rows
+  }
+}
+
+mutation GQLDeleteRole($role: Int, $kennelID: Int) {
+    delete_management(where: {id: {_eq: $role}, kennel: {_eq: $kennelID}}) {
+        affected_rows
+    }
+}
+
+mutation GQLUpdateSelfDraft($trailId: Int!) {
+  update_trails_by_pk(pk_columns: {id: $trailId}, _set: {draft: $trailId}) {
+    id
+  }
+}
+
+mutation GQLDeleteRolePermission($role: Int, $permission: permission_enum_enum) {
+  delete_permissions(where: {role: {_eq: $role}, permission: {_eq: $permission}}) {
+    affected_rows
+  }
+}
+
+mutation GQLSetCalendarId($cal: String, $kennelID: Int, $userEmail: String) {
+    update_kennels(where: {id: {_eq: $kennelID}, gm: {id: {}, email: {_eq: $userEmail}}}, _set: {google_calendar: $cal}) {
+        returning {
+            id
+        }
+    }
+}
+
+mutation GQLClearDraftMutation($trailId: Int!) {
+  update_trails_by_pk(pk_columns: {id: $trailId}, _set: {draft: null}) {
+    id
+  }
+}
+
+mutation GQLInsertTrail(
+  $id: Int = null,
+  $calculated_number: Int, 
+  $description: String,
+  $directions: String,
+  $draft: Int,
+  $google_calendar: String,
+  $hares: [hares_insert_input!]!,
+  $kennel: Int,
+  $latitude: float8,
+  $longitude: float8, 
+  $name: String, 
+  $number: Int, 
+  $start: timestamptz) {
+  insert_trails_one(object: {
+    id: $id,
+    calculated_number: $calculated_number, 
+    description: $description,
+    directions: $directions,
+    draft: $draft, 
+    google_calendar: $google_calendar, 
+    hares: {data: $hares}, 
+    kennel: $kennel, 
+    latitude: $latitude, longitude: $longitude, 
+    name: $name, 
+    number: $number, 
+    start: $start}) {
+    id
+  }
+}
+
+mutation GQLInsertTrailDraft(
+  $calculated_number: Int, 
+  $description: String,
+  $directions: String,
+  $draft: Int,
+  $google_calendar: String,
+  $hares: [hares_insert_input!]!,
+  $kennel: Int,
+  $latitude: float8,
+  $longitude: float8, 
+  $name: String, 
+  $number: Int, 
+  $start: timestamptz) {
+  insert_trails_one(object: {
+    calculated_number: $calculated_number, 
+    description: $description,
+    directions: $directions,
+    draft: $draft, 
+    google_calendar: $google_calendar, 
+    hares: {data: $hares}, 
+    kennel: $kennel,
+    gcal_dirty: true,
+    latitude: $latitude, longitude: $longitude, 
+    name: $name, 
+    number: $number, 
+    start: $start}) {
+    id
+  }
+}
+
+mutation GQLUpdateGoogleTokens($accessToken: String, $refreshToken: String,  $kennelID: Int) {
+  update_kennels(_set: {google_refresh: $refreshToken, google_token: $accessToken}, where: {id: {_eq: $kennelID}}) {
+    affected_rows
+  }
+}
+
+mutation GQLUpdateAttendance($attended: Boolean, $hasher: Int, $trail: Int) {
+  insert_attendance_one(object: {attended: $attended, hasher: $hasher, trail: $trail}, on_conflict: {constraint: attendance_pkey, update_columns: attended}) {
+    attended
+  }
+}
+
+mutation GQLClearCalendarInfoFromTrail($trailIds: [Int!]) {
+  update_trails(where: {id: {_in: $trailIds}}, _set: {google_calendar: null}) {
+    affected_rows
+  }
+}
+
+mutation GQLMarkClean($trailId: Int) {
+    update_trails(where: {id: {_eq: $trailId}}, _set: {gcal_dirty: false}) {
+        affected_rows
+    }
+}
+
+mutation GQLUpdateKennel($kennelID: Int!, $frequency: Int, $area: String, $description: String, $name: String, $next: timestamptz, $price: float8, $short: String, $web: String) {
+  update_kennels_by_pk(pk_columns: {id: $kennelID}, _set: {frequency: $frequency, area: $area, description: $description, name: $name, next: $next, price: $price, short_name: $short, web: $web}) {
+    id
+  }
+}
+
+mutation GQLUpdateTrailGID($gid: String, $trailId: Int) {
+  update_trails(where: {id: {_eq: $trailId}}, _set: {google_calendar: $gid, gcal_dirty: false}) {
+    affected_rows
+  }
+}
+
+mutation GQLInsertHasher($email: String!, $name: String) {
+  insert_hashers(objects: {email: $email, name: $name}, on_conflict: {constraint: hashers_email_key}) {
+    returning {
+      name
+      id
+    }
+  }
+}
+
+mutation GQLDeleteTrail($trailId: Int) {
+  delete_trails(where: {id: {_eq: $trailId}}) {
+    affected_rows
+    returning {
+      google_calendar
+      kennelInfo {
+        google_refresh
+        google_token
+        google_calendar
+      }
+    }
+  }
+}
+
+query GQLFixTrailNumberInfo($kennelId: Int) {
+  trails(where: {draft: {_is_null: true}, kennel: {_eq: $kennelId}}, order_by: {start: asc}) {
+    number
+    calculated_number
+    id
+    start
+    hares {
+      hasherInfo {
+        id
+      }
+    }
+  }
+}
+
+mutation GQLUpdateCalculatedNumber($id: Int!, $calculated_number: Int) {
+  update_trails_by_pk(pk_columns: {id: $id}, _set: {calculated_number: $calculated_number, gcal_dirty: true}) {
+    id
+  }
+}
+
+mutation GQLMoveAttendance($from: Int, $to: Int) {
+    update_attendance(where: {trail: {_eq: $from}}, _set: {trail: $to}) {
+        affected_rows
+    }
+}
+
+mutation GQLAcceptDraftMutation($from: Int!, $to: Int!) {
+  update_trails_by_pk(pk_columns: {id: $from}, _set: {id: $to, gcal_dirty: true, draft: null}) {
+    id
+  }
+}
+
+mutation GQLCreateVerificationToken($token: String, $expires: timestamptz, $email: String) {
+  update_hashers(where: {email: {_eq: $email}}, _set: {login: $token, login_expires: $expires}) {
+    returning {
+      id
+    }
+  }
+}
+
+mutation GQLUseVerificationToken($identifier: String, $token: String, $email_verified: timestamptz) {
+  update_hashers(where: {email: {_eq: $identifier}, login: {_eq: $token}}, _set: {login: null, login_expires: null, email_verified: $email_verified}) {
+    returning {
+      login_expires
+    }
+  }
+}
+
+mutation GQLDeleteSession($sessionToken: String) {
+  delete_sessions(where: {session_token: {_eq: $sessionToken}}) {
+    returning {
+      expires
+      id
+      user_id
+    }
+  }
+}
+
+mutation GQLUpdateUser($id: Int = 10, $emailVerified: timestamptz) {
+  update_hashers(where: {id: {_eq: $id}}, _set: {email_verified: $emailVerified}) {
+    returning {
+      email
+      email_verified
+      id
+      name
+    }
+  }
+}
+
+mutation GQLCreateSession($sessionToken: String, $userId: Int = 10, $expires: timestamptz, $id: String = "") {
+  insert_sessions_one(object: {session_token: $sessionToken, user_id: $userId, expires: $expires, id: $id}) {
+    id
+  }
+}
+
+mutation GQLCreateUser($email: String, $name: String) {
+  insert_hashers_one(object: {email: $email, name: $name}) {
+    id
+  }
+}
+
+mutation GQLLinkAccount($provider: String, $providerAccountId: String, $userId: Int) {
+  insert_account_links_one(object: {provider: $provider, provider_id: $providerAccountId, user_id: $userId}) {
+    user_id
+  }
+}
+
+mutation GQLUpdateCalendarToken($calendar: String = null, $refreshToken: String, $accessToken: String, $kennelID: Int, $userEmail: String) {
+  update_kennels(where: {id: {_eq: $kennelID}, gm: {id: {}, email: {_eq: $userEmail}}}, _set: {google_calendar: $calendar, google_refresh: $refreshToken, google_token: $accessToken}) {
+    returning {
+      id
+    }
+  }
+}

@@ -1,5 +1,14 @@
-schema:
-  - https://hasura.badpirate.net/v1/graphql:
+schema: 
+  "https://hasura.badpirate.net/v1/graphql":
     headers:
-        X-Hasura-Admin-Secret: iJqS6+ZfzQQ3s/fiFHd/9q98+JorNxWKN3N+IeqCksg=
+      X-Hasura-Admin-Secret: IncrementallyBetterThanTI82
 documents: "src/**/*.{graphql,js,ts,jsx,tsx}"
+config: # The following configuration will adjust output to the defaults of Apollo-Codegen, and should be compatible with most use-cases.
+  namingConventions: keep
+generates: 
+  "./src/graph/types.ts":
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+overwrite: true

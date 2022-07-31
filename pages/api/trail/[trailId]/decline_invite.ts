@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { queryToInt, requireAll } from '../../../../src/func/queryParsing'
 import { requireKnownUser } from '../../../../src/func/ServerHelpers'
-import { updateAttendance } from '../../../../src/graph/GQL_UPDATE_ATTENDANCE'
+import { updateAttendance } from '../../../../src/graph/update_attendance'
 import { ServerClient } from '../../../../src/graph/hasura'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

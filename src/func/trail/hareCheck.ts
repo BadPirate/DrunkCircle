@@ -1,27 +1,16 @@
+/* eslint-disable import/prefer-default-export */
 /* eslint-disable camelcase */
-import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { DCKnownUser } from '../ServerHelpers'
-import { GQLHareCheckFragment, permission_enum_enum } from '../../graph/types'
+import { GqlHareCheckFragmentFragment, Permission_Enum_Enum } from '../../graph/types'
 import { requireUserWithKennelPermission } from '../requireUserWithKennelPermission'
-
-export const GQL_HARE_CHECK_FRAGMENT = gql`
-fragment GQLHareCheckFragment on trails {
-  kennel
-  hares {
-    hasher
-    hasherInfo {
-      email
-    }
-  }
-}
-`
 
 export async function hareAuthorized(
   sc: ApolloClient<NormalizedCacheObject>,
   req: NextApiRequest,
   res: NextApiResponse,
-  hareCheck: GQLHareCheckFragment,
+  hareCheck: GqlHareCheckFragmentFragment,
   user: DCKnownUser,
 ) {
   if (!hareCheck.hares || hareCheck.hares.length < 1) { return true } // Yours if you want it
@@ -30,7 +19,7 @@ export async function hareAuthorized(
     sc,
     req,
     res,
-    permission_enum_enum.update_trails,
+    Permission_Enum_Enum.UpdateTrails,
     hareCheck.kennel,
   )
     .then((u) => (!!u))

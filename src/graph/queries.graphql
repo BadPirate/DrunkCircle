@@ -1,0 +1,499 @@
+query GQLHareRank($kennelId: Int) {
+  hashers(where: {name: {_is_null: false}, hares: {trailInfo: {kennel: {_eq: $kennelId}}}}, limit: 50) {
+    name
+    id
+    hares_aggregate(where: {trailInfo: {kennel: {_eq: $kennelId}}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+
+fragment GQLGetKennelPageKennel on kennels {
+    short_name
+    name
+    id
+    description
+    area
+    web
+    price
+    frequency
+    next
+    trails(limit: 10, order_by: {calculated_number: asc}, where: {start: {_gt: $after}, draft: {_is_null: true}}) {
+      calculated_number
+      hares {
+        hasherInfo {
+          name
+        }
+      }
+      id
+      start
+      name
+    }
+}
+
+query GQLGetKennelPage($kennelId: Int, $after: timestamptz) {
+  kennels(limit: 1, where: {id: {_eq: $kennelId}}, ) {
+    ...GQLGetKennelPageKennel
+  }
+}
+
+query GQLMismanagementView($kennelId: Int) {
+  management(where: {kennel: {_eq: $kennelId}}) {
+    hasherInfo {
+      name
+      id
+    }
+    title
+  }
+}
+
+query GQLFeedPage($limit: Int = 10, $kennels: [String!]) {
+  trails(order_by: {start: asc}, limit: $limit, where: {draft: {_is_null: true}, start: {_gt: "now()"}, kennelInfo: {short_name: {_in: $kennels}}}) {
+    name
+    id
+    kennelInfo {
+      short_name
+    }
+    start
+  }
+}
+
+query GQLGetRefreshToken($accessToken: String) {
+  kennels(where: {google_token: {_eq: $accessToken}}, limit: 1) {
+    google_refresh
+  }
+}
+
+query GQLHasherFromEmail($email: String) {
+  hashers(where: {email: {_like: $email}}, limit: 1) {
+    id
+    name
+  }
+} 
+
+fragment GQLHareCheckFragment on trails {
+  kennel
+  hares {
+    hasher
+    hasherInfo {
+      email
+    }
+  }
+}
+
+query GQLAcceptVerify($trailId: Int) {
+  trails(where: {id: {_eq: $trailId}}, limit: 1) {
+    draft
+    kennel
+    draftFor {
+        id
+      ...GQLHareCheckFragment
+    }
+  }
+}
+
+query GQLDeleteVerify($trailId: Int) {
+  trails(where: {id: {_eq: $trailId}}) {
+    ...GQLHareCheckFragment
+    kennel
+    draft
+  }
+}
+
+fragment GQLTrailInfo on trails {
+  id
+  name
+  draft
+  google_calendar
+  kennel
+  ...GQLHareCheckFragment
+}
+
+query GQLEditTrailInfo($trailId: Int) {
+  trails(where: {id: {_eq: $trailId}}, limit: 1) {
+    ...GQLTrailInfo
+    draftFor {
+      ...GQLTrailInfo
+    }
+  }
+}
+
+query GQLHasherEmail($hasher: Int) {
+  hashers(limit: 1, where: {id: {_eq: $hasher}}) {
+    email
+  }
+}
+
+query GQLInviteTrailInfo($trailId: Int) {
+  trails(limit: 1, where: {id: {_eq: $trailId}}) {
+    kennelInfo {
+      name
+    }
+    name
+    start
+    hares {
+      hasherInfo {
+        name
+      }
+    }
+  }
+}
+
+query GQLKennelIdForTrail($trailId: Int) {
+  trails(limit: 1, where: {id: {_eq: $trailId}}) {
+    kennel
+  }
+}
+
+query GQLHasherInfoServer($hasherId: Int) {
+  hashers(limit: 1, where: {id: {_eq: $hasherId}}) {
+    name
+  }
+}
+
+fragment GQLGetKennelsKennel on kennels {
+    short_name
+    name
+    id
+    description
+    trails_aggregate(where: {start: {_gt: "now()"}}) {
+      aggregate {
+        count
+      }
+    }
+}
+
+query GQLGetKennels {
+  kennels(order_by: {id: asc}) {
+    ...GQLGetKennelsKennel
+  }
+}
+
+query GQLPermissionsEnum {
+  permission_enum {
+    description
+    permission
+  }
+}
+
+fragment PublicHasherInfo on hashers {
+  name
+  id
+}
+
+query GQLGetHasherNames {
+  hashers(where: {name: {_is_null: false}}, order_by: {name: asc}) {
+    ...PublicHasherInfo
+  }
+}
+
+fragment GQLNext on kennels {
+  frequency
+  next
+  trails(limit: 1, order_by: {start: desc}, where: {draft: {_is_null: false}}) {
+    start
+  }
+}
+
+query GQLKennelEditPart($kennelId: Int = 10) {
+  kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
+    ...GQLNext
+    area
+    description
+    frequency
+    name
+    short_name
+    web
+    next
+    price
+  }
+}
+
+fragment GQLKennelEditPageKennel on kennels {
+    id
+    short_name
+    google_refresh
+    google_token
+    google_calendar
+}
+
+query GQLKennelEditPageSSR($kennelId: Int, $email: String) {
+  kennels(where: {id: {_eq: $kennelId}, gm: {email: {_eq: $email}}}, limit: 1) {
+    ...GQLKennelEditPageKennel
+  }
+}
+
+fragment PublicFragmentTrail on trails {
+  calculated_number
+  number
+  description
+  directions
+  kennelInfo {
+    name
+    short_name
+    id
+  }
+  id
+  latitude
+  longitude
+  name
+  start
+  draft
+  drafts {
+    id
+  }
+  hares {
+    hasherInfo {
+      ...PublicHasherInfo
+    }
+  }
+}
+
+query GQLPageTrailId($trailId: Int) {
+  trails(where: {id: {_eq: $trailId}}, limit: 1) {
+    ...PublicFragmentTrail
+  }
+}
+
+fragment GQLPageTrail on trails {
+  calculated_number
+  name
+  start
+  kennelInfo {
+    short_name
+    id
+  }
+  hares {
+    hasherInfo {
+      name
+    }
+  }
+  id
+}
+
+query GQLPageTrails($after: timestamptz = "now()", $limit: Int, $filters: [Int!]) {
+  trails(limit: $limit, order_by: {start: asc}, where: {start: {_gt: $after}, draft: {_is_null: true}, kennel: {_nin: $filters}}) {
+    ...GQLPageTrail
+  }
+}
+
+fragment GQLKennelInfo on kennels {
+  id
+  short_name
+}
+
+query GQLTrailIndexPreload {
+  kennels {
+    ...GQLKennelInfo
+  }
+}
+
+query GQLPageHasherHares($hasherId: Int) {
+  kennels(order_by: {trails_aggregate: {count: desc}}) {
+    id
+    short_name
+    trails_aggregate(where: {hares: {hasher: {_eq: $hasherId}}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+
+fragment GQLKennelList on kennels {
+  id
+  name
+}
+
+fragment GQLHasherManagement on management {
+  kennelInfo {
+    id
+    short_name
+  }
+  title
+}
+
+query GQLHasherInfoClient($hasherId: Int) {
+  hashers(limit: 1, where: {id: {_eq: $hasherId}}) {
+    name
+    gm {
+      ...GQLKennelList
+    }
+    management {
+      ...GQLHasherManagement
+    }
+    attendance_aggregate(where: {attended: {_eq: true}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+
+query GQLKennelPermissionCheck($kennelID: Int, $permission: permission_enum_enum, $userId: Int) {
+  management(where: {kennel: {_eq: $kennelID}, permissions: {permission: {_eq: $permission}}, hasher: {_eq: $userId}}) {
+    id
+  }
+}
+
+query GQLUserPerms($hasherId: Int, $kennelId: Int) {
+  management(where: {hasher: {_eq: $hasherId}, kennel: {_eq: $kennelId}}) {
+    permissions {
+      permission
+    }
+  }
+}
+
+query GQLVerifyCalendarAdmin($kennelId: Int, $email: String) {
+  kennels(where: {id: {_eq: $kennelId}, gm_email: {_eq: $email}}, limit: 1) {
+    id
+  }
+}
+
+fragment GQLKennelAddInfo on kennels {
+  google_calendar
+  short_name
+
+  google_refresh
+  google_token
+  id
+  name
+}
+
+query GQLRefreshKennelAddCount($kennelID: Int) {
+  kennels(where: {id: {_eq: $kennelID}, google_refresh: {_is_null: false}, google_calendar: {_is_null: false}, google_token: {_is_null: false}}) {
+    ...GQLKennelAddInfo
+    trails_aggregate(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}], draft: {_is_null: true}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+
+fragment GQLInsertTrail on trails {
+  calculated_number
+  id
+  name
+  start
+  latitude
+  longitude
+  directions
+  google_calendar
+  description
+  hares {
+     hasherInfo {
+       name
+     }
+  }
+}
+
+query GQLAddToCalendar($kennelID: Int, $limit: Int) {
+  trails(where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}], draft: {_is_null: true}}, limit: $limit) {
+    ...GQLInsertTrail
+  }
+}
+
+query GQLCalendarUpdate($kennelId: Int) {
+  trails(where: {draft: {_is_null: true}, kennel: {_eq: $kennelId}, _and: {gcal_dirty: {_eq: true}}, hares: {hasher: {_is_null: false}}}) {
+    ...GQLInsertTrail
+    google_calendar
+    gcal_dirty
+    kennelInfo {
+      ...GQLKennelAddInfo
+    }
+  }
+}
+
+query GQLGetGoogleCalendarId($kennelId: Int) {
+  kennels(where: {id: {_eq: $kennelId}}, limit: 1) {
+    google_calendar
+    google_refresh
+    google_token
+  }
+}
+
+query GQLCountSetCalendarEntries($kennelId: Int) {
+  trails_aggregate(where: {kennel: {_eq: $kennelId}, google_calendar: {_is_null: false}}) {
+    aggregate {
+      count
+    }
+  }
+}
+
+query GQLAllSetCalendarEntries($kennelId: Int, $limit: Int) {
+  trails(where: {kennel: {_eq: $kennelId}, google_calendar: {_is_null: false}}, limit: $limit) {
+    google_calendar
+    id
+  }
+}
+
+query GQLGetUserByEmail($email: String) {
+  hashers(where: {email: {_eq: $email}}) {
+    id
+    email
+    name
+    email_verified
+  }
+}
+
+query GQLCheckVerificationToken($identifier: String, $token: String) {
+  hashers(where: {email: {_eq: $identifier}, login: {_eq: $token}}) {
+    login_expires
+  }
+}
+
+query GQLGetSessionAndUser($sessionToken: String) {
+  sessions(where: {session_token: {_eq: $sessionToken}}) {
+    id
+    expires
+    user {
+      email
+      email_verified
+      id
+      name
+    }
+  }
+}
+
+query GQLGetSessionAndUser($sessionToken: String) {
+  sessions(where: {session_token: {_eq: $sessionToken}}) {
+    id
+    expires
+    user {
+      email
+      email_verified
+      id
+      name
+    }
+  }
+}
+
+query GQLGetUser($id: Int) {
+  hashers(where: {id: {_eq: $id}}, limit: 1) {
+    email
+    email_verified
+    name
+  }
+}
+
+query GQLGetUserByAccount($provider: String, $providerAccountId: String) {
+  account_links(limit: 1, where: {provider: {_eq: $provider}, provider_id: {_eq: $providerAccountId}}) {
+    user {
+      id
+      email
+      email_verified
+      name
+    }
+  }
+}
+
+query GQLUpdateSession($sessionToken: String) {
+  sessions(limit: 1, where: {session_token: {_eq: $sessionToken}}) {
+    id
+    user_id
+    expires
+  }
+}

@@ -1,16 +1,15 @@
 /* eslint-disable camelcase */
-import { gql } from '@apollo/client'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { BodyError } from '../../../src/components/ErrorBanner'
 import PageCard from '../../../src/components/PageCard'
 import { queryToInt } from '../../../src/func/queryParsing'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
-import { GQLHasherInfoServer } from '../../../src/graph/types'
 import { HasherInfoPageDetailPart } from '../../../src/components/HasherInfoPageDetailPart'
+import { GqlHasherInfoServerDocument, GqlHasherInfoServerQuery } from '../../../src/graph/types'
 
 interface ServerSideProps {
-    data?: GQLHasherInfoServer | null | undefined,
+    data?: GqlHasherInfoServerQuery | null | undefined,
     error?: any | undefined
 }
 
@@ -38,14 +37,8 @@ HasherInfoPage.defaultProps = {
 
 export const getServerSideProps: GetServerSideProps = async ({ query: { hasherId } }) => {
   const props : ServerSideProps = {}
-  await PublicClientHasura.query<GQLHasherInfoServer>({
-    query: gql`
-query GQLHasherInfoServer($hasherId: Int) {
-  hashers(limit: 1, where: {id: {_eq: $hasherId}}) {
-    name
-  }
-}
-`,
+  await PublicClientHasura.query<GqlHasherInfoServerQuery>({
+    query: GqlHasherInfoServerDocument,
     variables: { hasherId },
   })
     .catch((error) => { props.error = error })

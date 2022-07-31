@@ -1,24 +1,13 @@
-import { gql, useQuery } from '@apollo/client'
 import { Table } from 'react-bootstrap'
 import PublicClientHasura from '../graph/PublicClientHasura'
-import { GQLPageHasherHares } from '../graph/types'
+import { useGqlPageHasherHaresQuery } from '../graph/types'
 import ErrorBanner from './ErrorBanner'
 import { LoadSpinner } from './LoadSpinner'
 
 const HareCount = ({ hasherId } : {hasherId : number}) => {
-  const { error, data, loading } = useQuery<GQLPageHasherHares>(gql`
-query GQLPageHasherHares($hasherId: Int) {
-  kennels(order_by: {trails_aggregate: {count: desc}}) {
-    id
-    short_name
-    trails_aggregate(where: {hares: {hasher: {_eq: $hasherId}}}) {
-      aggregate {
-        count
-      }
-    }
-  }
-}
-`, { variables: { hasherId }, client: PublicClientHasura })
+  const { error, data, loading } = useGqlPageHasherHaresQuery(
+    { variables: { hasherId }, client: PublicClientHasura },
+  )
   if (error) return <ErrorBanner error={error} />
   if (loading || !data) return <LoadSpinner />
   const { kennels } = data

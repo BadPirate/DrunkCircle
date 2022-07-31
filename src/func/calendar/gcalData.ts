@@ -1,37 +1,8 @@
-import { gql } from '@apollo/client'
-import { GQLInsertFragment, GQLKennelInfoFragment } from '../../graph/types'
+/* eslint-disable import/prefer-default-export */
 
-export const GQL_INSERT_FRAGMENT = gql`
-fragment GQLInsertFragment on trails {
-  calculated_number
-  id
-  name
-  start
-  latitude
-  longitude
-  directions
-  google_calendar
-  description
-  hares {
-     hasherInfo {
-       name
-     }
-  }
-}
-`
+import { GqlInsertTrailFragment, GqlKennelAddInfoFragment } from '../../graph/types'
 
-export const GQL_KENNEL_INFO_FRAGMENT = gql`
-fragment GQLKennelInfoFragment on kennels {
-  google_calendar
-  short_name
-
-  google_refresh
-  google_token
-  id
-  name
-}
-`
-export function gcalData(kennel: GQLKennelInfoFragment, trail: GQLInsertFragment) {
+export function gcalData(kennel: GqlKennelAddInfoFragment, trail: GqlInsertTrailFragment) {
   const summary = `${kennel.short_name}${trail.calculated_number ? ` #${trail.calculated_number}` : ''}: ${trail.name}`
   const end = new Date(trail.start)
   const location = trail.latitude && trail.longitude ? `${trail.latitude}, ${trail.longitude}` : 'TBD'

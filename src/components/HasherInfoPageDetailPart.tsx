@@ -1,15 +1,14 @@
 /* eslint-disable camelcase */
 /* eslint-disable import/prefer-default-export */
-import { gql, useQuery } from '@apollo/client'
 import ErrorBanner from './ErrorBanner'
 import HareCount from './HareCount'
-import KennelList, { GQL_KENNEL_LIST_FRAGMENT } from './KennelList'
+import KennelList from './KennelList'
 import ListTable, { DataRow, DataTable } from './ListTable'
 import { LoadSpinner } from './LoadSpinner'
 import PublicClientHasura from '../graph/PublicClientHasura'
-import { GQLHasherInfoClient, GQLHasherInfoClient_hashers_management } from '../graph/types'
+import { GqlHasherManagementFragment, useGqlHasherInfoClientQuery } from '../graph/types'
 
-type MMRolesType = { roles: GQLHasherInfoClient_hashers_management[] }
+type MMRolesType = { roles: GqlHasherManagementFragment[] }
 export const MismanagementRolesPart = ({ roles } : MMRolesType) => (
   <ListTable
     columns={['Kennel', 'Title']}
@@ -27,29 +26,9 @@ export const MismanagementRolesPart = ({ roles } : MMRolesType) => (
 
 type HIPType = { hasherId: number; }
 export const HasherInfoPageDetailPart = ({ hasherId }: HIPType) => {
-  const { loading, data, error } = useQuery<GQLHasherInfoClient>(gql`
-  ${GQL_KENNEL_LIST_FRAGMENT}
-query GQLHasherInfoClient($hasherId: Int) {
-  hashers(limit: 1, where: {id: {_eq: $hasherId}}) {
-    name
-    gm {
-      ...GQLKennelListFragment
-    }
-    management {
-      kennelInfo {
-        id
-        short_name
-      }
-      title
-    }
-    attendance_aggregate(where: {attended: {_eq: true}}) {
-      aggregate {
-        count
-      }
-    }
-  }
-}
-  `, { variables: { hasherId }, client: PublicClientHasura })
+  const { loading, data, error } = useGqlHasherInfoClientQuery(
+    { variables: { hasherId }, client: PublicClientHasura },
+  )
   if (loading) { return <LoadSpinner /> }
   if (error) { return <ErrorBanner error={error} /> }
   if (!data || data.hashers.length < 1) { return <ErrorBanner error="No data" /> }

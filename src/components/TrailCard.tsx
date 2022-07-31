@@ -6,59 +6,21 @@ import {
 import dateFormat from 'dateformat'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
-import { gql } from '@apollo/client'
-import DateTimeField from 'react-datetime'
 import React, { useState } from 'react'
 import { GMapify } from 'g-mapify'
 import { useSession } from 'next-auth/react'
 import ErrorBanner from './ErrorBanner'
-import {
-  PublicFragmentTrail,
-} from '../graph/types'
 import { BodyCard } from './PageCard'
 import { DataRow, InfoTable } from './ListTable'
 import 'react-datetime/css/react-datetime.css'
-import { GQL_PUBLIC_HASHER_INFO, HasherPicker } from './HasherPicker'
+import { HasherPicker } from './HasherPicker'
 import 'g-mapify/dist/index.css'
 import AttendancePart from './AttendancePart'
-
-export const GQL_TRAIL_ID = gql`
-${GQL_PUBLIC_HASHER_INFO}
-fragment PublicFragmentTrail on trails {
-  calculated_number
-  number
-  description
-  directions
-  kennelInfo {
-    name
-    short_name
-    id
-  }
-  id
-  latitude
-  longitude
-  name
-  start
-  draft
-  drafts {
-    id
-  }
-  hares {
-    hasherInfo {
-      ...PublicHasherInfo
-    }
-  }
-}
-
-query GQLPageTrailId($trailId: Int) {
-  trails(where: {id: {_eq: $trailId}}, limit: 1) {
-    ...PublicFragmentTrail
-  }
-}
-`
+import { InputDate } from './InputDate'
+import { PublicFragmentTrailFragment } from '../graph/types'
 
 type TrailCardProps = {
-  trail: PublicFragmentTrail,
+  trail: PublicFragmentTrailFragment,
   editing?: Boolean,
 }
 
@@ -83,19 +45,6 @@ const InputText = ({
 InputText.defaultProps = {
   initialValue: undefined,
   required: true,
-}
-
-const InputDate = ({ name, initialValue } : {
-  name: string,
-  initialValue: Date
-}) => {
-  const [value, setValue] = useState(initialValue)
-  return (
-    <>
-      <Form.Control type="hidden" name={name} defaultValue={value.toISOString()} />
-      <DateTimeField initialValue={initialValue} onChange={(m) => setValue(typeof m === 'string' ? new Date(m) : m.toDate())} />
-    </>
-  )
 }
 
 const InputArea = ({ name, initialValue, rows } : {

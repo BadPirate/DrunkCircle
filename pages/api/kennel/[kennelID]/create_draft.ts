@@ -1,10 +1,9 @@
-import { gql } from '@apollo/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { queryToInt } from '../../../../src/func/queryParsing'
 import { requireKnownUser } from '../../../../src/func/ServerHelpers'
 import { insertTrail } from '../../../../src/func/trail/InsertTrail'
 import { ServerClient } from '../../../../src/graph/hasura'
-import { GQLUpdateSelfDraft } from '../../../../src/graph/types'
+import { GqlUpdateSelfDraftDocument, GqlUpdateSelfDraftMutation } from '../../../../src/graph/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await requireKnownUser(req, res)
@@ -31,13 +30,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     start: start.toISOString(),
     hares: [{ hasher: user.id }],
   })
-  await sc.mutate<GQLUpdateSelfDraft>({
-    mutation: gql`
-mutation GQLUpdateSelfDraft($trailId: Int!) {
-  update_trails_by_pk(pk_columns: {id: $trailId}, _set: {draft: $trailId}) {
-    id
-  }
-}      `,
+  await sc.mutate<GqlUpdateSelfDraftMutation>({
+    mutation: GqlUpdateSelfDraftDocument,
     variables: { trailId },
   }).then((r) => {
     if (!r.data?.update_trails_by_pk?.id) {

@@ -45,6 +45,6 @@ export function queryToInt(params: QParams): { [key: string]: number; } {
 
 export function requireAll(params: { [key: string]: any }) {
   Object.keys(params).forEach((k) => {
-    if (!params[k]) throw new Error(`${k} is required`)
+    if (params[k] === undefined || params[k] === null) throw new Error(`${k} is required`)
   })
 }

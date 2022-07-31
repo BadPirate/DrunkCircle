@@ -1,10 +1,10 @@
-import { gql } from '@apollo/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { verifyCalendarAdmin } from '../../../../src/func/calendar/CalendarShared'
 import { createCalendarEntries } from '../../../../src/func/calendar/createCalendarEntries'
 import { deleteAllCalendarEntries } from '../../../../src/func/calendar/deleteAllCalendarEntries'
 import { GoogleLimit, requireUserEmail } from '../../../../src/func/ServerHelpers'
 import { ServerClient } from '../../../../src/graph/hasura'
+import { GqlSetCalendarIdDocument } from '../../../../src/graph/types'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const userEmail = await requireUserEmail(req, res)
@@ -24,15 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // Clear graph
     await ServerClient().mutate(
       {
-        mutation: gql`
-mutation GQLSetCalendarId($cal: String, $kennelID: Int, $userEmail: String) {
-    update_kennels(where: {id: {_eq: $kennelID}, gm: {id: {}, email: {_eq: $userEmail}}}, _set: {google_calendar: $cal}) {
-        returning {
-            id
-        }
-    }
-}
-                `,
+        mutation: GqlSetCalendarIdDocument,
         variables: {
           cal,
           kennelID,

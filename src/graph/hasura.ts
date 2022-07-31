@@ -1,5 +1,5 @@
 import {
-  ApolloClient, InMemoryCache, HttpLink, gql,
+  ApolloClient, InMemoryCache, HttpLink,
 } from '@apollo/client'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
@@ -10,12 +10,19 @@ import {
   CallbacksOptions, Profile, Account, Session,
 } from 'next-auth'
 import { randomBytes } from 'crypto'
-import {
-  GQLCheckVerificationToken, GQLCreateSession, GQLCreateUser, GQLCreateVerificationToken,
-  GQLDeleteSession, GQLGetSessionAndUser, GQLGetUser, GQLGetUserByAccount, GQLGetUserByEmail,
-  GQLLinkAccount, GQLUpdateSession, GQLUpdateUser, GQLUseVerificationToken,
-} from './types'
 import { ilog, ilogError } from '../func/Logging'
+import {
+  GqlCheckVerificationTokenDocument,
+  GqlCheckVerificationTokenQuery, GqlCreateSessionDocument, GqlCreateSessionMutation,
+  GqlCreateUserDocument, GqlCreateUserMutation, GqlCreateVerificationTokenDocument,
+  GqlCreateVerificationTokenMutation, GqlDeleteSessionDocument,
+  GqlDeleteSessionMutation, GqlGetSessionAndUserDocument, GqlGetSessionAndUserQuery,
+  GqlGetUserByAccountDocument, GqlGetUserByAccountQuery, GqlGetUserByEmailDocument,
+  GqlGetUserByEmailQuery, GqlGetUserDocument, GqlGetUserQuery, GqlLinkAccountDocument,
+  GqlLinkAccountMutation, GqlUpdateSessionDocument, GqlUpdateSessionQuery,
+  GqlUpdateUserDocument, GqlUpdateUserMutation, GqlUseVerificationTokenDocument,
+  GqlUseVerificationTokenMutation,
+} from './types'
 
 const MAX_AGE = (24 * 60 * 60 * 30) // 30 days
 
@@ -114,15 +121,8 @@ export const emailToken = async (email: string, daysValid: number = 7) => {
 export const createVerificationToken = async (verificationToken: VerificationToken) => {
   const { identifier: email, token, expires } = verificationToken
   ilog('createVerficationToken...', verificationToken)
-  return adapterClient.mutate<GQLCreateVerificationToken>({
-    mutation: gql`
-mutation GQLCreateVerificationToken($token: String, $expires: timestamptz, $email: String) {
-  update_hashers(where: {email: {_eq: $email}}, _set: {login: $token, login_expires: $expires}) {
-    returning {
-      id
-    }
-  }
-}`,
+  return adapterClient.mutate<GqlCreateVerificationTokenMutation>({
+    mutation: GqlCreateVerificationTokenDocument,
     variables: { email, token, expires },
   }).then((result) => {
     if (!result.data
@@ -138,17 +138,8 @@ export function HasuraAdapter() {
   return <Adapter>{
     getUserByEmail: async (email: string) => {
       ilog('getUserByEmail...', email)
-      return adapterClient.query<GQLGetUserByEmail>({
-        query: gql`
-  query GQLGetUserByEmail($email: String) {
-    hashers(where: {email: {_eq: $email}}) {
-      id
-      email
-      name
-      email_verified
-    }
-  }
-  `,
+      return adapterClient.query<GqlGetUserByEmailQuery>({
+        query: GqlGetUserByEmailDocument,
         variables: { email },
       }).then((result) => {
         const hasher = result.data.hashers[0]
@@ -172,14 +163,8 @@ export function HasuraAdapter() {
   }) => {
       const { identifier, token } = params
       ilog('useVerificationToken...', params)
-      return adapterClient.query<GQLCheckVerificationToken>({
-        query: gql`
-        query GQLCheckVerificationToken($identifier: String, $token: String) {
-  hashers(where: {email: {_eq: $identifier}, login: {_eq: $token}}) {
-    login_expires
-  }
-}
-        `,
+      return adapterClient.query<GqlCheckVerificationTokenQuery>({
+        query: GqlCheckVerificationTokenDocument,
         variables: params,
       }).then((result) => {
         if (result.data.hashers.length < 1) {
@@ -192,15 +177,8 @@ export function HasuraAdapter() {
           token,
         }
         ilog('useVerificationToken: valid', validToken)
-        return adapterClient.mutate<GQLUseVerificationToken>({
-          mutation: gql`
-mutation GQLUseVerificationToken($identifier: String, $token: String, $email_verified: timestamptz) {
-  update_hashers(where: {email: {_eq: $identifier}, login: {_eq: $token}}, _set: {login: null, login_expires: null, email_verified: $email_verified}) {
-    returning {
-      login_expires
-    }
-  }
-}`,
+        return adapterClient.mutate<GqlUseVerificationTokenMutation>({
+          mutation: GqlUseVerificationTokenDocument,
           variables: {
             ...params,
             email_verified: new Date(),
@@ -211,20 +189,8 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
 
     getSessionAndUser: async (sessionToken: any) => {
       ilog('getSessionAndUser...', sessionToken)
-      return adapterClient.query<GQLGetSessionAndUser>({
-        query: gql`
-        query GQLGetSessionAndUser($sessionToken: String) {
-  sessions(where: {session_token: {_eq: $sessionToken}}) {
-    id
-    expires
-    user {
-      email
-      email_verified
-      id
-      name
-    }
-  }
-}`,
+      return adapterClient.query<GqlGetSessionAndUserQuery>({
+        query: GqlGetSessionAndUserDocument,
         variables: { sessionToken },
       }).then((result) => {
         if (result.data.sessions.length < 1) {
@@ -259,17 +225,8 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
 
     deleteSession: async (sessionToken: any) => {
       ilogError('deleteSession...', sessionToken)
-      return adapterClient.mutate<GQLDeleteSession>({
-        mutation: gql`
-        mutation GQLDeleteSession($sessionToken: String) {
-  delete_sessions(where: {session_token: {_eq: $sessionToken}}) {
-    returning {
-      expires
-      id
-      user_id
-    }
-  }
-}`,
+      return adapterClient.mutate<GqlDeleteSessionMutation>({
+        mutation: GqlDeleteSessionDocument,
         variables: { sessionToken },
       }).then((result) => {
         if (!result.data?.delete_sessions?.returning
@@ -291,18 +248,8 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
 
     updateUser: async (user: Partial<AdapterUser>) => {
       ilogError('updateUser', user)
-      return adapterClient.mutate<GQLUpdateUser>({
-        mutation: gql`
-        mutation GQLUpdateUser($id: Int = 10, $emailVerified: timestamptz) {
-  update_hashers(where: {id: {_eq: $id}}, _set: {email_verified: $emailVerified}) {
-    returning {
-      email
-      email_verified
-      id
-      name
-    }
-  }
-}`,
+      return adapterClient.mutate<GqlUpdateUserMutation>({
+        mutation: GqlUpdateUserDocument,
         variables: user,
       }).then((result) => {
         if (!result.data?.update_hashers?.returning
@@ -326,13 +273,8 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
       expires: Date;
   }) => {
       ilogError('createSession...', session)
-      return adapterClient.mutate<GQLCreateSession>({
-        mutation: gql`
-        mutation GQLCreateSession($sessionToken: String, $userId: Int = 10, $expires: timestamptz, $id: String = "") {
-  insert_sessions_one(object: {session_token: $sessionToken, user_id: $userId, expires: $expires, id: $id}) {
-    id
-  }
-}`,
+      return adapterClient.mutate<GqlCreateSessionMutation>({
+        mutation: GqlCreateSessionDocument,
         variables: {
           ...session,
           id: uuidv4(),
@@ -353,17 +295,11 @@ mutation GQLUseVerificationToken($identifier: String, $token: String, $email_ver
 
     createUser: async (omitUser: Omit<AdapterUser, 'id'>) => {
       ilog('createUser...', omitUser)
-      return adapterClient.query<GQLCreateUser>({
-        query: gql`
-mutation GQLCreateUser($email: String, $name: String) {
-  insert_hashers_one(object: {email: $email, name: $name}) {
-    id
-  }
-}
-`,
+      return adapterClient.mutate<GqlCreateUserMutation>({
+        mutation: GqlCreateUserDocument,
         variables: omitUser,
       }).then((result) => {
-        if (!result.data.insert_hashers_one?.id) {
+        if (!result.data || !result.data.insert_hashers_one?.id) {
           throw Error('No user created')
         }
         const user = <AdapterUser>{
@@ -376,15 +312,8 @@ mutation GQLCreateUser($email: String, $name: String) {
 
     getUser: async (id: string) => {
       ilog('getUser...', id)
-      return adapterClient.query<GQLGetUser>({
-        query: gql`
-        query GQLGetUser($id: Int) {
-  hashers(where: {id: {_eq: $id}}, limit: 1) {
-    email
-    email_verified
-    name
-  }
-}`,
+      return adapterClient.query<GqlGetUserQuery>({
+        query: GqlGetUserDocument,
         variables: { id },
       }).then((result) => {
         if (!result.data.hashers || result.data.hashers.length < 0) {
@@ -405,18 +334,8 @@ mutation GQLCreateUser($email: String, $name: String) {
 
     getUserByAccount: (providerAccountId: Pick<Account, 'provider' | 'providerAccountId'>) => {
       ilog('getUserByAccount...', providerAccountId)
-      return adapterClient.query<GQLGetUserByAccount>({
-        query: gql`
-        query GQLGetUserByAccount($provider: String, $providerAccountId: String) {
-  account_links(limit: 1, where: {provider: {_eq: $provider}, provider_id: {_eq: $providerAccountId}}) {
-    user {
-      id
-      email
-      email_verified
-      name
-    }
-  }
-}`,
+      return adapterClient.query<GqlGetUserByAccountQuery>({
+        query: GqlGetUserByAccountDocument,
         variables: providerAccountId,
       }).then((result) => {
         if (!result.data.account_links || result.data.account_links.length < 1) {
@@ -436,13 +355,8 @@ mutation GQLCreateUser($email: String, $name: String) {
 
     linkAccount: (account: Account) => {
       ilog('linkAccount...', account)
-      return adapterClient.mutate<GQLLinkAccount>({
-        mutation: gql`
-        mutation GQLLinkAccount($provider: String, $providerAccountId: String, $userId: Int) {
-  insert_account_links_one(object: {provider: $provider, provider_id: $providerAccountId, user_id: $userId}) {
-    user_id
-  }
-}`,
+      return adapterClient.mutate<GqlLinkAccountMutation>({
+        mutation: GqlLinkAccountDocument,
         variables: account,
       }).then((result) => {
         if (!result.data?.insert_account_links_one?.user_id) {
@@ -454,15 +368,8 @@ mutation GQLCreateUser($email: String, $name: String) {
 
     updateSession: (session: Partial<AdapterSession> & Pick<AdapterSession, 'sessionToken'>) => {
       ilog('updateSession...', session.userId)
-      return adapterClient.query<GQLUpdateSession>({
-        query: gql`
-        query GQLUpdateSession($sessionToken: String) {
-  sessions(limit: 1, where: {session_token: {_eq: $sessionToken}}) {
-    id
-    user_id
-    expires
-  }
-}`,
+      return adapterClient.query<GqlUpdateSessionQuery>({
+        query: GqlUpdateSessionDocument,
         variables: session,
       }).then((result) => {
         if (!result.data.sessions || result.data.sessions.length < 1) {

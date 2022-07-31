@@ -1,6 +1,5 @@
-import { gql } from '@apollo/client'
 import { ServerClient } from '../../graph/hasura'
-import { GQLVerifyCalendarAdmin } from '../../graph/types'
+import { GqlVerifyCalendarAdminDocument, GqlVerifyCalendarAdminQuery } from '../../graph/types'
 import { ilog, ilogError } from '../Logging'
 
 export type LabeledPromise<T> = {
@@ -43,14 +42,8 @@ export async function apiBackOff<T>(label: string, request: Promise<T>, timeout 
 }
 
 export async function verifyCalendarAdmin(kennelId : string, email: string) : Promise<void> {
-  return ServerClient().query<GQLVerifyCalendarAdmin>({
-    query: gql`
-query GQLVerifyCalendarAdmin($kennelId: Int, $email: String) {
-  kennels(where: {id: {_eq: $kennelId}, gm_email: {_eq: $email}}, limit: 1) {
-    id
-  }
-}
-    `,
+  return ServerClient().query<GqlVerifyCalendarAdminQuery>({
+    query: GqlVerifyCalendarAdminDocument,
     variables: { kennelId, email },
   }).then((r) => {
     if (r.data.kennels.length < 1) {

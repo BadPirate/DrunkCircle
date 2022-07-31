@@ -19,6 +19,7 @@ module.exports = {
   plugins: [
     'react',
   ],
+  ignorePatterns: ['src/graph/types.ts'],
   rules: {
     semi: ['error', 'never'],
     indent: ['error', 2],

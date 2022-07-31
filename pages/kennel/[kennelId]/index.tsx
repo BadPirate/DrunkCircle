@@ -1,40 +1,32 @@
 /* eslint-disable camelcase */
-import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import { Button, Tab, Tabs } from 'react-bootstrap'
+import moment from 'moment'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
 import { LoadSpinner } from '../../../src/components/LoadSpinner'
 import PageCard from '../../../src/components/PageCard'
 import PublicClientHasura from '../../../src/graph/PublicClientHasura'
-import {
-  GQLGetKennelPage, GQLGetKennelPage_kennels, GQLHareRank,
-  GQLMismanagementView, permission_enum_enum,
-} from '../../../src/graph/types'
 import FormattedDate, { MobileAlt } from '../../../src/components/FormattedDate'
 import { queryToInt } from '../../../src/func/queryParsing'
 import { useUserPermissions } from '../../../src/func/useUserPerms'
+import {
+  GqlGetKennelPageDocument, GqlGetKennelPageKennelFragment,
+  GqlGetKennelPageQuery,
+  Permission_Enum_Enum,
+  useGqlHareRankQuery,
+  useGqlMismanagementViewQuery,
+} from '../../../src/graph/types'
 
 const HareRank = ({ kennelId }: { kennelId: number }) => {
-  const { data, error } = useQuery<GQLHareRank>(
-    gql`
-   query GQLHareRank($kennelId: Int) {
-  hashers(where: {name: {_is_null: false}, hares: {trailInfo: {kennel: {_eq: $kennelId}}}}, limit: 50) {
-    name
-    id
-    hares_aggregate(where: {trailInfo: {kennel: {_eq: $kennelId}}}) {
-      aggregate {
-        count
-      }
-    }
-  }
-}
-`,
-    { variables: { kennelId }, client: PublicClientHasura },
-  )
+  const { data, error } = useGqlHareRankQuery({
+    client: PublicClientHasura,
+    variables: { kennelId },
+  })
+
   if (error) return <ErrorBanner error={error} />
   if (!data) return <LoadSpinner />
 
@@ -60,10 +52,12 @@ const HareRank = ({ kennelId }: { kennelId: number }) => {
 
 interface ServerSideProps {
   error?: any | undefined,
-  data?: GQLGetKennelPage | null | undefined
+  data?: GqlGetKennelPageQuery | null | undefined
 }
 
-const TrailsPart = ({ kennel: { trails, id: kennelId } } : { kennel: GQLGetKennelPage_kennels}) => (
+const TrailsPart = ({
+  kennel: { trails, id: kennelId },
+} : { kennel: GqlGetKennelPageKennelFragment }) => (
   <MobileAlt
     mobile={(
       <>
@@ -123,17 +117,7 @@ const TrailsPart = ({ kennel: { trails, id: kennelId } } : { kennel: GQLGetKenne
 )
 
 const MismanagementPart = ({ kennelId } : { kennelId : number }) => {
-  const { loading, data, error } = useQuery<GQLMismanagementView>(gql`
-query GQLMismanagementView($kennelId: Int) {
-  management(where: {kennel: {_eq: $kennelId}}) {
-    hasherInfo {
-      name
-      id
-    }
-    title
-  }
-}
-  `, {
+  const { loading, data, error } = useGqlMismanagementViewQuery({
     variables: { kennelId },
     client: PublicClientHasura,
   })
@@ -187,11 +171,18 @@ const KennelPage = ({ error: kennelError, data: kennelData }: ServerSideProps) =
     })
   }
 
+  rows.push({
+    title: 'Frequency',
+    row: kennel.frequency && kennel.frequency > 0 && kennel.next
+      ? `Hashes every ${kennel.frequency > 0 ? `${kennel.frequency / 7} weeks` : 'week'} on ${moment(kennel.next).format('dddd')}`
+      : 'Hashes periodically.  Click on Add trail to host your own trail for this kennel.',
+  })
+
   return (
     <PageCard
       title={kennel.name || 'DrunkCircle Kennel'}
       description={kennel.description || undefined}
-      editLink={perms.includes(permission_enum_enum.mismanage) ? `/kennel/${kennelId}/edit` : undefined}
+      editLink={perms.includes(Permission_Enum_Enum.Mismanage) ? `/kennel/${kennelId}/edit` : undefined}
     >
       <InfoTable rows={rows} />
       <Tabs className="mt-3">
@@ -218,29 +209,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query: { kennelId
   let props: ServerSideProps = {}
   const after = new Date()
   after.setHours(after.getHours() - 8)
-  await PublicClientHasura.query<GQLGetKennelPage>({
-    query: gql`
-      query GQLGetKennelPage($kennelId: Int, $after: timestamptz) {
-        kennels(limit: 1, where: {id: {_eq: $kennelId}}, ) {
-          short_name
-          name
-          id
-          description
-          area
-          web
-          trails(limit: 10, order_by: {calculated_number: asc}, where: {start: {_gt: $after}, draft: {_is_null: true}}) {
-            calculated_number
-            hares {
-              hasherInfo {
-                name
-              }
-            }
-            id
-            start
-            name
-          }
-        }
-      }`,
+  await PublicClientHasura.query<GqlGetKennelPageQuery>({
+    query: GqlGetKennelPageDocument,
     variables: { kennelId, after },
   })
     .catch((error) => { props = { error } })
