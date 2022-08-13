@@ -275,7 +275,8 @@ export type Attendance = {
   hasher: Scalars['Int'];
   /** An object relationship */
   hasherInfo: Hashers;
-  paid: Scalars['Boolean'];
+  note?: Maybe<Scalars['String']>;
+  paid?: Maybe<Scalars['Boolean']>;
   trail: Scalars['Int'];
 };
 
@@ -352,6 +353,7 @@ export type Attendance_Bool_Exp = {
   attended?: InputMaybe<Boolean_Comparison_Exp>;
   hasher?: InputMaybe<Int_Comparison_Exp>;
   hasherInfo?: InputMaybe<Hashers_Bool_Exp>;
+  note?: InputMaybe<String_Comparison_Exp>;
   paid?: InputMaybe<Boolean_Comparison_Exp>;
   trail?: InputMaybe<Int_Comparison_Exp>;
 };
@@ -373,6 +375,7 @@ export type Attendance_Insert_Input = {
   attended?: InputMaybe<Scalars['Boolean']>;
   hasher?: InputMaybe<Scalars['Int']>;
   hasherInfo?: InputMaybe<Hashers_Obj_Rel_Insert_Input>;
+  note?: InputMaybe<Scalars['String']>;
   paid?: InputMaybe<Scalars['Boolean']>;
   trail?: InputMaybe<Scalars['Int']>;
 };
@@ -381,12 +384,14 @@ export type Attendance_Insert_Input = {
 export type Attendance_Max_Fields = {
   __typename?: 'attendance_max_fields';
   hasher?: Maybe<Scalars['Int']>;
+  note?: Maybe<Scalars['String']>;
   trail?: Maybe<Scalars['Int']>;
 };
 
 /** order by max() on columns of table "attendance" */
 export type Attendance_Max_Order_By = {
   hasher?: InputMaybe<Order_By>;
+  note?: InputMaybe<Order_By>;
   trail?: InputMaybe<Order_By>;
 };
 
@@ -394,12 +399,14 @@ export type Attendance_Max_Order_By = {
 export type Attendance_Min_Fields = {
   __typename?: 'attendance_min_fields';
   hasher?: Maybe<Scalars['Int']>;
+  note?: Maybe<Scalars['String']>;
   trail?: Maybe<Scalars['Int']>;
 };
 
 /** order by min() on columns of table "attendance" */
 export type Attendance_Min_Order_By = {
   hasher?: InputMaybe<Order_By>;
+  note?: InputMaybe<Order_By>;
   trail?: InputMaybe<Order_By>;
 };
 
@@ -424,6 +431,7 @@ export type Attendance_Order_By = {
   attended?: InputMaybe<Order_By>;
   hasher?: InputMaybe<Order_By>;
   hasherInfo?: InputMaybe<Hashers_Order_By>;
+  note?: InputMaybe<Order_By>;
   paid?: InputMaybe<Order_By>;
   trail?: InputMaybe<Order_By>;
 };
@@ -441,6 +449,8 @@ export enum Attendance_Select_Column {
   /** column name */
   Hasher = 'hasher',
   /** column name */
+  Note = 'note',
+  /** column name */
   Paid = 'paid',
   /** column name */
   Trail = 'trail'
@@ -450,6 +460,7 @@ export enum Attendance_Select_Column {
 export type Attendance_Set_Input = {
   attended?: InputMaybe<Scalars['Boolean']>;
   hasher?: InputMaybe<Scalars['Int']>;
+  note?: InputMaybe<Scalars['String']>;
   paid?: InputMaybe<Scalars['Boolean']>;
   trail?: InputMaybe<Scalars['Int']>;
 };
@@ -512,6 +523,8 @@ export enum Attendance_Update_Column {
   Attended = 'attended',
   /** column name */
   Hasher = 'hasher',
+  /** column name */
+  Note = 'note',
   /** column name */
   Paid = 'paid',
   /** column name */
@@ -4509,6 +4522,7 @@ export type GqlUpdateAttendanceMutationVariables = Exact<{
   attended?: InputMaybe<Scalars['Boolean']>;
   hasher?: InputMaybe<Scalars['Int']>;
   trail?: InputMaybe<Scalars['Int']>;
+  note?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -4667,6 +4681,25 @@ export type GqlUpdateCalendarTokenMutationVariables = Exact<{
 
 
 export type GqlUpdateCalendarTokenMutation = { __typename?: 'mutation_root', update_kennels?: { __typename?: 'kennels_mutation_response', returning: Array<{ __typename?: 'kennels', id: number }> } | null };
+
+export type GqlUpdateNoteMutationVariables = Exact<{
+  note?: InputMaybe<Scalars['String']>;
+  trailId?: InputMaybe<Scalars['Int']>;
+  hasherId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GqlUpdateNoteMutation = { __typename?: 'mutation_root', update_attendance?: { __typename?: 'attendance_mutation_response', affected_rows: number } | null };
+
+export type GqlUpdatePaidMutationVariables = Exact<{
+  hasherId?: InputMaybe<Scalars['Int']>;
+  trailId?: InputMaybe<Scalars['Int']>;
+  paid?: InputMaybe<Scalars['Boolean']>;
+  attended?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+
+export type GqlUpdatePaidMutation = { __typename?: 'mutation_root', insert_attendance?: { __typename?: 'attendance_mutation_response', affected_rows: number } | null };
 
 export type GqlHareRankQueryVariables = Exact<{
   kennelId?: InputMaybe<Scalars['Int']>;
@@ -4967,6 +5000,13 @@ export type GqlUpdateSessionQueryVariables = Exact<{
 
 export type GqlUpdateSessionQuery = { __typename?: 'query_root', sessions: Array<{ __typename?: 'sessions', id: string, user_id: number, expires: any }> };
 
+export type GqlKennelForTrailQueryVariables = Exact<{
+  trailId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GqlKennelForTrailQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', kennel: number, hares: Array<{ __typename?: 'hares', hasher: number }> }> };
+
 export type GqlKennelRolesEditViewSubscriptionVariables = Exact<{
   kennelId?: InputMaybe<Scalars['Int']>;
 }>;
@@ -4979,7 +5019,7 @@ export type GqlAttendanceViewSubscriptionVariables = Exact<{
 }>;
 
 
-export type GqlAttendanceViewSubscription = { __typename?: 'subscription_root', attendance: Array<{ __typename?: 'attendance', attended?: boolean | null, hasherInfo: { __typename?: 'hashers', name?: string | null, id: number } }> };
+export type GqlAttendanceViewSubscription = { __typename?: 'subscription_root', attendance: Array<{ __typename?: 'attendance', attended?: boolean | null, note?: string | null, paid?: boolean | null, hasherInfo: { __typename?: 'hashers', name?: string | null, id: number } }> };
 
 export const GqlGetKennelPageKennelFragmentDoc = gql`
     fragment GQLGetKennelPageKennel on kennels {
@@ -5611,9 +5651,9 @@ export type GqlUpdateGoogleTokensMutationHookResult = ReturnType<typeof useGqlUp
 export type GqlUpdateGoogleTokensMutationResult = Apollo.MutationResult<GqlUpdateGoogleTokensMutation>;
 export type GqlUpdateGoogleTokensMutationOptions = Apollo.BaseMutationOptions<GqlUpdateGoogleTokensMutation, GqlUpdateGoogleTokensMutationVariables>;
 export const GqlUpdateAttendanceDocument = gql`
-    mutation GQLUpdateAttendance($attended: Boolean, $hasher: Int, $trail: Int) {
+    mutation GQLUpdateAttendance($attended: Boolean, $hasher: Int, $trail: Int, $note: String = "") {
   insert_attendance_one(
-    object: {attended: $attended, hasher: $hasher, trail: $trail}
+    object: {attended: $attended, hasher: $hasher, trail: $trail, note: $note}
     on_conflict: {constraint: attendance_pkey, update_columns: attended}
   ) {
     attended
@@ -5638,6 +5678,7 @@ export type GqlUpdateAttendanceMutationFn = Apollo.MutationFunction<GqlUpdateAtt
  *      attended: // value for 'attended'
  *      hasher: // value for 'hasher'
  *      trail: // value for 'trail'
+ *      note: // value for 'note'
  *   },
  * });
  */
@@ -6337,6 +6378,83 @@ export function useGqlUpdateCalendarTokenMutation(baseOptions?: Apollo.MutationH
 export type GqlUpdateCalendarTokenMutationHookResult = ReturnType<typeof useGqlUpdateCalendarTokenMutation>;
 export type GqlUpdateCalendarTokenMutationResult = Apollo.MutationResult<GqlUpdateCalendarTokenMutation>;
 export type GqlUpdateCalendarTokenMutationOptions = Apollo.BaseMutationOptions<GqlUpdateCalendarTokenMutation, GqlUpdateCalendarTokenMutationVariables>;
+export const GqlUpdateNoteDocument = gql`
+    mutation GQLUpdateNote($note: String, $trailId: Int, $hasherId: Int) {
+  update_attendance(
+    where: {trail: {_eq: $trailId}, hasher: {_eq: $hasherId}}
+    _set: {note: $note}
+  ) {
+    affected_rows
+  }
+}
+    `;
+export type GqlUpdateNoteMutationFn = Apollo.MutationFunction<GqlUpdateNoteMutation, GqlUpdateNoteMutationVariables>;
+
+/**
+ * __useGqlUpdateNoteMutation__
+ *
+ * To run a mutation, you first call `useGqlUpdateNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGqlUpdateNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [gqlUpdateNoteMutation, { data, loading, error }] = useGqlUpdateNoteMutation({
+ *   variables: {
+ *      note: // value for 'note'
+ *      trailId: // value for 'trailId'
+ *      hasherId: // value for 'hasherId'
+ *   },
+ * });
+ */
+export function useGqlUpdateNoteMutation(baseOptions?: Apollo.MutationHookOptions<GqlUpdateNoteMutation, GqlUpdateNoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GqlUpdateNoteMutation, GqlUpdateNoteMutationVariables>(GqlUpdateNoteDocument, options);
+      }
+export type GqlUpdateNoteMutationHookResult = ReturnType<typeof useGqlUpdateNoteMutation>;
+export type GqlUpdateNoteMutationResult = Apollo.MutationResult<GqlUpdateNoteMutation>;
+export type GqlUpdateNoteMutationOptions = Apollo.BaseMutationOptions<GqlUpdateNoteMutation, GqlUpdateNoteMutationVariables>;
+export const GqlUpdatePaidDocument = gql`
+    mutation GQLUpdatePaid($hasherId: Int, $trailId: Int, $paid: Boolean, $attended: Boolean) {
+  insert_attendance(
+    objects: {hasher: $hasherId, trail: $trailId, paid: $paid, attended: $attended}
+    on_conflict: {constraint: attendance_pkey, update_columns: [paid, attended]}
+  ) {
+    affected_rows
+  }
+}
+    `;
+export type GqlUpdatePaidMutationFn = Apollo.MutationFunction<GqlUpdatePaidMutation, GqlUpdatePaidMutationVariables>;
+
+/**
+ * __useGqlUpdatePaidMutation__
+ *
+ * To run a mutation, you first call `useGqlUpdatePaidMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGqlUpdatePaidMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [gqlUpdatePaidMutation, { data, loading, error }] = useGqlUpdatePaidMutation({
+ *   variables: {
+ *      hasherId: // value for 'hasherId'
+ *      trailId: // value for 'trailId'
+ *      paid: // value for 'paid'
+ *      attended: // value for 'attended'
+ *   },
+ * });
+ */
+export function useGqlUpdatePaidMutation(baseOptions?: Apollo.MutationHookOptions<GqlUpdatePaidMutation, GqlUpdatePaidMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GqlUpdatePaidMutation, GqlUpdatePaidMutationVariables>(GqlUpdatePaidDocument, options);
+      }
+export type GqlUpdatePaidMutationHookResult = ReturnType<typeof useGqlUpdatePaidMutation>;
+export type GqlUpdatePaidMutationResult = Apollo.MutationResult<GqlUpdatePaidMutation>;
+export type GqlUpdatePaidMutationOptions = Apollo.BaseMutationOptions<GqlUpdatePaidMutation, GqlUpdatePaidMutationVariables>;
 export const GqlHareRankDocument = gql`
     query GQLHareRank($kennelId: Int) {
   hashers(
@@ -7805,6 +7923,44 @@ export function useGqlUpdateSessionLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GqlUpdateSessionQueryHookResult = ReturnType<typeof useGqlUpdateSessionQuery>;
 export type GqlUpdateSessionLazyQueryHookResult = ReturnType<typeof useGqlUpdateSessionLazyQuery>;
 export type GqlUpdateSessionQueryResult = Apollo.QueryResult<GqlUpdateSessionQuery, GqlUpdateSessionQueryVariables>;
+export const GqlKennelForTrailDocument = gql`
+    query GQLKennelForTrail($trailId: Int) {
+  trails(where: {id: {_eq: $trailId}}, limit: 1) {
+    kennel
+    hares {
+      hasher
+    }
+  }
+}
+    `;
+
+/**
+ * __useGqlKennelForTrailQuery__
+ *
+ * To run a query within a React component, call `useGqlKennelForTrailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGqlKennelForTrailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGqlKennelForTrailQuery({
+ *   variables: {
+ *      trailId: // value for 'trailId'
+ *   },
+ * });
+ */
+export function useGqlKennelForTrailQuery(baseOptions?: Apollo.QueryHookOptions<GqlKennelForTrailQuery, GqlKennelForTrailQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GqlKennelForTrailQuery, GqlKennelForTrailQueryVariables>(GqlKennelForTrailDocument, options);
+      }
+export function useGqlKennelForTrailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GqlKennelForTrailQuery, GqlKennelForTrailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GqlKennelForTrailQuery, GqlKennelForTrailQueryVariables>(GqlKennelForTrailDocument, options);
+        }
+export type GqlKennelForTrailQueryHookResult = ReturnType<typeof useGqlKennelForTrailQuery>;
+export type GqlKennelForTrailLazyQueryHookResult = ReturnType<typeof useGqlKennelForTrailLazyQuery>;
+export type GqlKennelForTrailQueryResult = Apollo.QueryResult<GqlKennelForTrailQuery, GqlKennelForTrailQueryVariables>;
 export const GqlKennelRolesEditViewDocument = gql`
     subscription GQLKennelRolesEditView($kennelId: Int) {
   kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
@@ -7856,6 +8012,8 @@ export const GqlAttendanceViewDocument = gql`
       id
     }
     attended
+    note
+    paid
   }
 }
     `;

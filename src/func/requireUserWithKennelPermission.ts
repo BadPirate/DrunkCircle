@@ -2,7 +2,10 @@
 /* eslint-disable camelcase */
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { GqlKennelPermissionCheckDocument, GqlKennelPermissionCheckQuery, Permission_Enum_Enum } from '../graph/types'
+import {
+  GqlKennelPermissionCheckDocument, GqlKennelPermissionCheckQuery, GqlUserPermsDocument,
+  GqlUserPermsQuery, Permission_Enum_Enum,
+} from '../graph/types'
 import { queryToInt } from './queryParsing'
 import { requireKnownUser } from './ServerHelpers'
 
@@ -28,4 +31,16 @@ export async function requireUserWithKennelPermission(
     }
     return user
   })
+}
+
+export async function hasherPermissions(
+  sc: ApolloClient<NormalizedCacheObject>,
+  hasherId: number,
+  kennelId: number,
+) {
+  return sc.query<GqlUserPermsQuery>({
+    query: GqlUserPermsDocument,
+    variables: { hasherId, kennelId },
+  }).then((r) => (r.data ? r.data.management
+    .flatMap((m) => m.permissions).map((mp) => mp.permission) : []))
 }

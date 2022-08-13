@@ -30,6 +30,7 @@ import {
 } from '../../../../src/graph/types'
 import { InputDate } from '../../../../src/components/InputDate'
 import 'react-datetime/css/react-datetime.css'
+import { FormInputPart, FormPart, FormControlPart } from '../../../../src/components/FormInputPart'
 
 type CalendarOption = {
   id : string,
@@ -340,62 +341,6 @@ const RoleEditPart = ({
       <RoleAddPart kennelId={kennelId} />
     </>
   )
-}
-
-const FormPart = ({
-  name, label, children, help,
-} : {
-  name: string,
-  label: string,
-  children: React.ReactNode,
-  help: string | undefined
-}) => (
-  <Form.Group controlId={name} className="mb-3">
-    <Form.Label>{label}</Form.Label>
-    {children}
-    { help ? <Form.Text className="text-muted">{help}</Form.Text> : null }
-  </Form.Group>
-)
-
-const FormControlPart = ({
-  name, label, options,
-} : {
-  name: string,
-  label: string,
-  options: {[key: string] : any }
-}) => (
-  <Form.Control
-    placeholder={label}
-    name={name}
-    {...options}
-  />
-)
-
-const FormInputPart = ({
-  name, label, value, help, options,
-} : {
-  name: string,
-  label: string,
-  value?: string | null | undefined | number,
-  options?: {[key: string] : any }
-  help?: string | undefined
-}) => (
-  <FormPart name={name} label={label} help={help}>
-    <FormControlPart
-      label={label}
-      name={name}
-      options={{
-        ...options,
-        defaultValue: value,
-      }}
-    />
-  </FormPart>
-)
-
-FormInputPart.defaultProps = {
-  help: undefined,
-  options: [],
-  value: undefined,
 }
 
 const KennelEditPart = ({ kennelId } : {kennelId : number}) => {

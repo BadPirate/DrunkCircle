@@ -47,7 +47,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     await updateAttendance(sc, { attended: null, hasher, trail: trailId })
     const dynamicTemplateData = {
       title: subject,
-      subject,
+      subject: `Will you come to ${trailName}?`,
       body: `${hares.length > 0
         ? `${hares.map((h) => h.hasherInfo.name).join(', ')} ${hares.length === 1 ? 'is' : 'are'} haring`
         : 'There is a trail'} "${trailName}" 

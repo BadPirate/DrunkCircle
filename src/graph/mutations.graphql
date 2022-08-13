@@ -121,8 +121,8 @@ mutation GQLUpdateGoogleTokens($accessToken: String, $refreshToken: String,  $ke
   }
 }
 
-mutation GQLUpdateAttendance($attended: Boolean, $hasher: Int, $trail: Int) {
-  insert_attendance_one(object: {attended: $attended, hasher: $hasher, trail: $trail}, on_conflict: {constraint: attendance_pkey, update_columns: attended}) {
+mutation GQLUpdateAttendance($attended: Boolean, $hasher: Int, $trail: Int, $note: String = "") {
+  insert_attendance_one(object: {attended: $attended, hasher: $hasher, trail: $trail, note: $note}, on_conflict: {constraint: attendance_pkey, update_columns: attended}) {
     attended
   }
 }
@@ -266,5 +266,17 @@ mutation GQLUpdateCalendarToken($calendar: String = null, $refreshToken: String,
     returning {
       id
     }
+  }
+}
+
+mutation GQLUpdateNote($note: String, $trailId: Int, $hasherId: Int) {
+  update_attendance(where: {trail: {_eq: $trailId}, hasher: {_eq: $hasherId}}, _set: {note: $note}) {
+    affected_rows
+  }
+}
+
+mutation GQLUpdatePaid($hasherId: Int, $trailId: Int, $paid: Boolean, $attended: Boolean) {
+  insert_attendance(objects: {hasher: $hasherId, trail: $trailId, paid: $paid, attended: $attended}, on_conflict: {constraint: attendance_pkey, update_columns: [paid, attended]}) {
+    affected_rows
   }
 }

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Session } from 'next-auth'
 import { getSession } from 'next-auth/react'
+import { catchError } from './catchError'
 
 export const GoogleLimit = 5
 
@@ -70,4 +71,21 @@ export async function requireUserEmail(
     throw Error('Must have a set email address')
   }
   return user.email
+}
+
+type NextApiDetails = {req: NextApiRequest, res: NextApiResponse}
+// eslint-disable-next-line no-unused-vars
+type NextHandler = (details: NextApiDetails) => Promise<any>
+
+export function JSONHandler(handler: NextHandler) {
+  return (req: NextApiRequest, res: NextApiResponse) => handler({ req, res })
+    .then((r) => {
+      if (!r) return
+      res.status(200).json(r)
+    })
+    .catch((e) => {
+      res.status(400).json({
+        error: catchError(e).message,
+      })
+    })
 }

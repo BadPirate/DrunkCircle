@@ -34,11 +34,21 @@ export function queryToFloat(params: QParams): { [key: string]: number; } {
   })
   return result
 }
+
 export function queryToInt(params: QParams): { [key: string]: number; } {
   const result: { [key: string]: number; } = {}
   const strings = queryToStrings(params)
   Object.keys(strings).forEach((k) => {
     result[k] = parseInt(strings[k], 10)
+  })
+  return result
+}
+
+export function queryToBool(params: QParams): { [key: string]: boolean } {
+  const result: { [key: string]: boolean; } = {}
+  const strings = queryToStrings(params)
+  Object.keys(strings).forEach((k) => {
+    result[k] = strings[k] === 'true'
   })
   return result
 }

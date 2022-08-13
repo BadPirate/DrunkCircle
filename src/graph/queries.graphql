@@ -497,3 +497,13 @@ query GQLUpdateSession($sessionToken: String) {
     expires
   }
 }
+
+query GQLKennelForTrail($trailId: Int) {
+  trails(where: {id: {_eq: $trailId}}, limit: 1) {
+    kennel
+    hares {
+      hasher
+    }
+  }
+}
+

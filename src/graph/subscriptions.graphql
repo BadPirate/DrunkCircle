@@ -18,11 +18,13 @@ subscription GQLKennelRolesEditView($kennelId: Int) {
 }
 
 subscription GQLAttendanceView($trailId: Int) {
-  attendance(where: {trail: {_eq: $trailId}}, order_by: {attended: asc}) {
+  attendance(where: {trail: {_eq: $trailId}}) {
     hasherInfo {
       name
       id
     }
     attended
+    note
+    paid
   }
 }

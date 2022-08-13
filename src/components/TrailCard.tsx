@@ -199,7 +199,14 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
   if (!editing && !trail.draft) {
     rows.push({
       title: "Who's coming?",
-      row: <AttendancePart trailId={trail.id} />,
+      row: <AttendancePart
+        trailId={trail.id}
+        kennelID={trail.kennelInfo.id}
+        isHare={
+          user ? trail.hares.find((h) => h.hasherInfo.id === parseInt(user.id, 10)) !== undefined
+            : false
+        }
+      />,
     })
   }
 
