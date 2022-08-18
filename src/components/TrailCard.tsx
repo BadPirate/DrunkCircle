@@ -142,6 +142,11 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
             hasSearch
             lat={lat}
             lng={lng}
+            mapOptions={{
+              zoomControl: true,
+              mapTypeControl: true,
+              mapTypeId: 'hybrid',
+            }}
             onSelect={(_status: any, data : {
               geometry : {
                 location : {
@@ -166,6 +171,11 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
               <>
                 <GMapify
                   appKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY!}
+                  mapOptions={{
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    mapTypeId: 'hybrid',
+                  }}
                   customMarkers={
                     [
                       [trail.latitude, trail.longitude, 'Start'],
