@@ -136,7 +136,7 @@ export type Account_Links_Bool_Exp = {
 
 /** unique or primary key constraints on table "account_links" */
 export enum Account_Links_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "provider", "user_id" */
   AccountLinksPkey = 'account_links_pkey'
 }
 
@@ -178,7 +178,7 @@ export type Account_Links_Mutation_Response = {
   returning: Array<Account_Links>;
 };
 
-/** on conflict condition type for table "account_links" */
+/** on_conflict condition type for table "account_links" */
 export type Account_Links_On_Conflict = {
   constraint: Account_Links_Constraint;
   update_columns?: Array<Account_Links_Update_Column>;
@@ -249,6 +249,14 @@ export enum Account_Links_Update_Column {
   /** column name */
   UserId = 'user_id'
 }
+
+export type Account_Links_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Account_Links_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Account_Links_Set_Input>;
+  where: Account_Links_Bool_Exp;
+};
 
 /** aggregate var_pop on columns */
 export type Account_Links_Var_Pop_Fields = {
@@ -328,7 +336,7 @@ export type Attendance_Aggregate_Order_By = {
 /** input type for inserting array relation for remote table "attendance" */
 export type Attendance_Arr_Rel_Insert_Input = {
   data: Array<Attendance_Insert_Input>;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Attendance_On_Conflict>;
 };
 
@@ -360,7 +368,7 @@ export type Attendance_Bool_Exp = {
 
 /** unique or primary key constraints on table "attendance" */
 export enum Attendance_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "hasher", "trail" */
   AttendancePkey = 'attendance_pkey'
 }
 
@@ -419,7 +427,7 @@ export type Attendance_Mutation_Response = {
   returning: Array<Attendance>;
 };
 
-/** on conflict condition type for table "attendance" */
+/** on_conflict condition type for table "attendance" */
 export type Attendance_On_Conflict = {
   constraint: Attendance_Constraint;
   update_columns?: Array<Attendance_Update_Column>;
@@ -530,6 +538,14 @@ export enum Attendance_Update_Column {
   /** column name */
   Trail = 'trail'
 }
+
+export type Attendance_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Attendance_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Attendance_Set_Input>;
+  where: Attendance_Bool_Exp;
+};
 
 /** aggregate var_pop on columns */
 export type Attendance_Var_Pop_Fields = {
@@ -655,7 +671,7 @@ export type Hares_Aggregate_Order_By = {
 /** input type for inserting array relation for remote table "hares" */
 export type Hares_Arr_Rel_Insert_Input = {
   data: Array<Hares_Insert_Input>;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Hares_On_Conflict>;
 };
 
@@ -685,7 +701,7 @@ export type Hares_Bool_Exp = {
 
 /** unique or primary key constraints on table "hares" */
 export enum Hares_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "hasher", "trail" */
   HareIndex = 'hare_index'
 }
 
@@ -738,7 +754,7 @@ export type Hares_Mutation_Response = {
   returning: Array<Hares>;
 };
 
-/** on conflict condition type for table "hares" */
+/** on_conflict condition type for table "hares" */
 export type Hares_On_Conflict = {
   constraint: Hares_Constraint;
   update_columns?: Array<Hares_Update_Column>;
@@ -826,6 +842,14 @@ export enum Hares_Update_Column {
   /** column name */
   Trail = 'trail'
 }
+
+export type Hares_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Hares_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Hares_Set_Input>;
+  where: Hares_Bool_Exp;
+};
 
 /** aggregate var_pop on columns */
 export type Hares_Var_Pop_Fields = {
@@ -1028,11 +1052,11 @@ export type Hashers_Bool_Exp = {
 
 /** unique or primary key constraints on table "hashers" */
 export enum Hashers_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "email" */
   HashersEmailKey = 'hashers_email_key',
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "name" */
   HashersNameKey = 'hashers_name_key',
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "id" */
   HashersPkey = 'hashers_pkey'
 }
 
@@ -1089,11 +1113,11 @@ export type Hashers_Mutation_Response = {
 /** input type for inserting object relation for remote table "hashers" */
 export type Hashers_Obj_Rel_Insert_Input = {
   data: Hashers_Insert_Input;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Hashers_On_Conflict>;
 };
 
-/** on conflict condition type for table "hashers" */
+/** on_conflict condition type for table "hashers" */
 export type Hashers_On_Conflict = {
   constraint: Hashers_Constraint;
   update_columns?: Array<Hashers_Update_Column>;
@@ -1184,6 +1208,14 @@ export enum Hashers_Update_Column {
   /** column name */
   Name = 'name'
 }
+
+export type Hashers_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Hashers_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Hashers_Set_Input>;
+  where: Hashers_Bool_Exp;
+};
 
 /** aggregate var_pop on columns */
 export type Hashers_Var_Pop_Fields = {
@@ -1322,7 +1354,7 @@ export type Kennels_Aggregate_Order_By = {
 /** input type for inserting array relation for remote table "kennels" */
 export type Kennels_Arr_Rel_Insert_Input = {
   data: Array<Kennels_Insert_Input>;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Kennels_On_Conflict>;
 };
 
@@ -1369,7 +1401,7 @@ export type Kennels_Bool_Exp = {
 
 /** unique or primary key constraints on table "kennels" */
 export enum Kennels_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "id" */
   KennelsPkey = 'kennels_pkey'
 }
 
@@ -1497,11 +1529,11 @@ export type Kennels_Mutation_Response = {
 /** input type for inserting object relation for remote table "kennels" */
 export type Kennels_Obj_Rel_Insert_Input = {
   data: Kennels_Insert_Input;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Kennels_On_Conflict>;
 };
 
-/** on conflict condition type for table "kennels" */
+/** on_conflict condition type for table "kennels" */
 export type Kennels_On_Conflict = {
   constraint: Kennels_Constraint;
   update_columns?: Array<Kennels_Update_Column>;
@@ -1688,6 +1720,14 @@ export enum Kennels_Update_Column {
   Web = 'web'
 }
 
+export type Kennels_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Kennels_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Kennels_Set_Input>;
+  where: Kennels_Bool_Exp;
+};
+
 /** aggregate var_pop on columns */
 export type Kennels_Var_Pop_Fields = {
   __typename?: 'kennels_var_pop_fields';
@@ -1819,7 +1859,7 @@ export type Management_Aggregate_Order_By = {
 /** input type for inserting array relation for remote table "management" */
 export type Management_Arr_Rel_Insert_Input = {
   data: Array<Management_Insert_Input>;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Management_On_Conflict>;
 };
 
@@ -1855,7 +1895,7 @@ export type Management_Bool_Exp = {
 
 /** unique or primary key constraints on table "management" */
 export enum Management_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "id" */
   ManagementPkey = 'management_pkey'
 }
 
@@ -1924,11 +1964,11 @@ export type Management_Mutation_Response = {
 /** input type for inserting object relation for remote table "management" */
 export type Management_Obj_Rel_Insert_Input = {
   data: Management_Insert_Input;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Management_On_Conflict>;
 };
 
-/** on conflict condition type for table "management" */
+/** on_conflict condition type for table "management" */
 export type Management_On_Conflict = {
   constraint: Management_Constraint;
   update_columns?: Array<Management_Update_Column>;
@@ -2048,6 +2088,14 @@ export enum Management_Update_Column {
   /** column name */
   Title = 'title'
 }
+
+export type Management_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Management_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Management_Set_Input>;
+  where: Management_Bool_Exp;
+};
 
 /** aggregate var_pop on columns */
 export type Management_Var_Pop_Fields = {
@@ -2179,40 +2227,60 @@ export type Mutation_Root = {
   update_account_links?: Maybe<Account_Links_Mutation_Response>;
   /** update single row of the table: "account_links" */
   update_account_links_by_pk?: Maybe<Account_Links>;
+  /** update multiples rows of table: "account_links" */
+  update_account_links_many?: Maybe<Array<Maybe<Account_Links_Mutation_Response>>>;
   /** update data of the table: "attendance" */
   update_attendance?: Maybe<Attendance_Mutation_Response>;
   /** update single row of the table: "attendance" */
   update_attendance_by_pk?: Maybe<Attendance>;
+  /** update multiples rows of table: "attendance" */
+  update_attendance_many?: Maybe<Array<Maybe<Attendance_Mutation_Response>>>;
   /** update data of the table: "hares" */
   update_hares?: Maybe<Hares_Mutation_Response>;
+  /** update multiples rows of table: "hares" */
+  update_hares_many?: Maybe<Array<Maybe<Hares_Mutation_Response>>>;
   /** update data of the table: "hashers" */
   update_hashers?: Maybe<Hashers_Mutation_Response>;
   /** update single row of the table: "hashers" */
   update_hashers_by_pk?: Maybe<Hashers>;
+  /** update multiples rows of table: "hashers" */
+  update_hashers_many?: Maybe<Array<Maybe<Hashers_Mutation_Response>>>;
   /** update data of the table: "kennels" */
   update_kennels?: Maybe<Kennels_Mutation_Response>;
   /** update single row of the table: "kennels" */
   update_kennels_by_pk?: Maybe<Kennels>;
+  /** update multiples rows of table: "kennels" */
+  update_kennels_many?: Maybe<Array<Maybe<Kennels_Mutation_Response>>>;
   /** update data of the table: "management" */
   update_management?: Maybe<Management_Mutation_Response>;
   /** update single row of the table: "management" */
   update_management_by_pk?: Maybe<Management>;
+  /** update multiples rows of table: "management" */
+  update_management_many?: Maybe<Array<Maybe<Management_Mutation_Response>>>;
   /** update data of the table: "permission_enum" */
   update_permission_enum?: Maybe<Permission_Enum_Mutation_Response>;
   /** update single row of the table: "permission_enum" */
   update_permission_enum_by_pk?: Maybe<Permission_Enum>;
+  /** update multiples rows of table: "permission_enum" */
+  update_permission_enum_many?: Maybe<Array<Maybe<Permission_Enum_Mutation_Response>>>;
   /** update data of the table: "permissions" */
   update_permissions?: Maybe<Permissions_Mutation_Response>;
   /** update single row of the table: "permissions" */
   update_permissions_by_pk?: Maybe<Permissions>;
+  /** update multiples rows of table: "permissions" */
+  update_permissions_many?: Maybe<Array<Maybe<Permissions_Mutation_Response>>>;
   /** update data of the table: "sessions" */
   update_sessions?: Maybe<Sessions_Mutation_Response>;
   /** update single row of the table: "sessions" */
   update_sessions_by_pk?: Maybe<Sessions>;
+  /** update multiples rows of table: "sessions" */
+  update_sessions_many?: Maybe<Array<Maybe<Sessions_Mutation_Response>>>;
   /** update data of the table: "trails" */
   update_trails?: Maybe<Trails_Mutation_Response>;
   /** update single row of the table: "trails" */
   update_trails_by_pk?: Maybe<Trails>;
+  /** update multiples rows of table: "trails" */
+  update_trails_many?: Maybe<Array<Maybe<Trails_Mutation_Response>>>;
 };
 
 
@@ -2490,6 +2558,12 @@ export type Mutation_RootUpdate_Account_Links_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Account_Links_ManyArgs = {
+  updates: Array<Account_Links_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_AttendanceArgs = {
   _inc?: InputMaybe<Attendance_Inc_Input>;
   _set?: InputMaybe<Attendance_Set_Input>;
@@ -2506,10 +2580,22 @@ export type Mutation_RootUpdate_Attendance_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Attendance_ManyArgs = {
+  updates: Array<Attendance_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_HaresArgs = {
   _inc?: InputMaybe<Hares_Inc_Input>;
   _set?: InputMaybe<Hares_Set_Input>;
   where: Hares_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Hares_ManyArgs = {
+  updates: Array<Hares_Updates>;
 };
 
 
@@ -2530,6 +2616,12 @@ export type Mutation_RootUpdate_Hashers_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Hashers_ManyArgs = {
+  updates: Array<Hashers_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_KennelsArgs = {
   _inc?: InputMaybe<Kennels_Inc_Input>;
   _set?: InputMaybe<Kennels_Set_Input>;
@@ -2542,6 +2634,12 @@ export type Mutation_RootUpdate_Kennels_By_PkArgs = {
   _inc?: InputMaybe<Kennels_Inc_Input>;
   _set?: InputMaybe<Kennels_Set_Input>;
   pk_columns: Kennels_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Kennels_ManyArgs = {
+  updates: Array<Kennels_Updates>;
 };
 
 
@@ -2562,6 +2660,12 @@ export type Mutation_RootUpdate_Management_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Management_ManyArgs = {
+  updates: Array<Management_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Permission_EnumArgs = {
   _set?: InputMaybe<Permission_Enum_Set_Input>;
   where: Permission_Enum_Bool_Exp;
@@ -2572,6 +2676,12 @@ export type Mutation_RootUpdate_Permission_EnumArgs = {
 export type Mutation_RootUpdate_Permission_Enum_By_PkArgs = {
   _set?: InputMaybe<Permission_Enum_Set_Input>;
   pk_columns: Permission_Enum_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Permission_Enum_ManyArgs = {
+  updates: Array<Permission_Enum_Updates>;
 };
 
 
@@ -2592,6 +2702,12 @@ export type Mutation_RootUpdate_Permissions_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Permissions_ManyArgs = {
+  updates: Array<Permissions_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_SessionsArgs = {
   _inc?: InputMaybe<Sessions_Inc_Input>;
   _set?: InputMaybe<Sessions_Set_Input>;
@@ -2608,6 +2724,12 @@ export type Mutation_RootUpdate_Sessions_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Sessions_ManyArgs = {
+  updates: Array<Sessions_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_TrailsArgs = {
   _inc?: InputMaybe<Trails_Inc_Input>;
   _set?: InputMaybe<Trails_Set_Input>;
@@ -2620,6 +2742,12 @@ export type Mutation_RootUpdate_Trails_By_PkArgs = {
   _inc?: InputMaybe<Trails_Inc_Input>;
   _set?: InputMaybe<Trails_Set_Input>;
   pk_columns: Trails_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Trails_ManyArgs = {
+  updates: Array<Trails_Updates>;
 };
 
 /** column ordering options */
@@ -2678,7 +2806,7 @@ export type Permission_Enum_Bool_Exp = {
 
 /** unique or primary key constraints on table "permission_enum" */
 export enum Permission_Enum_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "permission" */
   PermissionEnumPkey = 'permission_enum_pkey'
 }
 
@@ -2732,11 +2860,11 @@ export type Permission_Enum_Mutation_Response = {
 /** input type for inserting object relation for remote table "permission_enum" */
 export type Permission_Enum_Obj_Rel_Insert_Input = {
   data: Permission_Enum_Insert_Input;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Permission_Enum_On_Conflict>;
 };
 
-/** on conflict condition type for table "permission_enum" */
+/** on_conflict condition type for table "permission_enum" */
 export type Permission_Enum_On_Conflict = {
   constraint: Permission_Enum_Constraint;
   update_columns?: Array<Permission_Enum_Update_Column>;
@@ -2775,6 +2903,12 @@ export enum Permission_Enum_Update_Column {
   /** column name */
   Permission = 'permission'
 }
+
+export type Permission_Enum_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Permission_Enum_Set_Input>;
+  where: Permission_Enum_Bool_Exp;
+};
 
 /** columns and relationships of "permissions" */
 export type Permissions = {
@@ -2835,7 +2969,7 @@ export type Permissions_Aggregate_Order_By = {
 /** input type for inserting array relation for remote table "permissions" */
 export type Permissions_Arr_Rel_Insert_Input = {
   data: Array<Permissions_Insert_Input>;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Permissions_On_Conflict>;
 };
 
@@ -2863,7 +2997,7 @@ export type Permissions_Bool_Exp = {
 
 /** unique or primary key constraints on table "permissions" */
 export enum Permissions_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "permission", "role" */
   PermissionsPkey = 'permissions_pkey'
 }
 
@@ -2911,7 +3045,7 @@ export type Permissions_Mutation_Response = {
   returning: Array<Permissions>;
 };
 
-/** on conflict condition type for table "permissions" */
+/** on_conflict condition type for table "permissions" */
 export type Permissions_On_Conflict = {
   constraint: Permissions_Constraint;
   update_columns?: Array<Permissions_Update_Column>;
@@ -2997,6 +3131,14 @@ export enum Permissions_Update_Column {
   /** column name */
   Role = 'role'
 }
+
+export type Permissions_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Permissions_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Permissions_Set_Input>;
+  where: Permissions_Bool_Exp;
+};
 
 /** aggregate var_pop on columns */
 export type Permissions_Var_Pop_Fields = {
@@ -3382,7 +3524,7 @@ export type Sessions_Bool_Exp = {
 
 /** unique or primary key constraints on table "sessions" */
 export enum Sessions_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "id" */
   SessionsPkey = 'sessions_pkey'
 }
 
@@ -3427,7 +3569,7 @@ export type Sessions_Mutation_Response = {
   returning: Array<Sessions>;
 };
 
-/** on conflict condition type for table "sessions" */
+/** on_conflict condition type for table "sessions" */
 export type Sessions_On_Conflict = {
   constraint: Sessions_Constraint;
   update_columns?: Array<Sessions_Update_Column>;
@@ -3503,6 +3645,14 @@ export enum Sessions_Update_Column {
   /** column name */
   UserId = 'user_id'
 }
+
+export type Sessions_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Sessions_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Sessions_Set_Input>;
+  where: Sessions_Bool_Exp;
+};
 
 /** aggregate var_pop on columns */
 export type Sessions_Var_Pop_Fields = {
@@ -3944,7 +4094,7 @@ export type Trails_Aggregate_Order_By = {
 /** input type for inserting array relation for remote table "trails" */
 export type Trails_Arr_Rel_Insert_Input = {
   data: Array<Trails_Insert_Input>;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Trails_On_Conflict>;
 };
 
@@ -3998,7 +4148,7 @@ export type Trails_Bool_Exp = {
 
 /** unique or primary key constraints on table "trails" */
 export enum Trails_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "id" */
   TrailsPkey = 'trails_pkey'
 }
 
@@ -4117,11 +4267,11 @@ export type Trails_Mutation_Response = {
 /** input type for inserting object relation for remote table "trails" */
 export type Trails_Obj_Rel_Insert_Input = {
   data: Trails_Insert_Input;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Trails_On_Conflict>;
 };
 
-/** on conflict condition type for table "trails" */
+/** on_conflict condition type for table "trails" */
 export type Trails_On_Conflict = {
   constraint: Trails_Constraint;
   update_columns?: Array<Trails_Update_Column>;
@@ -4328,6 +4478,14 @@ export enum Trails_Update_Column {
   /** column name */
   Verification = 'verification'
 }
+
+export type Trails_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Trails_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Trails_Set_Input>;
+  where: Trails_Bool_Exp;
+};
 
 /** aggregate var_pop on columns */
 export type Trails_Var_Pop_Fields = {
@@ -8006,7 +8164,7 @@ export type GqlKennelRolesEditViewSubscriptionHookResult = ReturnType<typeof use
 export type GqlKennelRolesEditViewSubscriptionResult = Apollo.SubscriptionResult<GqlKennelRolesEditViewSubscription>;
 export const GqlAttendanceViewDocument = gql`
     subscription GQLAttendanceView($trailId: Int) {
-  attendance(where: {trail: {_eq: $trailId}}, order_by: {attended: asc}) {
+  attendance(where: {trail: {_eq: $trailId}}) {
     hasherInfo {
       name
       id

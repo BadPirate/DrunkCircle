@@ -58,7 +58,7 @@ const RootNav = ({
       <Navbar key="navbar" variant="dark" bg="secondary" style={{ marginBottom: '1em' }}>
         <Container>
           <Navbar.Brand href="/" key="brand" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
-            <Image src="/banner_svg.svg" height="45px" width="85px" alt={process.env.NEXT_PUBLIC_APP_VERSION} />
+            <Image src="/drunk_paint.png" height="50px" width="50px" alt={process.env.NEXT_PUBLIC_APP_VERSION} />
           </Navbar.Brand>
           <Navbar.Toggle key="toggle" />
           <Nav key="links" className="me-auto">
