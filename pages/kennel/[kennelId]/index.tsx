@@ -211,6 +211,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query: { kennelId
   after.setHours(after.getHours() - 8)
   await PublicClientHasura.query<GqlGetKennelPageQuery>({
     query: GqlGetKennelPageDocument,
+    fetchPolicy: 'no-cache',
     variables: { kennelId, after },
   })
     .catch((error) => { props = { error } })

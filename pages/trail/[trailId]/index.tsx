@@ -63,6 +63,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query: { trailId 
   let props : ServerSideProps = {}
   await PublicClientHasura.query<GqlPageTrailIdQuery>({
     query: GqlPageTrailIdDocument,
+    fetchPolicy: 'no-cache',
     variables: { trailId },
   })
     .catch((error) => { props = { error } })
