@@ -195,6 +195,19 @@ const KennelPage = ({ error: kennelError, data: kennelData }: ServerSideProps) =
         <Tab eventKey="mismanagement" title="Mismanagement">
           <MismanagementPart kennelId={kennelId} />
         </Tab>
+        {
+          kennel.google_calendar ? (
+            <Tab eventKey="calendar" title="Calendar">
+              <iframe
+                title="Calendar"
+                src={`https://calendar.google.com/calendar/embed?src=${kennel.google_calendar}`}
+                style={{ border: 0 }}
+                height="600"
+                width="800"
+              />
+            </Tab>
+          ) : null
+        }
       </Tabs>
     </PageCard>
   )

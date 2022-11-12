@@ -20,6 +20,7 @@ fragment GQLGetKennelPageKennel on kennels {
     price
     frequency
     next
+    google_calendar
     trails(limit: 10, order_by: {calculated_number: asc}, where: {start: {_gt: $after}, draft: {_is_null: true}}) {
       calculated_number
       hares {

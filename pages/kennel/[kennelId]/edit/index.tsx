@@ -537,7 +537,7 @@ export const getServerSideProps: GetServerSideProps<EditKennelProps> = async (co
     try {
       await setCalendarEditProps(kennel, body)
     } catch (error) {
-      warning = `Error loading calendar: ${catchError(error)}`
+      warning = `Error loading calendar: ${catchError(error).message}`
     }
 
     if (warning) {

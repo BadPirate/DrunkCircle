@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ProgressBar } from 'react-bootstrap'
+import { Button, ProgressBar } from 'react-bootstrap'
 import { ProgressResult } from '../func/SharedTypes'
-import { BodyError } from './ErrorBanner'
+import ErrorBanner from './ErrorBanner'
 import { LoadSpinner } from './LoadSpinner'
 import { BodyCard } from './PageCard'
 
@@ -49,7 +49,12 @@ const ProgressComponent = ({
       .catch(setError)
   }, [progress, setProgress, api, error, complete])
   if (error) {
-    return <BodyError error={error} />
+    return (
+      <BodyCard title={`${progress.phase} Error`}>
+        <ErrorBanner error={error} />
+        <Button variant="info" href="#" />
+      </BodyCard>
+    )
   }
   return (
     <BodyCard title={action}>
@@ -59,7 +64,7 @@ const ProgressComponent = ({
             : <ProgressBar animated now={(progress.completed / progress.total) * 100} />
         }
       </p>
-      <p>{ progress.phase }</p>
+      <p>{ `${progress.phase} - ${progress.completed} / ${progress.total}` }</p>
     </BodyCard>
   )
 }

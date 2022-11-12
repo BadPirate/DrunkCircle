@@ -234,6 +234,21 @@ export type Account_Links_Stddev_Samp_Fields = {
   user_id?: Maybe<Scalars['Float']>;
 };
 
+/** Streaming cursor of the table "account_links" */
+export type Account_Links_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Account_Links_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Account_Links_Stream_Cursor_Value_Input = {
+  provider?: InputMaybe<Scalars['String']>;
+  provider_id?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['Int']>;
+};
+
 /** aggregate sum on columns */
 export type Account_Links_Sum_Fields = {
   __typename?: 'account_links_sum_fields';
@@ -293,6 +308,33 @@ export type Attendance_Aggregate = {
   __typename?: 'attendance_aggregate';
   aggregate?: Maybe<Attendance_Aggregate_Fields>;
   nodes: Array<Attendance>;
+};
+
+export type Attendance_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Attendance_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Attendance_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Attendance_Aggregate_Bool_Exp_Count>;
+};
+
+export type Attendance_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Attendance_Select_Column_Attendance_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Attendance_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Attendance_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Attendance_Select_Column_Attendance_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Attendance_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Attendance_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Attendance_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Attendance_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "attendance" */
@@ -464,6 +506,22 @@ export enum Attendance_Select_Column {
   Trail = 'trail'
 }
 
+/** select "attendance_aggregate_bool_exp_bool_and_arguments_columns" columns of table "attendance" */
+export enum Attendance_Select_Column_Attendance_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Attended = 'attended',
+  /** column name */
+  Paid = 'paid'
+}
+
+/** select "attendance_aggregate_bool_exp_bool_or_arguments_columns" columns of table "attendance" */
+export enum Attendance_Select_Column_Attendance_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Attended = 'attended',
+  /** column name */
+  Paid = 'paid'
+}
+
 /** input type for updating data in table "attendance" */
 export type Attendance_Set_Input = {
   attended?: InputMaybe<Scalars['Boolean']>;
@@ -510,6 +568,23 @@ export type Attendance_Stddev_Samp_Fields = {
 export type Attendance_Stddev_Samp_Order_By = {
   hasher?: InputMaybe<Order_By>;
   trail?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "attendance" */
+export type Attendance_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Attendance_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Attendance_Stream_Cursor_Value_Input = {
+  attended?: InputMaybe<Scalars['Boolean']>;
+  hasher?: InputMaybe<Scalars['Int']>;
+  note?: InputMaybe<Scalars['String']>;
+  paid?: InputMaybe<Scalars['Boolean']>;
+  trail?: InputMaybe<Scalars['Int']>;
 };
 
 /** aggregate sum on columns */
@@ -599,6 +674,14 @@ export type Bit_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['bit']>>;
 };
 
+/** ordering argument of a cursor */
+export enum Cursor_Ordering {
+  /** ascending ordering of the cursor */
+  Asc = 'ASC',
+  /** descending ordering of the cursor */
+  Desc = 'DESC'
+}
+
 /** Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'. */
 export type Float8_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['float8']>;
@@ -628,6 +711,17 @@ export type Hares_Aggregate = {
   __typename?: 'hares_aggregate';
   aggregate?: Maybe<Hares_Aggregate_Fields>;
   nodes: Array<Hares>;
+};
+
+export type Hares_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Hares_Aggregate_Bool_Exp_Count>;
+};
+
+export type Hares_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Hares_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Hares_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "hares" */
@@ -820,6 +914,20 @@ export type Hares_Stddev_Samp_Fields = {
 export type Hares_Stddev_Samp_Order_By = {
   hasher?: InputMaybe<Order_By>;
   trail?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "hares" */
+export type Hares_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Hares_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Hares_Stream_Cursor_Value_Input = {
+  hasher?: InputMaybe<Scalars['Int']>;
+  trail?: InputMaybe<Scalars['Int']>;
 };
 
 /** aggregate sum on columns */
@@ -1039,14 +1147,18 @@ export type Hashers_Bool_Exp = {
   _not?: InputMaybe<Hashers_Bool_Exp>;
   _or?: InputMaybe<Array<Hashers_Bool_Exp>>;
   attendance?: InputMaybe<Attendance_Bool_Exp>;
+  attendance_aggregate?: InputMaybe<Attendance_Aggregate_Bool_Exp>;
   email?: InputMaybe<String_Comparison_Exp>;
   email_verified?: InputMaybe<Timestamptz_Comparison_Exp>;
   gm?: InputMaybe<Kennels_Bool_Exp>;
+  gm_aggregate?: InputMaybe<Kennels_Aggregate_Bool_Exp>;
   hares?: InputMaybe<Hares_Bool_Exp>;
+  hares_aggregate?: InputMaybe<Hares_Aggregate_Bool_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
   login?: InputMaybe<String_Comparison_Exp>;
   login_expires?: InputMaybe<Timestamptz_Comparison_Exp>;
   management?: InputMaybe<Management_Bool_Exp>;
+  management_aggregate?: InputMaybe<Management_Aggregate_Bool_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -1187,6 +1299,24 @@ export type Hashers_Stddev_Samp_Fields = {
   id?: Maybe<Scalars['Float']>;
 };
 
+/** Streaming cursor of the table "hashers" */
+export type Hashers_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Hashers_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Hashers_Stream_Cursor_Value_Input = {
+  email?: InputMaybe<Scalars['String']>;
+  email_verified?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['Int']>;
+  login?: InputMaybe<Scalars['String']>;
+  login_expires?: InputMaybe<Scalars['timestamptz']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
 /** aggregate sum on columns */
 export type Hashers_Sum_Fields = {
   __typename?: 'hashers_sum_fields';
@@ -1313,6 +1443,91 @@ export type Kennels_Aggregate = {
   nodes: Array<Kennels>;
 };
 
+export type Kennels_Aggregate_Bool_Exp = {
+  avg?: InputMaybe<Kennels_Aggregate_Bool_Exp_Avg>;
+  corr?: InputMaybe<Kennels_Aggregate_Bool_Exp_Corr>;
+  count?: InputMaybe<Kennels_Aggregate_Bool_Exp_Count>;
+  covar_samp?: InputMaybe<Kennels_Aggregate_Bool_Exp_Covar_Samp>;
+  max?: InputMaybe<Kennels_Aggregate_Bool_Exp_Max>;
+  min?: InputMaybe<Kennels_Aggregate_Bool_Exp_Min>;
+  stddev_samp?: InputMaybe<Kennels_Aggregate_Bool_Exp_Stddev_Samp>;
+  sum?: InputMaybe<Kennels_Aggregate_Bool_Exp_Sum>;
+  var_samp?: InputMaybe<Kennels_Aggregate_Bool_Exp_Var_Samp>;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Avg = {
+  arguments: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Avg_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Corr = {
+  arguments: Kennels_Aggregate_Bool_Exp_Corr_Arguments;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Corr_Arguments = {
+  X: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Corr_Arguments_Columns;
+  Y: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Corr_Arguments_Columns;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Kennels_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Covar_Samp = {
+  arguments: Kennels_Aggregate_Bool_Exp_Covar_Samp_Arguments;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Covar_Samp_Arguments = {
+  X: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Covar_Samp_Arguments_Columns;
+  Y: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Covar_Samp_Arguments_Columns;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Max = {
+  arguments: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Max_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Min = {
+  arguments: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Min_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Stddev_Samp = {
+  arguments: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Stddev_Samp_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Sum = {
+  arguments: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Sum_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Kennels_Aggregate_Bool_Exp_Var_Samp = {
+  arguments: Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Var_Samp_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Kennels_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
 /** aggregate fields of "kennels" */
 export type Kennels_Aggregate_Fields = {
   __typename?: 'kennels_aggregate_fields';
@@ -1390,12 +1605,14 @@ export type Kennels_Bool_Exp = {
   google_token?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
   management?: InputMaybe<Management_Bool_Exp>;
+  management_aggregate?: InputMaybe<Management_Aggregate_Bool_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   next?: InputMaybe<Timestamptz_Comparison_Exp>;
   price?: InputMaybe<Float8_Comparison_Exp>;
   short_name?: InputMaybe<String_Comparison_Exp>;
   timezone?: InputMaybe<String_Comparison_Exp>;
   trails?: InputMaybe<Trails_Bool_Exp>;
+  trails_aggregate?: InputMaybe<Trails_Aggregate_Bool_Exp>;
   web?: InputMaybe<String_Comparison_Exp>;
 };
 
@@ -1604,6 +1821,54 @@ export enum Kennels_Select_Column {
   Web = 'web'
 }
 
+/** select "kennels_aggregate_bool_exp_avg_arguments_columns" columns of table "kennels" */
+export enum Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Avg_Arguments_Columns {
+  /** column name */
+  Price = 'price'
+}
+
+/** select "kennels_aggregate_bool_exp_corr_arguments_columns" columns of table "kennels" */
+export enum Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Corr_Arguments_Columns {
+  /** column name */
+  Price = 'price'
+}
+
+/** select "kennels_aggregate_bool_exp_covar_samp_arguments_columns" columns of table "kennels" */
+export enum Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Covar_Samp_Arguments_Columns {
+  /** column name */
+  Price = 'price'
+}
+
+/** select "kennels_aggregate_bool_exp_max_arguments_columns" columns of table "kennels" */
+export enum Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Max_Arguments_Columns {
+  /** column name */
+  Price = 'price'
+}
+
+/** select "kennels_aggregate_bool_exp_min_arguments_columns" columns of table "kennels" */
+export enum Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Min_Arguments_Columns {
+  /** column name */
+  Price = 'price'
+}
+
+/** select "kennels_aggregate_bool_exp_stddev_samp_arguments_columns" columns of table "kennels" */
+export enum Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Stddev_Samp_Arguments_Columns {
+  /** column name */
+  Price = 'price'
+}
+
+/** select "kennels_aggregate_bool_exp_sum_arguments_columns" columns of table "kennels" */
+export enum Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Sum_Arguments_Columns {
+  /** column name */
+  Price = 'price'
+}
+
+/** select "kennels_aggregate_bool_exp_var_samp_arguments_columns" columns of table "kennels" */
+export enum Kennels_Select_Column_Kennels_Aggregate_Bool_Exp_Var_Samp_Arguments_Columns {
+  /** column name */
+  Price = 'price'
+}
+
 /** input type for updating data in table "kennels" */
 export type Kennels_Set_Input = {
   area?: InputMaybe<Scalars['String']>;
@@ -1667,6 +1932,34 @@ export type Kennels_Stddev_Samp_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "kennels" */
+export type Kennels_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Kennels_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Kennels_Stream_Cursor_Value_Input = {
+  area?: InputMaybe<Scalars['String']>;
+  dc_verify?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  frequency?: InputMaybe<Scalars['Int']>;
+  gm_email?: InputMaybe<Scalars['String']>;
+  gm_verify?: InputMaybe<Scalars['String']>;
+  google_calendar?: InputMaybe<Scalars['String']>;
+  google_refresh?: InputMaybe<Scalars['String']>;
+  google_token?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['Int']>;
+  name?: InputMaybe<Scalars['String']>;
+  next?: InputMaybe<Scalars['timestamptz']>;
+  price?: InputMaybe<Scalars['float8']>;
+  short_name?: InputMaybe<Scalars['String']>;
+  timezone?: InputMaybe<Scalars['String']>;
+  web?: InputMaybe<Scalars['String']>;
 };
 
 /** aggregate sum on columns */
@@ -1818,6 +2111,17 @@ export type Management_Aggregate = {
   nodes: Array<Management>;
 };
 
+export type Management_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Management_Aggregate_Bool_Exp_Count>;
+};
+
+export type Management_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Management_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Management_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "management" */
 export type Management_Aggregate_Fields = {
   __typename?: 'management_aggregate_fields';
@@ -1889,6 +2193,7 @@ export type Management_Bool_Exp = {
   kennel?: InputMaybe<Int_Comparison_Exp>;
   kennelInfo?: InputMaybe<Kennels_Bool_Exp>;
   permissions?: InputMaybe<Permissions_Bool_Exp>;
+  permissions_aggregate?: InputMaybe<Permissions_Aggregate_Bool_Exp>;
   role?: InputMaybe<Bit_Comparison_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
 };
@@ -2058,6 +2363,23 @@ export type Management_Stddev_Samp_Order_By = {
   hasher?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "management" */
+export type Management_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Management_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Management_Stream_Cursor_Value_Input = {
+  hasher?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']>;
+  kennel?: InputMaybe<Scalars['Int']>;
+  role?: InputMaybe<Scalars['bit']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 /** aggregate sum on columns */
@@ -2896,6 +3218,20 @@ export type Permission_Enum_Set_Input = {
   permission?: InputMaybe<Scalars['String']>;
 };
 
+/** Streaming cursor of the table "permission_enum" */
+export type Permission_Enum_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Permission_Enum_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Permission_Enum_Stream_Cursor_Value_Input = {
+  description?: InputMaybe<Scalars['String']>;
+  permission?: InputMaybe<Scalars['String']>;
+};
+
 /** update columns of table "permission_enum" */
 export enum Permission_Enum_Update_Column {
   /** column name */
@@ -2926,6 +3262,17 @@ export type Permissions_Aggregate = {
   __typename?: 'permissions_aggregate';
   aggregate?: Maybe<Permissions_Aggregate_Fields>;
   nodes: Array<Permissions>;
+};
+
+export type Permissions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Permissions_Aggregate_Bool_Exp_Count>;
+};
+
+export type Permissions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Permissions_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Permissions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "permissions" */
@@ -3111,6 +3458,20 @@ export type Permissions_Stddev_Samp_Fields = {
 /** order by stddev_samp() on columns of table "permissions" */
 export type Permissions_Stddev_Samp_Order_By = {
   role?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "permissions" */
+export type Permissions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Permissions_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Permissions_Stream_Cursor_Value_Input = {
+  permission?: InputMaybe<Permission_Enum_Enum>;
+  role?: InputMaybe<Scalars['Int']>;
 };
 
 /** aggregate sum on columns */
@@ -3628,6 +3989,22 @@ export type Sessions_Stddev_Samp_Fields = {
   user_id?: Maybe<Scalars['Float']>;
 };
 
+/** Streaming cursor of the table "sessions" */
+export type Sessions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Sessions_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Sessions_Stream_Cursor_Value_Input = {
+  expires?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['String']>;
+  session_token?: InputMaybe<Scalars['String']>;
+  user_id?: InputMaybe<Scalars['Int']>;
+};
+
 /** aggregate sum on columns */
 export type Sessions_Sum_Fields = {
   __typename?: 'sessions_sum_fields';
@@ -3680,58 +4057,78 @@ export type Subscription_Root = {
   account_links_aggregate: Account_Links_Aggregate;
   /** fetch data from the table: "account_links" using primary key columns */
   account_links_by_pk?: Maybe<Account_Links>;
+  /** fetch data from the table in a streaming manner: "account_links" */
+  account_links_stream: Array<Account_Links>;
   /** An array relationship */
   attendance: Array<Attendance>;
   /** An aggregate relationship */
   attendance_aggregate: Attendance_Aggregate;
   /** fetch data from the table: "attendance" using primary key columns */
   attendance_by_pk?: Maybe<Attendance>;
+  /** fetch data from the table in a streaming manner: "attendance" */
+  attendance_stream: Array<Attendance>;
   /** An array relationship */
   hares: Array<Hares>;
   /** An aggregate relationship */
   hares_aggregate: Hares_Aggregate;
+  /** fetch data from the table in a streaming manner: "hares" */
+  hares_stream: Array<Hares>;
   /** fetch data from the table: "hashers" */
   hashers: Array<Hashers>;
   /** fetch aggregated fields from the table: "hashers" */
   hashers_aggregate: Hashers_Aggregate;
   /** fetch data from the table: "hashers" using primary key columns */
   hashers_by_pk?: Maybe<Hashers>;
+  /** fetch data from the table in a streaming manner: "hashers" */
+  hashers_stream: Array<Hashers>;
   /** fetch data from the table: "kennels" */
   kennels: Array<Kennels>;
   /** fetch aggregated fields from the table: "kennels" */
   kennels_aggregate: Kennels_Aggregate;
   /** fetch data from the table: "kennels" using primary key columns */
   kennels_by_pk?: Maybe<Kennels>;
+  /** fetch data from the table in a streaming manner: "kennels" */
+  kennels_stream: Array<Kennels>;
   /** An array relationship */
   management: Array<Management>;
   /** An aggregate relationship */
   management_aggregate: Management_Aggregate;
   /** fetch data from the table: "management" using primary key columns */
   management_by_pk?: Maybe<Management>;
+  /** fetch data from the table in a streaming manner: "management" */
+  management_stream: Array<Management>;
   /** fetch data from the table: "permission_enum" */
   permission_enum: Array<Permission_Enum>;
   /** fetch aggregated fields from the table: "permission_enum" */
   permission_enum_aggregate: Permission_Enum_Aggregate;
   /** fetch data from the table: "permission_enum" using primary key columns */
   permission_enum_by_pk?: Maybe<Permission_Enum>;
+  /** fetch data from the table in a streaming manner: "permission_enum" */
+  permission_enum_stream: Array<Permission_Enum>;
   /** An array relationship */
   permissions: Array<Permissions>;
   /** An aggregate relationship */
   permissions_aggregate: Permissions_Aggregate;
   /** fetch data from the table: "permissions" using primary key columns */
   permissions_by_pk?: Maybe<Permissions>;
+  /** fetch data from the table in a streaming manner: "permissions" */
+  permissions_stream: Array<Permissions>;
   /** fetch data from the table: "sessions" */
   sessions: Array<Sessions>;
   /** fetch aggregated fields from the table: "sessions" */
   sessions_aggregate: Sessions_Aggregate;
   /** fetch data from the table: "sessions" using primary key columns */
   sessions_by_pk?: Maybe<Sessions>;
+  /** fetch data from the table in a streaming manner: "sessions" */
+  sessions_stream: Array<Sessions>;
   /** An array relationship */
   trails: Array<Trails>;
   /** An aggregate relationship */
   trails_aggregate: Trails_Aggregate;
   /** fetch data from the table: "trails" using primary key columns */
   trails_by_pk?: Maybe<Trails>;
+  /** fetch data from the table in a streaming manner: "trails" */
+  trails_stream: Array<Trails>;
 };
 
 
@@ -3759,6 +4156,13 @@ export type Subscription_RootAccount_Links_By_PkArgs = {
 };
 
 
+export type Subscription_RootAccount_Links_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Account_Links_Stream_Cursor_Input>>;
+  where?: InputMaybe<Account_Links_Bool_Exp>;
+};
+
+
 export type Subscription_RootAttendanceArgs = {
   distinct_on?: InputMaybe<Array<Attendance_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -3783,6 +4187,13 @@ export type Subscription_RootAttendance_By_PkArgs = {
 };
 
 
+export type Subscription_RootAttendance_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Attendance_Stream_Cursor_Input>>;
+  where?: InputMaybe<Attendance_Bool_Exp>;
+};
+
+
 export type Subscription_RootHaresArgs = {
   distinct_on?: InputMaybe<Array<Hares_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -3797,6 +4208,13 @@ export type Subscription_RootHares_AggregateArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Hares_Order_By>>;
+  where?: InputMaybe<Hares_Bool_Exp>;
+};
+
+
+export type Subscription_RootHares_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Hares_Stream_Cursor_Input>>;
   where?: InputMaybe<Hares_Bool_Exp>;
 };
 
@@ -3824,6 +4242,13 @@ export type Subscription_RootHashers_By_PkArgs = {
 };
 
 
+export type Subscription_RootHashers_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Hashers_Stream_Cursor_Input>>;
+  where?: InputMaybe<Hashers_Bool_Exp>;
+};
+
+
 export type Subscription_RootKennelsArgs = {
   distinct_on?: InputMaybe<Array<Kennels_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -3844,6 +4269,13 @@ export type Subscription_RootKennels_AggregateArgs = {
 
 export type Subscription_RootKennels_By_PkArgs = {
   id: Scalars['Int'];
+};
+
+
+export type Subscription_RootKennels_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Kennels_Stream_Cursor_Input>>;
+  where?: InputMaybe<Kennels_Bool_Exp>;
 };
 
 
@@ -3870,6 +4302,13 @@ export type Subscription_RootManagement_By_PkArgs = {
 };
 
 
+export type Subscription_RootManagement_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Management_Stream_Cursor_Input>>;
+  where?: InputMaybe<Management_Bool_Exp>;
+};
+
+
 export type Subscription_RootPermission_EnumArgs = {
   distinct_on?: InputMaybe<Array<Permission_Enum_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -3890,6 +4329,13 @@ export type Subscription_RootPermission_Enum_AggregateArgs = {
 
 export type Subscription_RootPermission_Enum_By_PkArgs = {
   permission: Scalars['String'];
+};
+
+
+export type Subscription_RootPermission_Enum_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Permission_Enum_Stream_Cursor_Input>>;
+  where?: InputMaybe<Permission_Enum_Bool_Exp>;
 };
 
 
@@ -3917,6 +4363,13 @@ export type Subscription_RootPermissions_By_PkArgs = {
 };
 
 
+export type Subscription_RootPermissions_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Permissions_Stream_Cursor_Input>>;
+  where?: InputMaybe<Permissions_Bool_Exp>;
+};
+
+
 export type Subscription_RootSessionsArgs = {
   distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -3940,6 +4393,13 @@ export type Subscription_RootSessions_By_PkArgs = {
 };
 
 
+export type Subscription_RootSessions_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Sessions_Stream_Cursor_Input>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
+};
+
+
 export type Subscription_RootTrailsArgs = {
   distinct_on?: InputMaybe<Array<Trails_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -3960,6 +4420,13 @@ export type Subscription_RootTrails_AggregateArgs = {
 
 export type Subscription_RootTrails_By_PkArgs = {
   id: Scalars['Int'];
+};
+
+
+export type Subscription_RootTrails_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Trails_Stream_Cursor_Input>>;
+  where?: InputMaybe<Trails_Bool_Exp>;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
@@ -4053,6 +4520,107 @@ export type Trails_Aggregate = {
   nodes: Array<Trails>;
 };
 
+export type Trails_Aggregate_Bool_Exp = {
+  avg?: InputMaybe<Trails_Aggregate_Bool_Exp_Avg>;
+  bool_and?: InputMaybe<Trails_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Trails_Aggregate_Bool_Exp_Bool_Or>;
+  corr?: InputMaybe<Trails_Aggregate_Bool_Exp_Corr>;
+  count?: InputMaybe<Trails_Aggregate_Bool_Exp_Count>;
+  covar_samp?: InputMaybe<Trails_Aggregate_Bool_Exp_Covar_Samp>;
+  max?: InputMaybe<Trails_Aggregate_Bool_Exp_Max>;
+  min?: InputMaybe<Trails_Aggregate_Bool_Exp_Min>;
+  stddev_samp?: InputMaybe<Trails_Aggregate_Bool_Exp_Stddev_Samp>;
+  sum?: InputMaybe<Trails_Aggregate_Bool_Exp_Sum>;
+  var_samp?: InputMaybe<Trails_Aggregate_Bool_Exp_Var_Samp>;
+};
+
+export type Trails_Aggregate_Bool_Exp_Avg = {
+  arguments: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Avg_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Corr = {
+  arguments: Trails_Aggregate_Bool_Exp_Corr_Arguments;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Corr_Arguments = {
+  X: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Corr_Arguments_Columns;
+  Y: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Corr_Arguments_Columns;
+};
+
+export type Trails_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Trails_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Covar_Samp = {
+  arguments: Trails_Aggregate_Bool_Exp_Covar_Samp_Arguments;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Covar_Samp_Arguments = {
+  X: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Covar_Samp_Arguments_Columns;
+  Y: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Covar_Samp_Arguments_Columns;
+};
+
+export type Trails_Aggregate_Bool_Exp_Max = {
+  arguments: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Max_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Min = {
+  arguments: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Min_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Stddev_Samp = {
+  arguments: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Stddev_Samp_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Sum = {
+  arguments: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Sum_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
+export type Trails_Aggregate_Bool_Exp_Var_Samp = {
+  arguments: Trails_Select_Column_Trails_Aggregate_Bool_Exp_Var_Samp_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Trails_Bool_Exp>;
+  predicate: Float8_Comparison_Exp;
+};
+
 /** aggregate fields of "trails" */
 export type Trails_Aggregate_Fields = {
   __typename?: 'trails_aggregate_fields';
@@ -4132,9 +4700,11 @@ export type Trails_Bool_Exp = {
   draft?: InputMaybe<Int_Comparison_Exp>;
   draftFor?: InputMaybe<Trails_Bool_Exp>;
   drafts?: InputMaybe<Trails_Bool_Exp>;
+  drafts_aggregate?: InputMaybe<Trails_Aggregate_Bool_Exp>;
   gcal_dirty?: InputMaybe<Boolean_Comparison_Exp>;
   google_calendar?: InputMaybe<String_Comparison_Exp>;
   hares?: InputMaybe<Hares_Bool_Exp>;
+  hares_aggregate?: InputMaybe<Hares_Aggregate_Bool_Exp>;
   id?: InputMaybe<Int_Comparison_Exp>;
   kennel?: InputMaybe<Int_Comparison_Exp>;
   kennelInfo?: InputMaybe<Kennels_Bool_Exp>;
@@ -4337,6 +4907,82 @@ export enum Trails_Select_Column {
   Verification = 'verification'
 }
 
+/** select "trails_aggregate_bool_exp_avg_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Avg_Arguments_Columns {
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude'
+}
+
+/** select "trails_aggregate_bool_exp_bool_and_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  GcalDirty = 'gcal_dirty'
+}
+
+/** select "trails_aggregate_bool_exp_bool_or_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  GcalDirty = 'gcal_dirty'
+}
+
+/** select "trails_aggregate_bool_exp_corr_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Corr_Arguments_Columns {
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude'
+}
+
+/** select "trails_aggregate_bool_exp_covar_samp_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Covar_Samp_Arguments_Columns {
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude'
+}
+
+/** select "trails_aggregate_bool_exp_max_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Max_Arguments_Columns {
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude'
+}
+
+/** select "trails_aggregate_bool_exp_min_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Min_Arguments_Columns {
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude'
+}
+
+/** select "trails_aggregate_bool_exp_stddev_samp_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Stddev_Samp_Arguments_Columns {
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude'
+}
+
+/** select "trails_aggregate_bool_exp_sum_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Sum_Arguments_Columns {
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude'
+}
+
+/** select "trails_aggregate_bool_exp_var_samp_arguments_columns" columns of table "trails" */
+export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Var_Samp_Arguments_Columns {
+  /** column name */
+  Latitude = 'latitude',
+  /** column name */
+  Longitude = 'longitude'
+}
+
 /** input type for updating data in table "trails" */
 export type Trails_Set_Input = {
   calculated_number?: InputMaybe<Scalars['Int']>;
@@ -4422,6 +5068,32 @@ export type Trails_Stddev_Samp_Order_By = {
   latitude?: InputMaybe<Order_By>;
   longitude?: InputMaybe<Order_By>;
   number?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "trails" */
+export type Trails_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Trails_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Trails_Stream_Cursor_Value_Input = {
+  calculated_number?: InputMaybe<Scalars['Int']>;
+  description?: InputMaybe<Scalars['String']>;
+  directions?: InputMaybe<Scalars['String']>;
+  draft?: InputMaybe<Scalars['Int']>;
+  gcal_dirty?: InputMaybe<Scalars['Boolean']>;
+  google_calendar?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['Int']>;
+  kennel?: InputMaybe<Scalars['Int']>;
+  latitude?: InputMaybe<Scalars['float8']>;
+  longitude?: InputMaybe<Scalars['float8']>;
+  name?: InputMaybe<Scalars['String']>;
+  number?: InputMaybe<Scalars['Int']>;
+  start?: InputMaybe<Scalars['timestamptz']>;
+  verification?: InputMaybe<Scalars['String']>;
 };
 
 /** aggregate sum on columns */
@@ -4866,7 +5538,7 @@ export type GqlHareRankQueryVariables = Exact<{
 
 export type GqlHareRankQuery = { __typename?: 'query_root', hashers: Array<{ __typename?: 'hashers', name?: string | null, id: number, hares_aggregate: { __typename?: 'hares_aggregate', aggregate?: { __typename?: 'hares_aggregate_fields', count: number } | null } }> };
 
-export type GqlGetKennelPageKennelFragment = { __typename?: 'kennels', short_name?: string | null, name?: string | null, id: number, description?: string | null, area?: string | null, web?: string | null, price?: any | null, frequency?: number | null, next?: any | null, trails: Array<{ __typename?: 'trails', calculated_number?: number | null, id: number, start: any, name: string, hares: Array<{ __typename?: 'hares', hasherInfo: { __typename?: 'hashers', name?: string | null } }> }> };
+export type GqlGetKennelPageKennelFragment = { __typename?: 'kennels', short_name?: string | null, name?: string | null, id: number, description?: string | null, area?: string | null, web?: string | null, price?: any | null, frequency?: number | null, next?: any | null, google_calendar?: string | null, trails: Array<{ __typename?: 'trails', calculated_number?: number | null, id: number, start: any, name: string, hares: Array<{ __typename?: 'hares', hasherInfo: { __typename?: 'hashers', name?: string | null } }> }> };
 
 export type GqlGetKennelPageQueryVariables = Exact<{
   kennelId?: InputMaybe<Scalars['Int']>;
@@ -4874,7 +5546,7 @@ export type GqlGetKennelPageQueryVariables = Exact<{
 }>;
 
 
-export type GqlGetKennelPageQuery = { __typename?: 'query_root', kennels: Array<{ __typename?: 'kennels', short_name?: string | null, name?: string | null, id: number, description?: string | null, area?: string | null, web?: string | null, price?: any | null, frequency?: number | null, next?: any | null, trails: Array<{ __typename?: 'trails', calculated_number?: number | null, id: number, start: any, name: string, hares: Array<{ __typename?: 'hares', hasherInfo: { __typename?: 'hashers', name?: string | null } }> }> }> };
+export type GqlGetKennelPageQuery = { __typename?: 'query_root', kennels: Array<{ __typename?: 'kennels', short_name?: string | null, name?: string | null, id: number, description?: string | null, area?: string | null, web?: string | null, price?: any | null, frequency?: number | null, next?: any | null, google_calendar?: string | null, trails: Array<{ __typename?: 'trails', calculated_number?: number | null, id: number, start: any, name: string, hares: Array<{ __typename?: 'hares', hasherInfo: { __typename?: 'hashers', name?: string | null } }> }> }> };
 
 export type GqlMismanagementViewQueryVariables = Exact<{
   kennelId?: InputMaybe<Scalars['Int']>;
@@ -5190,6 +5862,7 @@ export const GqlGetKennelPageKennelFragmentDoc = gql`
   price
   frequency
   next
+  google_calendar
   trails(
     limit: 10
     order_by: {calculated_number: asc}
