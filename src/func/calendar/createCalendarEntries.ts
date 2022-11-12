@@ -10,6 +10,7 @@ import {
   GqlAddToCalendarDocument, GqlAddToCalendarQuery, GqlRefreshKennelAddCountDocument,
   GqlRefreshKennelAddCountQuery,
 } from '../../graph/types'
+import { apiBackOff } from './CalendarShared'
 
 export async function createCalendarEntries(
   kennelID: string,
@@ -44,7 +45,11 @@ export async function createCalendarEntries(
   const cal = gcal(kennelInfo.google_token!, kennelInfo.google_refresh!)
   for (let index = 0; index < trails.length; index += 1) {
     const trail = trails[index]
-    await insertCalendar(ac, cal, kennelInfo, trail)
+    await apiBackOff(
+      'Cooldown for session cost',
+      insertCalendar(ac, cal, kennelInfo, trail),
+      (5 * 1200) / trails.length,
+    )
   }
   return {
     total,

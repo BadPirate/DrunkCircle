@@ -75,7 +75,7 @@ const CalendarEditPart = ({
               {' '}
               {calendarSummary}
             </Button>
-            <Button variant="success">
+            <Button variant="success" href={`/kennel/${kennelId}/edit/add_gcal`}>
               Synchronize
             </Button>
           </>

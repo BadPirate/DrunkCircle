@@ -25,6 +25,7 @@ export async function apiBackOff<T>(
 ): Promise<T> {
   return new Promise((resolveRD, failRD) => {
     setTimeout(() => {
+      console.log('Backoff', label)
       request.catch((e) => {
         if (e.code === '403' || e.code === 403) {
           ilog(label, 'API Backoff', e.code, timeout)
@@ -39,6 +40,7 @@ export async function apiBackOff<T>(
       }).then((r) => {
         resolveRD(<T>r)
       }).catch((e) => {
+        console.log('Backoff fail', e.code)
         failRD(e)
       })
     }, timeout)

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { ProgressBar } from 'react-bootstrap'
-import { BodyError } from '../../../../src/components/ErrorBanner'
+import { Button, ProgressBar } from 'react-bootstrap'
+import ErrorBanner from '../../../../src/components/ErrorBanner'
 import { LoadSpinner } from '../../../../src/components/LoadSpinner'
 import { BodyCard } from '../../../../src/components/PageCard'
 
@@ -14,7 +14,7 @@ export default () => {
   const [error, setError] = useState<Error | undefined>(undefined)
   useEffect(() => {
     if (!kennelId) return
-    fetch(`/api/kennel/${kennelId}/add_gcal`)
+    fetch(`/api/kennel/${kennelId}/use_gcal?context=adding`)
       .then((r) => {
         if (!r.headers.get('content-type')?.includes('application/json')) {
           throw Error(`Invalid content type. [${r.status}]`)
@@ -32,7 +32,14 @@ export default () => {
       .catch(setError)
   }, [progress, setProgress, kennelId])
   if (error) {
-    return <BodyError error={error} />
+    return (
+      <BodyCard title="Error">
+        <ErrorBanner error={error} />
+        <Button variant="info" href={`/kennel/${kennelId}/edit/add_gcal`}>
+          Retry
+        </Button>
+      </BodyCard>
+    )
   }
   return (
     <BodyCard title="Adding trails to Google Calendar">
@@ -40,6 +47,7 @@ export default () => {
         progress.total === 0 ? <LoadSpinner />
           : <ProgressBar animated now={progress.completed / progress.total} />
       }
+      <p>{`${progress.completed} / ${progress.total}`}</p>
     </BodyCard>
   )
 }
