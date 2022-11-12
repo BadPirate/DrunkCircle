@@ -3,6 +3,7 @@
 import { useSubscription } from '@apollo/client'
 import {
   Accordion,
+  Alert,
   Button, ButtonGroup, Card, Form, InputGroup, ListGroup, OverlayTrigger, Row, Tooltip,
 } from 'react-bootstrap'
 import { GetServerSideProps } from 'next'
@@ -31,6 +32,7 @@ import {
 import { InputDate } from '../../../../src/components/InputDate'
 import 'react-datetime/css/react-datetime.css'
 import { FormInputPart, FormPart, FormControlPart } from '../../../../src/components/FormInputPart'
+import { catchError } from '../../../../src/func/catchError'
 
 type CalendarOption = {
   id : string,
@@ -40,6 +42,7 @@ type CalendarOption = {
 type EditKennelProps = {
   body? : {
     kennelId: string,
+    warning?: string,
     accessTokenURL?: string,
     credentialUser?: string,
     calendarSummary?: string,
@@ -431,6 +434,7 @@ const EditKennelPage = ({ error, body } : EditKennelProps) => {
   const { shortName, kennelId } = body
   return (
     <PageCard title={`Edit ${shortName}:`}>
+      { body.warning ? <Alert variant="danger">{body.warning}</Alert> : null }
       <Accordion>
         <Accordion.Item eventKey="info">
           <Accordion.Header>Kennel Info</Accordion.Header>
@@ -511,7 +515,6 @@ export const getServerSideProps: GetServerSideProps<EditKennelProps> = async (co
     }
   }
   const { user: { email } } = session
-
   try {
     const kennel = await ServerClient().query<GqlKennelEditPageSsrQuery>({
       query: GqlKennelEditPageSsrDocument,
@@ -530,8 +533,16 @@ export const getServerSideProps: GetServerSideProps<EditKennelProps> = async (co
       shortName: kennel.short_name!,
     }
 
-    await setCalendarEditProps(kennel, body)
+    let warning
+    try {
+      await setCalendarEditProps(kennel, body)
+    } catch (error) {
+      warning = `Error loading calendar: ${catchError(error)}`
+    }
 
+    if (warning) {
+      body.warning = warning
+    }
     return {
       props: { body },
     }

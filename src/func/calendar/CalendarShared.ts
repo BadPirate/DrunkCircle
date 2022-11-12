@@ -18,7 +18,11 @@ export async function backoffAll<T>(promises: LabeledPromise<T>[], timeout = 100
   return r
 }
 
-export async function apiBackOff<T>(label: string, request: Promise<T>, timeout = 100): Promise<T> {
+export async function apiBackOff<T>(
+  label: string,
+  request: Promise<T>,
+  timeout = 1000,
+): Promise<T> {
   return new Promise((resolveRD, failRD) => {
     setTimeout(() => {
       request.catch((e) => {
