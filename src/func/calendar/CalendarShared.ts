@@ -7,7 +7,7 @@ export type LabeledPromise<T> = {
   promise: Promise<T>
 }
 
-export async function backoffAll<T>(promises: LabeledPromise<T>[], timeout = 1000): Promise<T[]> {
+export async function backoffAll<T>(promises: LabeledPromise<T>[], timeout = 1500): Promise<T[]> {
   const r : T[] = []
   for (let i = 0; i < promises.length; i += 1) {
     const p = promises[i]
