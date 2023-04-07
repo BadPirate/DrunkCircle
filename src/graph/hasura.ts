@@ -377,7 +377,7 @@ export function HasuraAdapter() {
           return null
         }
         const data = result.data.sessions[0]
-        const updatedSession = <AdapterSession>{
+        const updatedSession = {
           id: data.id,
           userId: `${data.user_id}`,
           expires: data.expires,
