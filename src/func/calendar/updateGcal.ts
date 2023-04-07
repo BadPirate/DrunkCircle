@@ -2,12 +2,14 @@
 /* eslint-disable camelcase */
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { calendar_v3 } from 'googleapis'
+import { GaxiosError } from 'googleapis-common'
 import {
   GqlInsertTrailFragment, GqlKennelAddInfoFragment, GqlMarkCleanDocument,
   GqlUpdateTrailGidDocument, GqlUpdateTrailGidMutation,
 } from '../../graph/types'
 import { apiBackOff } from './CalendarShared'
 import { gcalData } from './gcalData'
+import { ilog } from '../Logging'
 
 export async function updateCalendar(
   ac: ApolloClient<NormalizedCacheObject>,
@@ -24,10 +26,18 @@ export async function updateCalendar(
     cal.events.update({
       eventId: trail.google_calendar,
       ...updateData,
+    }).catch((e: GaxiosError) => {
+      if (e.response?.status === 404) {
+        ilog('404 Calendar')
+        return
+      }
+      throw e
     }),
   ).then((r) => {
+    if (!r) return null
     const { id } = r.data
     if (!id) { throw Error(`Unable to update ${trail.id}`) }
+    ilog(`Updated GCAL ${id}`)
     return id
   }).then(() => ac.mutate({
     mutation: GqlMarkCleanDocument,

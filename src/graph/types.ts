@@ -270,6 +270,7 @@ export type Account_Links_Updates = {
   _inc?: InputMaybe<Account_Links_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Account_Links_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Account_Links_Bool_Exp;
 };
 
@@ -619,6 +620,7 @@ export type Attendance_Updates = {
   _inc?: InputMaybe<Attendance_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Attendance_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Attendance_Bool_Exp;
 };
 
@@ -956,6 +958,7 @@ export type Hares_Updates = {
   _inc?: InputMaybe<Hares_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Hares_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Hares_Bool_Exp;
 };
 
@@ -1344,6 +1347,7 @@ export type Hashers_Updates = {
   _inc?: InputMaybe<Hashers_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Hashers_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Hashers_Bool_Exp;
 };
 
@@ -2018,6 +2022,7 @@ export type Kennels_Updates = {
   _inc?: InputMaybe<Kennels_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Kennels_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Kennels_Bool_Exp;
 };
 
@@ -2416,6 +2421,7 @@ export type Management_Updates = {
   _inc?: InputMaybe<Management_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Management_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Management_Bool_Exp;
 };
 
@@ -3243,6 +3249,7 @@ export enum Permission_Enum_Update_Column {
 export type Permission_Enum_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Permission_Enum_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Permission_Enum_Bool_Exp;
 };
 
@@ -3498,6 +3505,7 @@ export type Permissions_Updates = {
   _inc?: InputMaybe<Permissions_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Permissions_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Permissions_Bool_Exp;
 };
 
@@ -4028,6 +4036,7 @@ export type Sessions_Updates = {
   _inc?: InputMaybe<Sessions_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Sessions_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Sessions_Bool_Exp;
 };
 
@@ -5156,6 +5165,7 @@ export type Trails_Updates = {
   _inc?: InputMaybe<Trails_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Trails_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Trails_Bool_Exp;
 };
 
@@ -5531,6 +5541,21 @@ export type GqlUpdatePaidMutationVariables = Exact<{
 
 export type GqlUpdatePaidMutation = { __typename?: 'mutation_root', insert_attendance?: { __typename?: 'attendance_mutation_response', affected_rows: number } | null };
 
+export type InsertTrailsMutationVariables = Exact<{
+  trails?: InputMaybe<Array<Trails_Insert_Input> | Trails_Insert_Input>;
+}>;
+
+
+export type InsertTrailsMutation = { __typename?: 'mutation_root', insert_trails?: { __typename?: 'trails_mutation_response', affected_rows: number } | null };
+
+export type UpdateKennelNextMutationVariables = Exact<{
+  kennelId: Scalars['Int'];
+  next: Scalars['timestamptz'];
+}>;
+
+
+export type UpdateKennelNextMutation = { __typename?: 'mutation_root', update_kennels_by_pk?: { __typename?: 'kennels', id: number } | null };
+
 export type GqlHareRankQueryVariables = Exact<{
   kennelId?: InputMaybe<Scalars['Int']>;
 }>;
@@ -5836,6 +5861,11 @@ export type GqlKennelForTrailQueryVariables = Exact<{
 
 
 export type GqlKennelForTrailQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', kennel: number, hares: Array<{ __typename?: 'hares', hasher: number }> }> };
+
+export type ScheduleTrailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ScheduleTrailsQuery = { __typename?: 'query_root', kennels: Array<{ __typename?: 'kennels', frequency?: number | null, next?: any | null, id: number, short_name?: string | null, trails: Array<{ __typename?: 'trails', start: any, id: number }>, trails_aggregate: { __typename?: 'trails_aggregate', aggregate?: { __typename?: 'trails_aggregate_fields', max?: { __typename?: 'trails_max_fields', start?: any | null } | null } | null } }> };
 
 export type GqlKennelRolesEditViewSubscriptionVariables = Exact<{
   kennelId?: InputMaybe<Scalars['Int']>;
@@ -7286,6 +7316,73 @@ export function useGqlUpdatePaidMutation(baseOptions?: Apollo.MutationHookOption
 export type GqlUpdatePaidMutationHookResult = ReturnType<typeof useGqlUpdatePaidMutation>;
 export type GqlUpdatePaidMutationResult = Apollo.MutationResult<GqlUpdatePaidMutation>;
 export type GqlUpdatePaidMutationOptions = Apollo.BaseMutationOptions<GqlUpdatePaidMutation, GqlUpdatePaidMutationVariables>;
+export const InsertTrailsDocument = gql`
+    mutation InsertTrails($trails: [trails_insert_input!] = {}) {
+  insert_trails(objects: $trails) {
+    affected_rows
+  }
+}
+    `;
+export type InsertTrailsMutationFn = Apollo.MutationFunction<InsertTrailsMutation, InsertTrailsMutationVariables>;
+
+/**
+ * __useInsertTrailsMutation__
+ *
+ * To run a mutation, you first call `useInsertTrailsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertTrailsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertTrailsMutation, { data, loading, error }] = useInsertTrailsMutation({
+ *   variables: {
+ *      trails: // value for 'trails'
+ *   },
+ * });
+ */
+export function useInsertTrailsMutation(baseOptions?: Apollo.MutationHookOptions<InsertTrailsMutation, InsertTrailsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InsertTrailsMutation, InsertTrailsMutationVariables>(InsertTrailsDocument, options);
+      }
+export type InsertTrailsMutationHookResult = ReturnType<typeof useInsertTrailsMutation>;
+export type InsertTrailsMutationResult = Apollo.MutationResult<InsertTrailsMutation>;
+export type InsertTrailsMutationOptions = Apollo.BaseMutationOptions<InsertTrailsMutation, InsertTrailsMutationVariables>;
+export const UpdateKennelNextDocument = gql`
+    mutation UpdateKennelNext($kennelId: Int!, $next: timestamptz!) {
+  update_kennels_by_pk(pk_columns: {id: $kennelId}, _set: {next: $next}) {
+    id
+  }
+}
+    `;
+export type UpdateKennelNextMutationFn = Apollo.MutationFunction<UpdateKennelNextMutation, UpdateKennelNextMutationVariables>;
+
+/**
+ * __useUpdateKennelNextMutation__
+ *
+ * To run a mutation, you first call `useUpdateKennelNextMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateKennelNextMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateKennelNextMutation, { data, loading, error }] = useUpdateKennelNextMutation({
+ *   variables: {
+ *      kennelId: // value for 'kennelId'
+ *      next: // value for 'next'
+ *   },
+ * });
+ */
+export function useUpdateKennelNextMutation(baseOptions?: Apollo.MutationHookOptions<UpdateKennelNextMutation, UpdateKennelNextMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateKennelNextMutation, UpdateKennelNextMutationVariables>(UpdateKennelNextDocument, options);
+      }
+export type UpdateKennelNextMutationHookResult = ReturnType<typeof useUpdateKennelNextMutation>;
+export type UpdateKennelNextMutationResult = Apollo.MutationResult<UpdateKennelNextMutation>;
+export type UpdateKennelNextMutationOptions = Apollo.BaseMutationOptions<UpdateKennelNextMutation, UpdateKennelNextMutationVariables>;
 export const GqlHareRankDocument = gql`
     query GQLHareRank($kennelId: Int) {
   hashers(
@@ -8792,6 +8889,54 @@ export function useGqlKennelForTrailLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GqlKennelForTrailQueryHookResult = ReturnType<typeof useGqlKennelForTrailQuery>;
 export type GqlKennelForTrailLazyQueryHookResult = ReturnType<typeof useGqlKennelForTrailLazyQuery>;
 export type GqlKennelForTrailQueryResult = Apollo.QueryResult<GqlKennelForTrailQuery, GqlKennelForTrailQueryVariables>;
+export const ScheduleTrailsDocument = gql`
+    query ScheduleTrails {
+  kennels(where: {frequency: {_neq: 0}, next: {_is_null: false}}) {
+    frequency
+    next
+    trails(order_by: {start: desc}, where: {start: {_gt: "now()"}}) {
+      start
+      id
+    }
+    id
+    short_name
+    trails_aggregate {
+      aggregate {
+        max {
+          start
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useScheduleTrailsQuery__
+ *
+ * To run a query within a React component, call `useScheduleTrailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useScheduleTrailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useScheduleTrailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useScheduleTrailsQuery(baseOptions?: Apollo.QueryHookOptions<ScheduleTrailsQuery, ScheduleTrailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ScheduleTrailsQuery, ScheduleTrailsQueryVariables>(ScheduleTrailsDocument, options);
+      }
+export function useScheduleTrailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ScheduleTrailsQuery, ScheduleTrailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ScheduleTrailsQuery, ScheduleTrailsQueryVariables>(ScheduleTrailsDocument, options);
+        }
+export type ScheduleTrailsQueryHookResult = ReturnType<typeof useScheduleTrailsQuery>;
+export type ScheduleTrailsLazyQueryHookResult = ReturnType<typeof useScheduleTrailsLazyQuery>;
+export type ScheduleTrailsQueryResult = Apollo.QueryResult<ScheduleTrailsQuery, ScheduleTrailsQueryVariables>;
 export const GqlKennelRolesEditViewDocument = gql`
     subscription GQLKennelRolesEditView($kennelId: Int) {
   kennels(limit: 1, where: {id: {_eq: $kennelId}}) {

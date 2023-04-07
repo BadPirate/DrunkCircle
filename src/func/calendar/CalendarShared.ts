@@ -21,11 +21,11 @@ export async function backoffAll<T>(promises: LabeledPromise<T>[], timeout = 150
 export async function apiBackOff<T>(
   label: string,
   request: Promise<T>,
-  timeout = 1000,
+  timeout = 2000,
 ): Promise<T> {
   return new Promise((resolveRD, failRD) => {
     setTimeout(() => {
-      console.log('Backoff', label)
+      ilog(`Backoff ${label} started...`)
       request.catch((e) => {
         if (e.code === '403' || e.code === 403) {
           ilog(label, 'API Backoff', e.code, timeout)
@@ -38,9 +38,10 @@ export async function apiBackOff<T>(
         ilogError(label, 'Unhandled error code', e.code)
         throw e
       }).then((r) => {
+        ilog(`Backoff ${label} completed.`)
         resolveRD(<T>r)
       }).catch((e) => {
-        console.log('Backoff fail', e.code)
+        ilog('Backoff fail', e.code)
         failRD(e)
       })
     }, timeout)

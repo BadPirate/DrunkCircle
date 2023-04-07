@@ -508,3 +508,23 @@ query GQLKennelForTrail($trailId: Int) {
   }
 }
 
+query ScheduleTrails {
+  kennels(where: {frequency: {_neq: 0}, next: {_is_null: false}}) {
+    frequency
+    next
+    trails(order_by: {start: desc}, where: {start: {_gt: "now()"}}) {
+      start
+      id
+    }
+    id
+    short_name
+    trails_aggregate {
+      aggregate {
+        max {
+          start
+        }
+      }
+    }
+  }
+}
+

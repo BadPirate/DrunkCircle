@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-extend-native */
 /* eslint-disable react/jsx-props-no-spreading */
 import '../styles/styles.css'
 import '../styles/global.css'
@@ -10,6 +12,18 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import { SSRProvider } from 'react-bootstrap'
 
 config.autoAddCss = false
+
+declare global {
+  interface Array<T> {
+    squish(): Array<NonNullable<T>>;
+  }
+}
+
+if (!Array.prototype.squish) {
+  Array.prototype.squish = function squish<T>(): Array<NonNullable<T>> {
+    return this.filter((item) => item !== null) as Array<NonNullable<T>>
+  }
+}
 
 // eslint-disable-next-line react/jsx-props-no-spreading
 const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {

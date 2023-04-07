@@ -5,6 +5,7 @@ import {
   GqlUpdateCalculatedNumberDocument, GqlUpdateCalculatedNumberMutation,
 } from '../../graph/types'
 import { ilog, ilogError } from '../Logging'
+import { backoffAll } from '../calendar/CalendarShared'
 
 export async function fixCalculatedNumbers(
   sc: ApolloClient<NormalizedCacheObject>,
@@ -33,22 +34,25 @@ export async function fixCalculatedNumbers(
       return null
     }
     const to = on
-    return sc.mutate<GqlUpdateCalculatedNumberMutation>({
-      mutation: GqlUpdateCalculatedNumberDocument,
-      variables: {
-        id: t.id,
-        calculated_number: to,
-      },
-    }).then((r) => {
-      if (r.errors && r.errors.length > 0) {
-        ilogError('Error updating calculated number for trail', t, r.errors)
-        return null
-      }
-      ilog('Updated calculated number for trail', t.calculated_number, to)
-      return t.id
-    })
-  })
-  return Promise.all(promises).then((r) => {
+    return {
+      label: `Update calculated number for ${t.id} -> ${to}`,
+      promise: sc.mutate<GqlUpdateCalculatedNumberMutation>({
+        mutation: GqlUpdateCalculatedNumberDocument,
+        variables: {
+          id: t.id,
+          calculated_number: to,
+        },
+      }).then((r) => {
+        if (r.errors && r.errors.length > 0) {
+          ilogError('Error updating calculated number for trail', t, r.errors)
+          return null
+        }
+        ilog('Updated calculated number for trail', t.calculated_number, to)
+        return t.id
+      }),
+    }
+  }).squish()
+  return backoffAll(promises).then((r) => {
     const flat: number[] = r.filter((e): e is number => e !== null)
     return flat
   })

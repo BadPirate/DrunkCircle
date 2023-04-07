@@ -280,3 +280,15 @@ mutation GQLUpdatePaid($hasherId: Int, $trailId: Int, $paid: Boolean, $attended:
     affected_rows
   }
 }
+
+mutation InsertTrails($trails: [trails_insert_input!] = {}) {
+  insert_trails(objects: $trails) {
+    affected_rows
+  }
+}
+
+mutation UpdateKennelNext($kennelId: Int!, $next: timestamptz!) {
+  update_kennels_by_pk(pk_columns: {id: $kennelId}, _set: {next: $next}) {
+    id
+  }
+}
