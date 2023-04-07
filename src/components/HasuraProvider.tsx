@@ -5,9 +5,11 @@ import { useSession } from 'next-auth/react'
 import { useMemo } from 'react'
 import { Spinner } from 'react-bootstrap'
 import PublicClientHasura from '../graph/PublicClientHasura'
+import { HasuraSession } from '../../pages/api/auth/[...nextauth]'
 
 const HasuraProvider = ({ children } : {children : React.ReactNode}) => {
-  const { data: session, status } = useSession()
+  const { data, status } = useSession()
+  const session = data as HasuraSession
 
   const client = useMemo(() => {
     if (!session || !session.hasura_token) {

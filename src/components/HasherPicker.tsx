@@ -1,9 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  Button, Form, FormControl, InputGroup,
+  Button, Form, FormControl, InputGroup, ListGroup, ListGroupItem,
 } from 'react-bootstrap'
 import { useState } from 'react'
-import AutoComplete from 'react-autocomplete'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleXmark, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import ErrorBanner from './ErrorBanner'
 import PublicClientHasura from '../graph/PublicClientHasura'
 import { LoadSpinner } from './LoadSpinner'
@@ -29,6 +30,7 @@ export const HasherPicker = ({
   const [hashers, setHashers] = useState<PublicHasherInfoFragment[]>(initialValue ?? [])
   const [value, setValue] = useState<string>('')
   const [hasher, setHasher] = useState<PublicHasherInfoFragment | undefined>(undefined)
+
   const { loading, data, error } = useGqlGetHasherNamesQuery({
     client: PublicClientHasura,
   })
@@ -42,11 +44,9 @@ export const HasherPicker = ({
     (h) => !(hideHashers || []).includes(h.id),
   ) ?? []
 
-  const hasherIds = hashers.map((f) => f.id)
+  // const hasherIds = hashers.map((f) => f.id)
   const isEmail = value.match('@') !== null
-  const validHasher = hasher && hashers.map((h) => h.id).includes(hasher.id)
   const validEmail = isEmail && isValidEmail(value)
-
   const appendHasher = (h: PublicHasherInfoFragment) => {
     if (onSelect) {
       onSelect(h)
@@ -59,6 +59,10 @@ export const HasherPicker = ({
     setValue('')
     setHasher(undefined)
   }
+
+  const suggestions = value.length > 0
+    ? items.filter((v) => v.name?.toLowerCase().includes(value.toLowerCase())).slice(0, 5) : []
+  const showHints = suggestions.length > 0
 
   return (
     <Form.Group style={{ zIndex: 100 }}>
@@ -76,79 +80,89 @@ export const HasherPicker = ({
                   }}
                 >
                   Remove
-
                 </Button>
               </InputGroup>
             ))}
           </>
         ) : null
       }
-      <AutoComplete
-        items={value.length > 0
-          ? items.filter((i) => i.name!.toLowerCase().includes(value.toLowerCase())
-          && !hasherIds.includes(i.id))
-          : items.filter((i) => !hasherIds.includes(i.id))}
-        getItemValue={(i) => i.name}
-        inputProps={{
-          className: 'form-control',
-          placeholder: 'Hash name or Email',
-        }}
-        renderItem={(item, isHighlighted) => (
-          <div key={item.id} style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
-            {item.name}
-          </div>
-        )}
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value)
-          const s = items.find((h) => h.name?.toLowerCase() === e.target.value.toLocaleLowerCase())
-          setHasher(s)
-        }}
-        onSelect={(v) => {
-          const selected = items.find((h) => h.name === v)
-          if (!selected) {
-            setValue(v)
-            return
-          }
-          appendHasher(selected)
-        }}
-      />
       {
-        addName !== undefined ? (
-          <Button
-            variant="success"
-            onClick={() => {
-              if (validEmail) {
-                const email = value
-                liveMutate(`/api/hasher/from_email?email=${email}`)
-                  .then((j) => {
-                    if (!j) { throw Error('Unexpected non-JSON response from_email') }
-                    const { id } = queryToInt(j)
-                    const { name, error: retrieveError } = queryToStrings(j)
-                    if (!id) {
-                      // eslint-disable-next-line no-alert
-                      alert(retrieveError || 'Unable to add / invite')
-                      return
-                    }
-                    const existing = items.find((h) => h.id === id)
-                    appendHasher(existing || {
-                      __typename: 'hashers',
-                      name,
-                      id,
-                    })
-                  })
-                return
-              }
-              if (hasher) {
-                appendHasher(hasher)
-              }
-            }}
-            disabled={!validHasher && !validEmail}
-          >
-            {isEmail ? `${addName} by email` : addName}
-          </Button>
+        showHints ? (
+          <ListGroup>
+            {
+              suggestions.map((h) => (
+                <ListGroupItem
+                  action
+                  onClick={() => {
+                    appendHasher(h)
+                    setValue('')
+                  }}
+                >
+                  {h.name}
+                </ListGroupItem>
+              ))
+            }
+          </ListGroup>
         ) : null
       }
+      <InputGroup>
+        <FormControl
+          type="input"
+          value={value}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+        />
+        {
+          value.length > 0 ? (
+            <Button onClick={() => {
+              setValue('')
+              setHasher(undefined)
+            }}
+            >
+              <FontAwesomeIcon icon={faCircleXmark} />
+            </Button>
+          ) : null
+        }
+        {
+          addName !== undefined ? (
+            <Button
+              variant="success"
+              onClick={() => {
+                if (validEmail) {
+                  const email = value
+                  liveMutate(`/api/hasher/from_email?email=${email}`)
+                    .then((j) => {
+                      if (!j) { throw Error('Unexpected non-JSON response from_email') }
+                      const { id } = queryToInt(j)
+                      const { name, error: retrieveError } = queryToStrings(j)
+                      if (!id) {
+                      // eslint-disable-next-line no-alert
+                        alert(retrieveError || 'Unable to add / invite')
+                        return
+                      }
+                      const existing = items.find((h) => h.id === id)
+                      appendHasher(existing || {
+                        __typename: 'hashers',
+                        name,
+                        id,
+                      })
+                    })
+                  return
+                }
+                if (hasher) {
+                  appendHasher(hasher)
+                }
+              }}
+              disabled={!hasher && !validEmail}
+            >
+              {addName}
+              {
+                isEmail
+                  ? <FontAwesomeIcon icon={faPaperPlane} className="ms-1" /> : null
+              }
+            </Button>
+          ) : null
+        }
+      </InputGroup>
     </Form.Group>
   )
 }
