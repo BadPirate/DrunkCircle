@@ -8382,7 +8382,7 @@ export const GqlRefreshKennelAddCountDocument = gql`
   ) {
     ...GQLKennelAddInfo
     trails_aggregate(
-      where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}], draft: {_is_null: true}}
+      where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, draft: {_is_null: true}}
     ) {
       aggregate {
         count
@@ -8422,7 +8422,7 @@ export type GqlRefreshKennelAddCountQueryResult = Apollo.QueryResult<GqlRefreshK
 export const GqlAddToCalendarDocument = gql`
     query GQLAddToCalendar($kennelID: Int, $limit: Int) {
   trails(
-    where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, _or: [{hares: {hasher: {_is_null: false}}}, {start: {_gt: "now()"}}], draft: {_is_null: true}}
+    where: {google_calendar: {_is_null: true}, kennel: {_eq: $kennelID}, start: {_is_null: false}, draft: {_is_null: true}}
     limit: $limit
   ) {
     ...GQLInsertTrail
