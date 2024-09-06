@@ -28,4 +28,7 @@ export default NextAuth({
   adapter: HasuraAdapter(),
   secret: process.env.JWT_SECRET,
   callbacks: HasuraCallbacks,
+  session: {
+    maxAge: 365 * 24 * 60 * 60, // 1 year
+  },
 })
