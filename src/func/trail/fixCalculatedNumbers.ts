@@ -42,17 +42,22 @@ export async function fixCalculatedNumbers(
           id: t.id,
           calculated_number: to,
         },
-      }).then((r) => {
-        if (r.errors && r.errors.length > 0) {
-          ilogError('Error updating calculated number for trail', t, r.errors)
-          return null
-        }
-        ilog('Updated calculated number for trail', t.calculated_number, to)
-        return t.id
-      }),
+      })
+        .catch((e) => {
+          ilogError('Error updating calculated number for trail', t, e)
+          throw e
+        })
+        .then((r) => {
+          if (r.errors && r.errors.length > 0) {
+            ilogError('Error updating calculated number for trail', t, r.errors)
+            return null
+          }
+          ilog('Updated calculated number for trail', t.calculated_number, to)
+          return t.id
+        }),
     }
   }).squish()
-  return backoffAll(promises).then((r) => {
+  return backoffAll(promises, 6000).then((r) => {
     const flat: number[] = r.filter((e): e is number => e !== null)
     return flat
   })

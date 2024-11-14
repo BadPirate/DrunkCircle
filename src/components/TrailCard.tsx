@@ -84,13 +84,8 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
       row: <InputText label="Trail Name" name="name" initialValue={trail.name !== 'Hare needed!' ? trail.name : undefined} />,
     },
     {
-      title: `Custom Trail Number${trail.calculated_number && !trail.number ? `: #${trail.calculated_number} (auto)` : ''}`,
-      row: (
-        <>
-          <InputText label="Trail Number" name="number" initialValue={trail.number} required={false} />
-          <Form.Text className="text-muted">WARNING: Changing this value will effect the values of future trails as well</Form.Text>
-        </>
-      ),
+      title: `Trail Number ${trail.calculated_number && !trail.number ? `: #${trail.calculated_number} (auto)` : ''}`,
+      row: null,
     },
   ] : []
 
