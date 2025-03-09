@@ -4,7 +4,7 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: ['next/core-web-vitals', 'airbnb', 'airbnb/hooks'],
+  extends: ['next/core-web-vitals', 'airbnb'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',

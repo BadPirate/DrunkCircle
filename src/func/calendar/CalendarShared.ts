@@ -1,6 +1,5 @@
 import { ServerClient } from '../../graph/hasura'
 import { GqlVerifyCalendarAdminDocument, GqlVerifyCalendarAdminQuery } from '../../graph/types'
-import { ilog, ilogError } from '../Logging'
 
 export type LabeledPromise<T> = {
   label: string,

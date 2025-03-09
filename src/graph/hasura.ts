@@ -41,11 +41,11 @@ const disablePersistedQueries = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => ({
     headers: {
       ...headers,
-      "apollo-require-preflight": "true", // Ensures full query is sent
+      'apollo-require-preflight': 'true', // Ensures full query is sent
     },
-  }));
-  return forward(operation);
-});
+  }))
+  return forward(operation)
+})
 
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,

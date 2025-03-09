@@ -5867,6 +5867,8 @@ export type ScheduleTrailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ScheduleTrailsQuery = { __typename?: 'query_root', kennels: Array<{ __typename?: 'kennels', frequency?: number | null, next?: any | null, id: number, short_name?: string | null, trails: Array<{ __typename?: 'trails', start: any, id: number }>, trails_aggregate: { __typename?: 'trails_aggregate', aggregate?: { __typename?: 'trails_aggregate_fields', max?: { __typename?: 'trails_max_fields', start?: any | null } | null } | null } }> };
 
+export type KennelSyncInfoFragment = { __typename?: 'kennels', google_calendar?: string | null, short_name?: string | null, google_refresh?: string | null, google_token?: string | null, id: number, name?: string | null, trails: Array<{ __typename?: 'trails', calculated_number?: number | null, id: number, name: string, start: any, latitude?: any | null, longitude?: any | null, directions?: string | null, google_calendar?: string | null, description?: string | null, hares: Array<{ __typename?: 'hares', hasherInfo: { __typename?: 'hashers', name?: string | null } }> }> };
+
 export type SyncQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -6066,6 +6068,15 @@ export const GqlInsertTrailFragmentDoc = gql`
   }
 }
     `;
+export const KennelSyncInfoFragmentDoc = gql`
+    fragment KennelSyncInfo on kennels {
+  ...GQLKennelAddInfo
+  trails(where: {start: {_gte: "NOW()"}, draft: {_is_null: true}}) {
+    ...GQLInsertTrail
+  }
+}
+    ${GqlKennelAddInfoFragmentDoc}
+${GqlInsertTrailFragmentDoc}`;
 export const GqlUpdateAccessTokenDocument = gql`
     mutation GQLUpdateAccessToken($accessToken: String, $urt: String, $uat: String) {
   update_kennels(
@@ -8945,14 +8956,10 @@ export type ScheduleTrailsQueryResult = Apollo.QueryResult<ScheduleTrailsQuery, 
 export const SyncDocument = gql`
     query Sync {
   kennels(where: {google_calendar: {_is_null: false}}) {
-    ...GQLKennelAddInfo
-    trails(where: {start: {_gte: "NOW()"}, draft: {_is_null: true}}) {
-      ...GQLInsertTrail
-    }
+    ...KennelSyncInfo
   }
 }
-    ${GqlKennelAddInfoFragmentDoc}
-${GqlInsertTrailFragmentDoc}`;
+    ${KennelSyncInfoFragmentDoc}`;
 
 /**
  * __useSyncQuery__

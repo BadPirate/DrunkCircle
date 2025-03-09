@@ -56,7 +56,7 @@ export async function fixCalculatedNumbers(
         }),
     }
   }).squish()
-  return await Promise.all(promises.map(({promise}) => promise)).then((r) => {
+  return Promise.all(promises.map(({ promise }) => promise)).then((r) => {
     const flat: number[] = r.filter((e): e is number => e !== null)
     return flat
   })

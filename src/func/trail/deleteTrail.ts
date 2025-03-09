@@ -33,6 +33,6 @@ export async function deleteTrail(
     return cal.events.delete({
       eventId: google_calendar,
       calendarId,
-    }) 
-   })
+    })
+  })
 }

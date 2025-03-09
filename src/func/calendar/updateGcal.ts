@@ -24,30 +24,30 @@ export async function updateCalendar(
     eventId: trail.google_calendar,
     ...updateData,
   })
-  .catch((e: GaxiosError) => {
+    .catch((e: GaxiosError) => {
       if (e.response?.status === 404) {
         ilog('404 Calendar')
         return
       }
       throw e
     })
-  .then((r) => {
-    if (!r) return null
-    const { id } = r.data
-    if (!id) { throw Error(`Unable to update ${trail.id}`) }
-    ilog(`Updated GCAL ${id}`)
-    return id
-  })
-  .then(() => ac.mutate({
-    mutation: GqlMarkCleanDocument,
-    variables: { trailId: trail.id },
-  }))
-  .then((r) => {
-    if (r.errors) { throw r.errors[0] }
-    if (!r.data?.update_trails?.affected_rows || r.data.update_trails.affected_rows < 1) {
-      throw Error(`Error updating trail info ${trail.id}`)
-    }
-  })
+    .then((r) => {
+      if (!r) return null
+      const { id } = r.data
+      if (!id) { throw Error(`Unable to update ${trail.id}`) }
+      ilog(`Updated GCAL ${id}`)
+      return id
+    })
+    .then(() => ac.mutate({
+      mutation: GqlMarkCleanDocument,
+      variables: { trailId: trail.id },
+    }))
+    .then((r) => {
+      if (r.errors) { throw r.errors[0] }
+      if (!r.data?.update_trails?.affected_rows || r.data.update_trails.affected_rows < 1) {
+        throw Error(`Error updating trail info ${trail.id}`)
+      }
+    })
 }
 
 export async function insertCalendar(
@@ -58,22 +58,22 @@ export async function insertCalendar(
 ) {
   const insertData = gcalData(kennel, trail)
   const gid = await cal.events.insert(insertData)
-  .then((r) => {
-    const { id } = r.data
-    if (!id) { throw Error(`Unable to create ${trail.id}`) }
-    console.log(`Inserted GCAL ${id}`)
-    return id
-  })
+    .then((r) => {
+      const { id } = r.data
+      if (!id) { throw Error(`Unable to create ${trail.id}`) }
+      ilog(`Inserted GCAL ${id}`)
+      return id
+    })
   await ac.mutate<GqlUpdateTrailGidMutation>({
     mutation: GqlUpdateTrailGidDocument,
     variables: { trailId: trail.id, gid },
   })
-  .then((r) => {
+    .then((r) => {
       if (r.errors) { throw r.errors[0] }
       if (!r.data?.update_trails?.affected_rows || r.data.update_trails.affected_rows < 1) {
         throw Error(`Error updating trail info ${trail.id}`)
       }
-      console.log("Inserted GCAL, updated trail", trail.id)
-  })
+      ilog('Inserted GCAL, updated trail', trail.id)
+    })
   return gid
 }

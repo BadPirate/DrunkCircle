@@ -55,7 +55,6 @@ export function loginRedirectLink(path: string, email: string, token: string) {
   const callbackUrl = `${host}${path}`
   const params = new URLSearchParams({ callbackUrl, token, email })
   const link = `${host}/api/auth/callback/email?${params}`
-  console.log('LOGIN_LINK', link)
   return link
 }
 
@@ -87,7 +86,6 @@ export async function sendEmails(
 
 let apiKeySet = false
 export async function rawEmailSend(data: sgm.MailDataRequired | sgm.MailDataRequired[]) {
-  console.log('DATA', data)
   if (!apiKeySet) {
     const apiKey = process.env.SENDGRID_API_KEY
     if (!apiKey) throw Error('SENDGRID_API_KEY must be set in order to email users')
