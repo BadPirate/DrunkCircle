@@ -8,7 +8,7 @@ import {
 } from '../../../src/graph/types'
 import { updateGoogleCalendar } from '../../../src/func/calendar/updateGoogleCalendar'
 import { fixCalculatedNumbers } from '../../../src/func/trail/fixCalculatedNumbers'
-import { LabeledPromise, backoffAll } from '../../../src/func/calendar/CalendarShared'
+import { LabeledPromise } from '../../../src/func/calendar/CalendarShared'
 
 const kScheduleAheadDays = 30 * 6
 const kInactiveDays = 30 * 2
@@ -93,7 +93,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     })
   })
 
-  const result = await backoffAll(updateCalendarPromises)
+  const result = await Promise.all(updateCalendarPromises)
 
   res.json(result)
 }

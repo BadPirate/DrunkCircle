@@ -528,3 +528,11 @@ query ScheduleTrails {
   }
 }
 
+query Sync {
+  kennels(where: {google_calendar: {_is_null: false}}) {
+    ...GQLKennelAddInfo
+    trails(where: {start: {_gte: "NOW()"}, draft: {_is_null: true}}) {
+      ...GQLInsertTrail
+    }
+  }
+}

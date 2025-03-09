@@ -5,7 +5,6 @@ import {
   GqlUpdateCalculatedNumberDocument, GqlUpdateCalculatedNumberMutation,
 } from '../../graph/types'
 import { ilog, ilogError } from '../Logging'
-import { backoffAll } from '../calendar/CalendarShared'
 
 export async function fixCalculatedNumbers(
   sc: ApolloClient<NormalizedCacheObject>,
@@ -57,7 +56,7 @@ export async function fixCalculatedNumbers(
         }),
     }
   }).squish()
-  return backoffAll(promises, 6000).then((r) => {
+  return await Promise.all(promises.map(({promise}) => promise)).then((r) => {
     const flat: number[] = r.filter((e): e is number => e !== null)
     return flat
   })

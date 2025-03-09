@@ -1,5 +1,6 @@
 import {
   ApolloClient, InMemoryCache, HttpLink,
+  ApolloLink,
 } from '@apollo/client'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
@@ -36,13 +37,25 @@ export const HasuraClient = (authToken : string) => new ApolloClient({
   cache: new InMemoryCache(),
 })
 
-export const ServerClient = () => new ApolloClient({
-  link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
+const disablePersistedQueries = new ApolloLink((operation, forward) => {
+  operation.setContext(({ headers = {} }) => ({
     headers: {
-      'X-Hasura-Admin-Secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET || '',
+      ...headers,
+      "apollo-require-preflight": "true", // Ensures full query is sent
     },
-  }),
+  }));
+  return forward(operation);
+});
+
+const httpLink = new HttpLink({
+  uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
+  headers: {
+    'X-Hasura-Admin-Secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET || '',
+  },
+})
+
+export const ServerClient = () => new ApolloClient({
+  link: ApolloLink.from([disablePersistedQueries, httpLink]),
   cache: new InMemoryCache(),
 })
 

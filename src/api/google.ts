@@ -44,6 +44,7 @@ export function gcal(accessToken : string, refreshToken: string) : calendar_v3.C
     refresh_token: refreshToken,
   })
   return google.calendar({
+    rootUrl: 'https://google.gateway.badpirate.net',
     version: 'v3',
     auth: oauth2Client,
   })

@@ -12,7 +12,6 @@ import {
 import { ilog } from '../Logging'
 import { GoogleLimit } from '../ServerHelpers'
 import { ProgressResult } from '../SharedTypes'
-import { apiBackOff } from './CalendarShared'
 
 export async function deleteAllCalendarEntries(
   kennelId: string,
@@ -64,10 +63,11 @@ export async function deleteAllCalendarEntries(
   const cal = gcal(accessToken, refreshToken)
   for (let on = 0; on < entries.length; on += 1) {
     const c = entries[on]
-    await apiBackOff(`${c.id}`, cal.events.delete({
+    await cal.events.delete({
       calendarId,
       eventId: c.google_calendar!,
-    }).catch((e) => {
+    })
+    .catch((e) => {
       if (e.code === '410' || e.code === 410) {
         ilog('Calendar event already deleted', c.id)
       } else if (e.code === '404' || e.code === 404) {
@@ -76,7 +76,7 @@ export async function deleteAllCalendarEntries(
         ilog(c.id, 'THREW', e.code)
         throw e
       }
-    }))
+    })
       .then(() => {
         ilog(c.id, 'Clearing...')
         return ac.mutate<GqlClearCalendarInfoFromTrailMutation>({

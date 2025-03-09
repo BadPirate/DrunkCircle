@@ -136,7 +136,7 @@ export type Account_Links_Bool_Exp = {
 
 /** unique or primary key constraints on table "account_links" */
 export enum Account_Links_Constraint {
-  /** unique or primary key constraint on columns "provider", "user_id" */
+  /** unique or primary key constraint on columns "user_id", "provider" */
   AccountLinksPkey = 'account_links_pkey'
 }
 
@@ -411,7 +411,7 @@ export type Attendance_Bool_Exp = {
 
 /** unique or primary key constraints on table "attendance" */
 export enum Attendance_Constraint {
-  /** unique or primary key constraint on columns "hasher", "trail" */
+  /** unique or primary key constraint on columns "trail", "hasher" */
   AttendancePkey = 'attendance_pkey'
 }
 
@@ -797,7 +797,7 @@ export type Hares_Bool_Exp = {
 
 /** unique or primary key constraints on table "hares" */
 export enum Hares_Constraint {
-  /** unique or primary key constraint on columns "hasher", "trail" */
+  /** unique or primary key constraint on columns "trail", "hasher" */
   HareIndex = 'hare_index'
 }
 
@@ -3351,7 +3351,7 @@ export type Permissions_Bool_Exp = {
 
 /** unique or primary key constraints on table "permissions" */
 export enum Permissions_Constraint {
-  /** unique or primary key constraint on columns "permission", "role" */
+  /** unique or primary key constraint on columns "role", "permission" */
   PermissionsPkey = 'permissions_pkey'
 }
 
@@ -5866,6 +5866,11 @@ export type ScheduleTrailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ScheduleTrailsQuery = { __typename?: 'query_root', kennels: Array<{ __typename?: 'kennels', frequency?: number | null, next?: any | null, id: number, short_name?: string | null, trails: Array<{ __typename?: 'trails', start: any, id: number }>, trails_aggregate: { __typename?: 'trails_aggregate', aggregate?: { __typename?: 'trails_aggregate_fields', max?: { __typename?: 'trails_max_fields', start?: any | null } | null } | null } }> };
+
+export type SyncQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SyncQuery = { __typename?: 'query_root', kennels: Array<{ __typename?: 'kennels', google_calendar?: string | null, short_name?: string | null, google_refresh?: string | null, google_token?: string | null, id: number, name?: string | null, trails: Array<{ __typename?: 'trails', calculated_number?: number | null, id: number, name: string, start: any, latitude?: any | null, longitude?: any | null, directions?: string | null, google_calendar?: string | null, description?: string | null, hares: Array<{ __typename?: 'hares', hasherInfo: { __typename?: 'hashers', name?: string | null } }> }> }> };
 
 export type GqlKennelRolesEditViewSubscriptionVariables = Exact<{
   kennelId?: InputMaybe<Scalars['Int']>;
@@ -8937,6 +8942,44 @@ export function useScheduleTrailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type ScheduleTrailsQueryHookResult = ReturnType<typeof useScheduleTrailsQuery>;
 export type ScheduleTrailsLazyQueryHookResult = ReturnType<typeof useScheduleTrailsLazyQuery>;
 export type ScheduleTrailsQueryResult = Apollo.QueryResult<ScheduleTrailsQuery, ScheduleTrailsQueryVariables>;
+export const SyncDocument = gql`
+    query Sync {
+  kennels(where: {google_calendar: {_is_null: false}}) {
+    ...GQLKennelAddInfo
+    trails(where: {start: {_gte: "NOW()"}, draft: {_is_null: true}}) {
+      ...GQLInsertTrail
+    }
+  }
+}
+    ${GqlKennelAddInfoFragmentDoc}
+${GqlInsertTrailFragmentDoc}`;
+
+/**
+ * __useSyncQuery__
+ *
+ * To run a query within a React component, call `useSyncQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSyncQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSyncQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSyncQuery(baseOptions?: Apollo.QueryHookOptions<SyncQuery, SyncQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SyncQuery, SyncQueryVariables>(SyncDocument, options);
+      }
+export function useSyncLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SyncQuery, SyncQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SyncQuery, SyncQueryVariables>(SyncDocument, options);
+        }
+export type SyncQueryHookResult = ReturnType<typeof useSyncQuery>;
+export type SyncLazyQueryHookResult = ReturnType<typeof useSyncLazyQuery>;
+export type SyncQueryResult = Apollo.QueryResult<SyncQuery, SyncQueryVariables>;
 export const GqlKennelRolesEditViewDocument = gql`
     subscription GQLKennelRolesEditView($kennelId: Int) {
   kennels(limit: 1, where: {id: {_eq: $kennelId}}) {
