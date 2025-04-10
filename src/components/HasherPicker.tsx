@@ -17,13 +17,14 @@ const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}
 const isValidEmail = (s: string) => emailRegex.test(s)
 
 export const HasherPicker = ({
-  addName, initialValue, formName, onSelect, hideHashers, allowMultiple,
+  addName, initialValue, formName, onSelect, hideHashers, allowMultiple, disabled,
 }: {
   addName?: string | undefined
   formName?: string
   initialValue?: PublicHasherInfoFragment[]
   hideHashers?: number[]
   allowMultiple?: boolean
+  disabled?: boolean
   // eslint-disable-next-line no-unused-vars
   onSelect?: (hasher: PublicHasherInfoFragment) => void
 }) => {
@@ -44,7 +45,6 @@ export const HasherPicker = ({
     (h) => !(hideHashers || []).includes(h.id),
   ) ?? []
 
-  // const hasherIds = hashers.map((f) => f.id)
   const isEmail = value.match('@') !== null
   const validEmail = isEmail && isValidEmail(value)
   const appendHasher = (h: PublicHasherInfoFragment) => {
@@ -78,6 +78,7 @@ export const HasherPicker = ({
                   onClick={() => {
                     setHashers(hashers!.filter((f) => f.id !== h.id))
                   }}
+                  disabled={disabled}
                 >
                   Remove
                 </Button>
@@ -97,6 +98,7 @@ export const HasherPicker = ({
                     appendHasher(h)
                     setValue('')
                   }}
+                  disabled={disabled}
                 >
                   {h.name}
                 </ListGroupItem>
@@ -110,13 +112,16 @@ export const HasherPicker = ({
           type="input"
           value={value}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+          disabled={disabled}
         />
         {
           value.length > 0 ? (
-            <Button onClick={() => {
-              setValue('')
-              setHasher(undefined)
-            }}
+            <Button
+              onClick={() => {
+                setValue('')
+                setHasher(undefined)
+              }}
+              disabled={disabled}
             >
               <FontAwesomeIcon icon={faCircleXmark} />
             </Button>
@@ -152,7 +157,7 @@ export const HasherPicker = ({
                   appendHasher(hasher)
                 }
               }}
-              disabled={!hasher && !validEmail}
+              disabled={!hasher && (disabled || !validEmail)}
             >
               {addName}
               {
@@ -174,4 +179,5 @@ HasherPicker.defaultProps = {
   onSelect: null,
   hideHashers: [],
   allowMultiple: true,
+  disabled: false,
 }

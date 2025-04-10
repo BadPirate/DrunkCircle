@@ -4455,6 +4455,9 @@ export type Timestamptz_Comparison_Exp = {
 export type Trails = {
   __typename?: 'trails';
   calculated_number?: Maybe<Scalars['Int']>;
+  /** An object relationship */
+  createdBy?: Maybe<Hashers>;
+  createdById?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
   directions?: Maybe<Scalars['String']>;
   draft?: Maybe<Scalars['Int']>;
@@ -4679,6 +4682,7 @@ export type Trails_Arr_Rel_Insert_Input = {
 export type Trails_Avg_Fields = {
   __typename?: 'trails_avg_fields';
   calculated_number?: Maybe<Scalars['Float']>;
+  createdById?: Maybe<Scalars['Float']>;
   draft?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   kennel?: Maybe<Scalars['Float']>;
@@ -4690,6 +4694,7 @@ export type Trails_Avg_Fields = {
 /** order by avg() on columns of table "trails" */
 export type Trails_Avg_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
@@ -4704,6 +4709,8 @@ export type Trails_Bool_Exp = {
   _not?: InputMaybe<Trails_Bool_Exp>;
   _or?: InputMaybe<Array<Trails_Bool_Exp>>;
   calculated_number?: InputMaybe<Int_Comparison_Exp>;
+  createdBy?: InputMaybe<Hashers_Bool_Exp>;
+  createdById?: InputMaybe<Int_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   directions?: InputMaybe<String_Comparison_Exp>;
   draft?: InputMaybe<Int_Comparison_Exp>;
@@ -4734,6 +4741,7 @@ export enum Trails_Constraint {
 /** input type for incrementing numeric columns in table "trails" */
 export type Trails_Inc_Input = {
   calculated_number?: InputMaybe<Scalars['Int']>;
+  createdById?: InputMaybe<Scalars['Int']>;
   draft?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['Int']>;
   kennel?: InputMaybe<Scalars['Int']>;
@@ -4745,6 +4753,8 @@ export type Trails_Inc_Input = {
 /** input type for inserting data into table "trails" */
 export type Trails_Insert_Input = {
   calculated_number?: InputMaybe<Scalars['Int']>;
+  createdBy?: InputMaybe<Hashers_Obj_Rel_Insert_Input>;
+  createdById?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
   directions?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Int']>;
@@ -4768,6 +4778,7 @@ export type Trails_Insert_Input = {
 export type Trails_Max_Fields = {
   __typename?: 'trails_max_fields';
   calculated_number?: Maybe<Scalars['Int']>;
+  createdById?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
   directions?: Maybe<Scalars['String']>;
   draft?: Maybe<Scalars['Int']>;
@@ -4785,6 +4796,7 @@ export type Trails_Max_Fields = {
 /** order by max() on columns of table "trails" */
 export type Trails_Max_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   directions?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
@@ -4803,6 +4815,7 @@ export type Trails_Max_Order_By = {
 export type Trails_Min_Fields = {
   __typename?: 'trails_min_fields';
   calculated_number?: Maybe<Scalars['Int']>;
+  createdById?: Maybe<Scalars['Int']>;
   description?: Maybe<Scalars['String']>;
   directions?: Maybe<Scalars['String']>;
   draft?: Maybe<Scalars['Int']>;
@@ -4820,6 +4833,7 @@ export type Trails_Min_Fields = {
 /** order by min() on columns of table "trails" */
 export type Trails_Min_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   directions?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
@@ -4860,6 +4874,8 @@ export type Trails_On_Conflict = {
 /** Ordering options when selecting data from "trails". */
 export type Trails_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdBy?: InputMaybe<Hashers_Order_By>;
+  createdById?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   directions?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
@@ -4888,6 +4904,8 @@ export type Trails_Pk_Columns_Input = {
 export enum Trails_Select_Column {
   /** column name */
   CalculatedNumber = 'calculated_number',
+  /** column name */
+  CreatedById = 'createdById',
   /** column name */
   Description = 'description',
   /** column name */
@@ -4995,6 +5013,7 @@ export enum Trails_Select_Column_Trails_Aggregate_Bool_Exp_Var_Samp_Arguments_Co
 /** input type for updating data in table "trails" */
 export type Trails_Set_Input = {
   calculated_number?: InputMaybe<Scalars['Int']>;
+  createdById?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
   directions?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Int']>;
@@ -5014,6 +5033,7 @@ export type Trails_Set_Input = {
 export type Trails_Stddev_Fields = {
   __typename?: 'trails_stddev_fields';
   calculated_number?: Maybe<Scalars['Float']>;
+  createdById?: Maybe<Scalars['Float']>;
   draft?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   kennel?: Maybe<Scalars['Float']>;
@@ -5025,6 +5045,7 @@ export type Trails_Stddev_Fields = {
 /** order by stddev() on columns of table "trails" */
 export type Trails_Stddev_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
@@ -5037,6 +5058,7 @@ export type Trails_Stddev_Order_By = {
 export type Trails_Stddev_Pop_Fields = {
   __typename?: 'trails_stddev_pop_fields';
   calculated_number?: Maybe<Scalars['Float']>;
+  createdById?: Maybe<Scalars['Float']>;
   draft?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   kennel?: Maybe<Scalars['Float']>;
@@ -5048,6 +5070,7 @@ export type Trails_Stddev_Pop_Fields = {
 /** order by stddev_pop() on columns of table "trails" */
 export type Trails_Stddev_Pop_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
@@ -5060,6 +5083,7 @@ export type Trails_Stddev_Pop_Order_By = {
 export type Trails_Stddev_Samp_Fields = {
   __typename?: 'trails_stddev_samp_fields';
   calculated_number?: Maybe<Scalars['Float']>;
+  createdById?: Maybe<Scalars['Float']>;
   draft?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   kennel?: Maybe<Scalars['Float']>;
@@ -5071,6 +5095,7 @@ export type Trails_Stddev_Samp_Fields = {
 /** order by stddev_samp() on columns of table "trails" */
 export type Trails_Stddev_Samp_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
@@ -5090,6 +5115,7 @@ export type Trails_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Trails_Stream_Cursor_Value_Input = {
   calculated_number?: InputMaybe<Scalars['Int']>;
+  createdById?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
   directions?: InputMaybe<Scalars['String']>;
   draft?: InputMaybe<Scalars['Int']>;
@@ -5109,6 +5135,7 @@ export type Trails_Stream_Cursor_Value_Input = {
 export type Trails_Sum_Fields = {
   __typename?: 'trails_sum_fields';
   calculated_number?: Maybe<Scalars['Int']>;
+  createdById?: Maybe<Scalars['Int']>;
   draft?: Maybe<Scalars['Int']>;
   id?: Maybe<Scalars['Int']>;
   kennel?: Maybe<Scalars['Int']>;
@@ -5120,6 +5147,7 @@ export type Trails_Sum_Fields = {
 /** order by sum() on columns of table "trails" */
 export type Trails_Sum_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
@@ -5132,6 +5160,8 @@ export type Trails_Sum_Order_By = {
 export enum Trails_Update_Column {
   /** column name */
   CalculatedNumber = 'calculated_number',
+  /** column name */
+  CreatedById = 'createdById',
   /** column name */
   Description = 'description',
   /** column name */
@@ -5173,6 +5203,7 @@ export type Trails_Updates = {
 export type Trails_Var_Pop_Fields = {
   __typename?: 'trails_var_pop_fields';
   calculated_number?: Maybe<Scalars['Float']>;
+  createdById?: Maybe<Scalars['Float']>;
   draft?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   kennel?: Maybe<Scalars['Float']>;
@@ -5184,6 +5215,7 @@ export type Trails_Var_Pop_Fields = {
 /** order by var_pop() on columns of table "trails" */
 export type Trails_Var_Pop_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
@@ -5196,6 +5228,7 @@ export type Trails_Var_Pop_Order_By = {
 export type Trails_Var_Samp_Fields = {
   __typename?: 'trails_var_samp_fields';
   calculated_number?: Maybe<Scalars['Float']>;
+  createdById?: Maybe<Scalars['Float']>;
   draft?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   kennel?: Maybe<Scalars['Float']>;
@@ -5207,6 +5240,7 @@ export type Trails_Var_Samp_Fields = {
 /** order by var_samp() on columns of table "trails" */
 export type Trails_Var_Samp_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
@@ -5219,6 +5253,7 @@ export type Trails_Var_Samp_Order_By = {
 export type Trails_Variance_Fields = {
   __typename?: 'trails_variance_fields';
   calculated_number?: Maybe<Scalars['Float']>;
+  createdById?: Maybe<Scalars['Float']>;
   draft?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
   kennel?: Maybe<Scalars['Float']>;
@@ -5230,6 +5265,7 @@ export type Trails_Variance_Fields = {
 /** order by variance() on columns of table "trails" */
 export type Trails_Variance_Order_By = {
   calculated_number?: InputMaybe<Order_By>;
+  createdById?: InputMaybe<Order_By>;
   draft?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   kennel?: InputMaybe<Order_By>;
@@ -5325,6 +5361,7 @@ export type GqlInsertTrailMutationVariables = Exact<{
   longitude?: InputMaybe<Scalars['float8']>;
   name?: InputMaybe<Scalars['String']>;
   number?: InputMaybe<Scalars['Int']>;
+  createdById?: InputMaybe<Scalars['Int']>;
   start?: InputMaybe<Scalars['timestamptz']>;
 }>;
 
@@ -5344,6 +5381,7 @@ export type GqlInsertTrailDraftMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
   number?: InputMaybe<Scalars['Int']>;
   start?: InputMaybe<Scalars['timestamptz']>;
+  createdById?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -5618,14 +5656,14 @@ export type GqlDeleteVerifyQueryVariables = Exact<{
 
 export type GqlDeleteVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', kennel: number, draft?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> }> };
 
-export type GqlTrailInfoFragment = { __typename?: 'trails', id: number, name: string, draft?: number | null, google_calendar?: string | null, kennel: number, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> };
+export type GqlTrailInfoFragment = { __typename?: 'trails', id: number, name: string, draft?: number | null, createdById?: number | null, google_calendar?: string | null, kennel: number, drafts: Array<{ __typename?: 'trails', id: number, createdById?: number | null }>, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> };
 
 export type GqlEditTrailInfoQueryVariables = Exact<{
   trailId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type GqlEditTrailInfoQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', id: number, name: string, draft?: number | null, google_calendar?: string | null, kennel: number, draftFor?: { __typename?: 'trails', id: number, name: string, draft?: number | null, google_calendar?: string | null, kennel: number, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> } | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> }> };
+export type GqlEditTrailInfoQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', id: number, name: string, draft?: number | null, createdById?: number | null, google_calendar?: string | null, kennel: number, draftFor?: { __typename?: 'trails', id: number, name: string, draft?: number | null, createdById?: number | null, google_calendar?: string | null, kennel: number, drafts: Array<{ __typename?: 'trails', id: number, createdById?: number | null }>, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> } | null, drafts: Array<{ __typename?: 'trails', id: number, createdById?: number | null }>, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> }> };
 
 export type GqlHasherEmailQueryVariables = Exact<{
   hasher?: InputMaybe<Scalars['Int']>;
@@ -5933,6 +5971,11 @@ export const GqlTrailInfoFragmentDoc = gql`
   id
   name
   draft
+  drafts {
+    id
+    createdById
+  }
+  createdById
   google_calendar
   kennel
   ...GQLHareCheckFragment
@@ -6397,9 +6440,9 @@ export type GqlClearDraftMutationMutationHookResult = ReturnType<typeof useGqlCl
 export type GqlClearDraftMutationMutationResult = Apollo.MutationResult<GqlClearDraftMutationMutation>;
 export type GqlClearDraftMutationMutationOptions = Apollo.BaseMutationOptions<GqlClearDraftMutationMutation, GqlClearDraftMutationMutationVariables>;
 export const GqlInsertTrailDocument = gql`
-    mutation GQLInsertTrail($id: Int = null, $calculated_number: Int, $description: String, $directions: String, $draft: Int, $google_calendar: String, $hares: [hares_insert_input!]!, $kennel: Int, $latitude: float8, $longitude: float8, $name: String, $number: Int, $start: timestamptz) {
+    mutation GQLInsertTrail($id: Int = null, $calculated_number: Int, $description: String, $directions: String, $draft: Int, $google_calendar: String, $hares: [hares_insert_input!]!, $kennel: Int, $latitude: float8, $longitude: float8, $name: String, $number: Int, $createdById: Int, $start: timestamptz) {
   insert_trails_one(
-    object: {id: $id, calculated_number: $calculated_number, description: $description, directions: $directions, draft: $draft, google_calendar: $google_calendar, hares: {data: $hares}, kennel: $kennel, latitude: $latitude, longitude: $longitude, name: $name, number: $number, start: $start}
+    object: {id: $id, calculated_number: $calculated_number, description: $description, directions: $directions, draft: $draft, createdById: $createdById, google_calendar: $google_calendar, hares: {data: $hares}, kennel: $kennel, latitude: $latitude, longitude: $longitude, name: $name, number: $number, start: $start}
   ) {
     id
   }
@@ -6432,6 +6475,7 @@ export type GqlInsertTrailMutationFn = Apollo.MutationFunction<GqlInsertTrailMut
  *      longitude: // value for 'longitude'
  *      name: // value for 'name'
  *      number: // value for 'number'
+ *      createdById: // value for 'createdById'
  *      start: // value for 'start'
  *   },
  * });
@@ -6444,9 +6488,9 @@ export type GqlInsertTrailMutationHookResult = ReturnType<typeof useGqlInsertTra
 export type GqlInsertTrailMutationResult = Apollo.MutationResult<GqlInsertTrailMutation>;
 export type GqlInsertTrailMutationOptions = Apollo.BaseMutationOptions<GqlInsertTrailMutation, GqlInsertTrailMutationVariables>;
 export const GqlInsertTrailDraftDocument = gql`
-    mutation GQLInsertTrailDraft($calculated_number: Int, $description: String, $directions: String, $draft: Int, $google_calendar: String, $hares: [hares_insert_input!]!, $kennel: Int, $latitude: float8, $longitude: float8, $name: String, $number: Int, $start: timestamptz) {
+    mutation GQLInsertTrailDraft($calculated_number: Int, $description: String, $directions: String, $draft: Int, $google_calendar: String, $hares: [hares_insert_input!]!, $kennel: Int, $latitude: float8, $longitude: float8, $name: String, $number: Int, $start: timestamptz, $createdById: Int) {
   insert_trails_one(
-    object: {calculated_number: $calculated_number, description: $description, directions: $directions, draft: $draft, google_calendar: $google_calendar, hares: {data: $hares}, kennel: $kennel, gcal_dirty: true, latitude: $latitude, longitude: $longitude, name: $name, number: $number, start: $start}
+    object: {calculated_number: $calculated_number, description: $description, directions: $directions, draft: $draft, google_calendar: $google_calendar, hares: {data: $hares}, kennel: $kennel, gcal_dirty: true, latitude: $latitude, longitude: $longitude, name: $name, number: $number, start: $start, createdById: $createdById}
   ) {
     id
   }
@@ -6479,6 +6523,7 @@ export type GqlInsertTrailDraftMutationFn = Apollo.MutationFunction<GqlInsertTra
  *      name: // value for 'name'
  *      number: // value for 'number'
  *      start: // value for 'start'
+ *      createdById: // value for 'createdById'
  *   },
  * });
  */

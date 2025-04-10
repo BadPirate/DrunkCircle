@@ -11,7 +11,10 @@ import { GqlDeleteVerifyDocument, GqlDeleteVerifyQuery } from '../../../../src/g
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await requireKnownUser(req, res)
-  if (!user) return
+  if (!user) {
+    res.status(401).json({ error: 'Unauthorized: User not found' })
+    return
+  }
   const { trailId } = queryToInt(req.query)
   requireAll({ trailId })
   const ac = ServerClient()

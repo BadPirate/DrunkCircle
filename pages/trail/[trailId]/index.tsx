@@ -23,11 +23,11 @@ const CardRow = ({ title, children } : CardRowProperties) => (
 CardRow.defaultProps = { children: null }
 
 interface ServerSideProps {
-    error? : any | undefined,
-    data? : GqlPageTrailIdQuery | undefined
+  error?: string | undefined,
+  data?: GqlPageTrailIdQuery | undefined,
 }
 
-const TrailId = ({ error, data } : ServerSideProps) => {
+const TrailId = ({ error, data }: ServerSideProps) => {
   if (error) {
     return <BodyError error={error} />
   }
@@ -37,9 +37,10 @@ const TrailId = ({ error, data } : ServerSideProps) => {
 
   const trail = data.trails[0]
   const mapImage = !trail.longitude || !trail.latitude
-  || (trail.longitude === 0 && trail.latitude === 0)
+    || (trail.longitude === 0 && trail.latitude === 0)
     ? undefined
     : `https://maps.googleapis.com/maps/api/staticmap?markers=${trail.latitude},${trail.longitude}&zoom=18&center=${trail.latitude},${trail.longitude}&size=600x315&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`
+
   return (
     <RootNav
       title={`${trail.kennelInfo.short_name}: ${trail.name} - ${dateFormat(trail.start, 'DDDD m/d/yy')}`}
@@ -60,14 +61,17 @@ TrailId.defaultProps = {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query: { trailId } }) => {
-  let props : ServerSideProps = {}
+  let props: ServerSideProps = {}
   await PublicClientHasura.query<GqlPageTrailIdQuery>({
     query: GqlPageTrailIdDocument,
     fetchPolicy: 'no-cache',
-    variables: { trailId },
+    variables: {
+      trailId: parseInt(trailId as
+       string, 10),
+    }, // Ensure trailId is parsed as an integer
   })
-    .catch((error) => { props = { error } })
     .then((r) => { props = { data: r ? r.data : undefined } })
+    .catch((error) => { props = { error: error.message } }) // Ensure error is properly handled
   return { props }
 }
 

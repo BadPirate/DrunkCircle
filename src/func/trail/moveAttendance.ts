@@ -28,15 +28,23 @@ export async function reidentifyTrail(
   from: number,
   to: number,
 ) {
-  sc.mutate<GqlAcceptDraftMutationMutation>({
-    mutation: GqlAcceptDraftMutationDocument,
-    variables: {
-      from,
-      to,
-    },
-  }).then((r) => {
-    if (!r.data?.update_trails_by_pk) {
-      ilogError('Reidentify Error', r)
+  try {
+    const result = await sc.mutate<GqlAcceptDraftMutationMutation>({
+      mutation: GqlAcceptDraftMutationDocument,
+      variables: {
+        from,
+        to,
+      },
+    })
+
+    if (!result.data?.update_trails_by_pk) {
+      ilogError('Reidentify Error: No trail updated', result)
+      return false
     }
-  })
+
+    return true
+  } catch (error) {
+    ilogError('Reidentify Error: Mutation failed', error)
+    return false
+  }
 }
