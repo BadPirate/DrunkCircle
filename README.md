@@ -1,20 +1,37 @@
-# Nextstrap
+# DrunkCircle
 
-A simple project the way Badpirate likes it:
+DrunkCircle is a collaborative platform for the Hash House Harriers community. It provides tools for managing trails, kennels, and events, making it easier for members to connect and organize activities.
 
-- Next JS
-- Typescript
-- Eslint (Airbnb)
-- No forking semi-colons
+## Features
 
-Feel free to fork for your own project if want to make a quick web project based on the best setup available.
+- **Trail Management**: Add, edit, and view trails for your kennel.
+- **Kennel Directory**: Search and manage kennel information.
+- **Hasher Profiles**: Manage hasher details and participation.
+- **Google Calendar Integration**: Sync events with Google Calendar.
 
-## Using
+## Development Requirements
 
-1. `git clone git@github.com:BadPirate/nextstrap.git MyCoolNextProject`
-2. Rename the project in `package.json`
-3. `yarn dev`
+This project requires a Hasura backend (GraphQL) for development. If you want to start your own instance, please reach out to badpirate@gmail.com to get set up with a database backend.
 
-## Theme
+## Getting Started
 
-Currently comes preinstalled with [Cyborg](https://bootswatch.com/cyborg/), but you can download any theme that you want to use or the default min theme.  Replacing the min'd css at `styles/bootstrap.min.css`
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:BadPirate/drunkcircle.git
+   ```
+2. Install dependencies:
+   ```bash
+   yarn install
+   ```
+3. Start the development server:
+   ```bash
+   yarn dev
+   ```
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request with your changes. Ensure your code follows the existing style and includes tests where applicable.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.

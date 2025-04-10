@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "schema": "set -a; source .env.local; set +a; yarn graphql-codegen -c graphqlrc.yml --verbose"
+    "schema": "set -a; source .env.local; set +a; yarn graphql-codegen -c graphqlrc.yml --verbose",
+    "test:e2e": "playwright test",
+    "test": "yarn test:e2e"
   },
   "dependencies": {
     "@apollo/client": "^3.6.1",
@@ -65,8 +67,10 @@
     "@graphql-codegen/typescript-react-apollo": "^3.3.2",
     "@graphql-codegen/typescript-react-query": "^4.0.0",
     "@next/eslint-plugin-next": "^13.3.0",
+    "@playwright/test": "^1.51.1",
     "@types/dateformat": "^5.0.0",
     "@types/google-map-react": "^2.1.7",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.15.11",
     "@types/nodemailer": "^6.4.4",
@@ -86,6 +90,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "install-peers": "^1.0.3",
+    "ts-jest": "^29.3.1",
     "typescript": "^5.0.3"
   }
 }
