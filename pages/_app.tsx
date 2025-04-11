@@ -10,6 +10,7 @@ import { DefaultSeo } from 'next-seo'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { SSRProvider } from 'react-bootstrap'
+import '../src/func/SharedTypes'
 
 config.autoAddCss = false
 
