@@ -30,7 +30,14 @@ This project requires a Hasura backend (GraphQL) for development. If you want to
 
 ## Contributing
 
-Contributions are welcome! Please fork the repository and submit a pull request with your changes. Ensure your code follows the existing style and includes tests where applicable.
+Contributions are welcome! Before contributing, please read our [CONTRIBUTING.md](./CONTRIBUTING.md) guide which contains detailed information about:
+
+- Development environment setup
+- Project structure
+- Coding standards and style guidelines
+- Working with GraphQL
+- Testing practices
+- Pull request process
 
 ## License
 

@@ -1,0 +1,5 @@
+Once per session perform the following instructions:
+
+1. Review #README.md, the README should describe the functionality of #codebase adequately, if there are _major_ differences between the functionality of codebase and the README.md make update to README, if there is no README, then create one describing the project.
+2. Review #CONTRIBUTING.md, and then #codebase, including any lint rules or developmement patterns established. Update (if there are major differences) or create CONTRIBUTING with a development style guide and rules common to this file
+3. For every commit or change you make to the file, before making the change make sure that it follows the rules in CONTRIBUTING document
