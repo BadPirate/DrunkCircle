@@ -9,7 +9,7 @@ module.exports = withPlugins(
     [
       withImages,
       {
-        // Removed the invalid 'exclude' property
+        exclude: /\.(svg|png)$/,
       },
     ],
     withSourceMaps,
