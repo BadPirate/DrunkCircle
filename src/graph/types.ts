@@ -5484,6 +5484,7 @@ export type GqlMoveAttendanceMutation = { __typename?: 'mutation_root', update_a
 export type GqlAcceptDraftMutationMutationVariables = Exact<{
   from: Scalars['Int'];
   to: Scalars['Int'];
+  draft?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -5640,21 +5641,21 @@ export type GqlHasherFromEmailQueryVariables = Exact<{
 
 export type GqlHasherFromEmailQuery = { __typename?: 'query_root', hashers: Array<{ __typename?: 'hashers', id: number, name?: string | null }> };
 
-export type GqlHareCheckFragmentFragment = { __typename?: 'trails', kennel: number, draft?: number | null, createdById?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> };
+export type GqlHareCheckFragmentFragment = { __typename?: 'trails', kennel: number, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> };
 
 export type GqlAcceptVerifyQueryVariables = Exact<{
   trailId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type GqlAcceptVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', draft?: number | null, kennel: number, draftFor?: { __typename?: 'trails', id: number, kennel: number, draft?: number | null, createdById?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> } | null }> };
+export type GqlAcceptVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', draft?: number | null, kennel: number, draftFor?: { __typename?: 'trails', id: number, kennel: number, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> } | null }> };
 
 export type GqlDeleteVerifyQueryVariables = Exact<{
   trailId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type GqlDeleteVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', kennel: number, draft?: number | null, createdById?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> }> };
+export type GqlDeleteVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', kennel: number, draft?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> }> };
 
 export type GqlTrailInfoFragment = { __typename?: 'trails', id: number, name: string, draft?: number | null, createdById?: number | null, google_calendar?: string | null, kennel: number, drafts: Array<{ __typename?: 'trails', id: number, createdById?: number | null }>, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> };
 
@@ -5958,8 +5959,6 @@ export const GqlGetKennelPageKennelFragmentDoc = gql`
 export const GqlHareCheckFragmentFragmentDoc = gql`
     fragment GQLHareCheckFragment on trails {
   kennel
-  draft
-  createdById
   hares {
     hasher
     hasherInfo {
@@ -6959,10 +6958,10 @@ export type GqlMoveAttendanceMutationHookResult = ReturnType<typeof useGqlMoveAt
 export type GqlMoveAttendanceMutationResult = Apollo.MutationResult<GqlMoveAttendanceMutation>;
 export type GqlMoveAttendanceMutationOptions = Apollo.BaseMutationOptions<GqlMoveAttendanceMutation, GqlMoveAttendanceMutationVariables>;
 export const GqlAcceptDraftMutationDocument = gql`
-    mutation GQLAcceptDraftMutation($from: Int!, $to: Int!) {
+    mutation GQLAcceptDraftMutation($from: Int!, $to: Int!, $draft: Int) {
   update_trails_by_pk(
     pk_columns: {id: $from}
-    _set: {id: $to, gcal_dirty: true, draft: null}
+    _set: {id: $to, gcal_dirty: true, draft: $draft}
   ) {
     id
   }
@@ -6985,6 +6984,7 @@ export type GqlAcceptDraftMutationMutationFn = Apollo.MutationFunction<GqlAccept
  *   variables: {
  *      from: // value for 'from'
  *      to: // value for 'to'
+ *      draft: // value for 'draft'
  *   },
  * });
  */

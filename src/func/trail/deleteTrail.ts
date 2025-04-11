@@ -4,6 +4,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { gcal } from '../../api/google'
 import { GqlDeleteTrailDocument, GqlDeleteTrailMutation } from '../../graph/types'
 import { ilogError } from '../Logging'
+import { deleteCalendarEntry } from '../calendar/deleteAllCalendarEntries'
 
 export async function deleteTrail(
   sc: ApolloClient<NormalizedCacheObject>,
@@ -30,9 +31,6 @@ export async function deleteTrail(
       return null
     }
     const cal = gcal(google_token, google_refresh)
-    return cal.events.delete({
-      eventId: google_calendar,
-      calendarId,
-    })
+    return deleteCalendarEntry(cal, calendarId, trailId, google_calendar, sc)
   })
 }

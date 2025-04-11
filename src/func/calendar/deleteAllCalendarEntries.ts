@@ -5,13 +5,46 @@ import { ServerClient } from '../../graph/hasura'
 import {
   GqlAllSetCalendarEntriesDocument, GqlAllSetCalendarEntriesQuery,
   GqlClearCalendarInfoFromTrailDocument,
-  GqlClearCalendarInfoFromTrailMutation, GqlCountSetCalendarEntriesDocument,
+  GqlCountSetCalendarEntriesDocument,
   GqlCountSetCalendarEntriesQuery,
   GqlGetGoogleCalendarIdDocument, GqlGetGoogleCalendarIdQuery,
 } from '../../graph/types'
 import { ilog } from '../Logging'
 import { GoogleLimit } from '../ServerHelpers'
 import { ProgressResult } from '../SharedTypes'
+
+export async function deleteCalendarEntry(
+  cal: any,
+  calendarId: string,
+  trailId: number,
+  eventId: string,
+  ac: any,
+) {
+  await cal.events.delete({
+    calendarId,
+    eventId,
+  })
+    .catch((e: { code: string | number }) => {
+      if (e.code === '410' || e.code === 410) {
+        ilog('Calendar event already deleted', trailId)
+      } else if (e.code === '404' || e.code === 404) {
+        ilog('Calendar event not found', trailId)
+      } else {
+        ilog(trailId, 'THREW', e.code)
+        throw e
+      }
+    })
+    .then(() => {
+      ilog(trailId, 'Clearing...')
+      return ac.mutate({
+        mutation: GqlClearCalendarInfoFromTrailDocument,
+        variables: { trailIds: [trailId] },
+      })
+    })
+    .then(() => {
+      ilog(trailId, 'CLEARED')
+    })
+}
 
 export async function deleteAllCalendarEntries(
   kennelId: string,
@@ -63,30 +96,7 @@ export async function deleteAllCalendarEntries(
   const cal = gcal(accessToken, refreshToken)
   for (let on = 0; on < entries.length; on += 1) {
     const c = entries[on]
-    await cal.events.delete({
-      calendarId,
-      eventId: c.google_calendar!,
-    })
-      .catch((e) => {
-        if (e.code === '410' || e.code === 410) {
-          ilog('Calendar event already deleted', c.id)
-        } else if (e.code === '404' || e.code === 404) {
-          ilog('Calendar event not found', c.id)
-        } else {
-          ilog(c.id, 'THREW', e.code)
-          throw e
-        }
-      })
-      .then(() => {
-        ilog(c.id, 'Clearing...')
-        return ac.mutate<GqlClearCalendarInfoFromTrailMutation>({
-          mutation: GqlClearCalendarInfoFromTrailDocument,
-          variables: { trailIds: [c.id] },
-        })
-      })
-      .then(() => {
-        ilog(c.id, 'CLEARED')
-      })
+    await deleteCalendarEntry(cal, calendarId, c.id, c.google_calendar!, ac)
   }
   ilog('Batch cleared', progressResult)
   return progressResult

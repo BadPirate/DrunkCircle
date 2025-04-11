@@ -27,6 +27,7 @@ export async function reidentifyTrail(
   sc: ApolloClient<NormalizedCacheObject>,
   from: number,
   to: number,
+  draft?: number,
 ) {
   try {
     const result = await sc.mutate<GqlAcceptDraftMutationMutation>({
@@ -34,6 +35,7 @@ export async function reidentifyTrail(
       variables: {
         from,
         to,
+        draft: draft ?? null,
       },
     })
 

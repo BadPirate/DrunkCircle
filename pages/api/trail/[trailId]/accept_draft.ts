@@ -46,5 +46,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   await updateGoogleCalendar(sc, info.kennel)
   res.revalidate(`/trail/${originalId}`)
   res.revalidate(`/kennel/${info.kennel}`)
-  res.redirect(`/trail/${originalId}?message=Draft accepted successfully.`)
+  res.redirect(`/trail/${originalId}?message=Trail updated from draft.`)
 }

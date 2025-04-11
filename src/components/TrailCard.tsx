@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import {
-  Button, ButtonGroup, Card, Form, Alert,
+  Button, ButtonGroup, Card, Form, Alert, ListGroup,
 } from 'react-bootstrap'
 import dateFormat from 'dateformat'
 import ReactMarkdown from 'react-markdown'
@@ -18,6 +18,7 @@ import 'g-mapify/dist/index.css'
 import { InputDate } from './InputDate'
 import { PublicFragmentTrailFragment } from '../graph/types'
 import { ilog, ilogError } from '../func/Logging'
+import AttendancePart from './AttendancePart'
 
 type TrailCardProps = {
   trail: PublicFragmentTrailFragment,
@@ -216,6 +217,37 @@ const TrailCard = ({ trail, editing }: TrailCardProps) => {
       ),
     },
   ])
+
+  if (!editing && !trail.draft) {
+    rows.push({
+      title: "Who's coming?",
+      row: <AttendancePart
+        trailId={trail.id}
+        kennelID={trail.kennelInfo.id}
+        isHare={
+          user ? trail.hares.find((h) => h.hasherInfo.id === parseInt(user.id, 10)) !== undefined
+            : false
+        }
+      />,
+    })
+  }
+
+  if (!editing && trail.drafts.length > 0) {
+    rows.push(
+      {
+        title: 'Drafts',
+        row: (
+          <ListGroup>
+            { trail.drafts.map((d) => (
+              <ListGroup.Item action href={`/trail/${d.id}`} key={d.id}>
+                {`Draft #${d.id}`}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        ),
+      },
+    )
+  }
 
   let body = <InfoTable rows={rows} />
   if (editing) {

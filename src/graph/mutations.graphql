@@ -206,8 +206,8 @@ mutation GQLMoveAttendance($from: Int, $to: Int) {
     }
 }
 
-mutation GQLAcceptDraftMutation($from: Int!, $to: Int!) {
-  update_trails_by_pk(pk_columns: {id: $from}, _set: {id: $to, gcal_dirty: true, draft: null}) {
+mutation GQLAcceptDraftMutation($from: Int!, $to: Int!, $draft: Int) {
+  update_trails_by_pk(pk_columns: {id: $from}, _set: {id: $to, gcal_dirty: true, draft: $draft}) {
     id
   }
 }
