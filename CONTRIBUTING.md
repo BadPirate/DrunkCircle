@@ -118,6 +118,8 @@ export default MyComponent
 
 ## Code Review
 
+- Run `yarn lint` and clear any warnings or errors after code changes
+- Run github tests (using local runner through gh cli) before commit
 - All submissions require review
 - Changes must pass automated tests
 - Address any feedback or requested changes promptly
