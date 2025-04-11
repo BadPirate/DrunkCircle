@@ -66,7 +66,8 @@ mutation GQLInsertTrail(
   $latitude: float8,
   $longitude: float8, 
   $name: String, 
-  $number: Int, 
+  $number: Int,
+  $createdById: Int,
   $start: timestamptz) {
   insert_trails_one(object: {
     id: $id,
@@ -74,6 +75,7 @@ mutation GQLInsertTrail(
     description: $description,
     directions: $directions,
     draft: $draft, 
+    createdById: $createdById,
     google_calendar: $google_calendar, 
     hares: {data: $hares}, 
     kennel: $kennel, 
@@ -97,7 +99,9 @@ mutation GQLInsertTrailDraft(
   $longitude: float8, 
   $name: String, 
   $number: Int, 
-  $start: timestamptz) {
+  $start: timestamptz,
+  $createdById: Int
+) {
   insert_trails_one(object: {
     calculated_number: $calculated_number, 
     description: $description,
@@ -110,7 +114,9 @@ mutation GQLInsertTrailDraft(
     latitude: $latitude, longitude: $longitude, 
     name: $name, 
     number: $number, 
-    start: $start}) {
+    start: $start,
+    createdById: $createdById
+  }) {
     id
   }
 }

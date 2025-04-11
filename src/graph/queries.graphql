@@ -107,6 +107,11 @@ fragment GQLTrailInfo on trails {
   id
   name
   draft
+  drafts {
+    id
+    createdById
+  }
+  createdById
   google_calendar
   kennel
   ...GQLHareCheckFragment
