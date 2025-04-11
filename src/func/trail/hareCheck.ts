@@ -13,6 +13,7 @@ export async function hareAuthorized(
   hareCheck: GqlHareCheckFragmentFragment,
   user: DCKnownUser,
 ) {
+  if (hareCheck.createdById === user.id) { return true } // You created it
   if (!hareCheck.hares || hareCheck.hares.length < 1) { return true } // Yours if you want it
   if (hareCheck.hares && hareCheck.hares.map((h) => h.hasher).includes(user.id)) { return true }
   return requireUserWithKennelPermission(

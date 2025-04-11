@@ -5640,21 +5640,21 @@ export type GqlHasherFromEmailQueryVariables = Exact<{
 
 export type GqlHasherFromEmailQuery = { __typename?: 'query_root', hashers: Array<{ __typename?: 'hashers', id: number, name?: string | null }> };
 
-export type GqlHareCheckFragmentFragment = { __typename?: 'trails', kennel: number, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> };
+export type GqlHareCheckFragmentFragment = { __typename?: 'trails', kennel: number, draft?: number | null, createdById?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> };
 
 export type GqlAcceptVerifyQueryVariables = Exact<{
   trailId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type GqlAcceptVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', draft?: number | null, kennel: number, draftFor?: { __typename?: 'trails', id: number, kennel: number, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> } | null }> };
+export type GqlAcceptVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', draft?: number | null, kennel: number, draftFor?: { __typename?: 'trails', id: number, kennel: number, draft?: number | null, createdById?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> } | null }> };
 
 export type GqlDeleteVerifyQueryVariables = Exact<{
   trailId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type GqlDeleteVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', kennel: number, draft?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> }> };
+export type GqlDeleteVerifyQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', kennel: number, draft?: number | null, createdById?: number | null, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> }> };
 
 export type GqlTrailInfoFragment = { __typename?: 'trails', id: number, name: string, draft?: number | null, createdById?: number | null, google_calendar?: string | null, kennel: number, drafts: Array<{ __typename?: 'trails', id: number, createdById?: number | null }>, hares: Array<{ __typename?: 'hares', hasher: number, hasherInfo: { __typename?: 'hashers', email?: string | null } }> };
 
@@ -5958,6 +5958,8 @@ export const GqlGetKennelPageKennelFragmentDoc = gql`
 export const GqlHareCheckFragmentFragmentDoc = gql`
     fragment GQLHareCheckFragment on trails {
   kennel
+  draft
+  createdById
   hares {
     hasher
     hasherInfo {

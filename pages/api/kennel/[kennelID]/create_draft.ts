@@ -28,6 +28,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     name: `${user.name} didn't give this trail a name.`,
     number: null,
     start: start.toISOString(),
+    createdById: user.id,
     hares: [{ hasher: user.id }],
   })
   await sc.mutate<GqlUpdateSelfDraftMutation>({

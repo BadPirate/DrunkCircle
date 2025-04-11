@@ -105,6 +105,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ...trailInfo,
         id: null,
         draft: ot.id,
+        createdById: user.id,
       })
 
       res.redirect(`/trail/${draftId}?message=Draft created, a hare must approve`)
@@ -120,6 +121,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const tempId = await insertTrail(sc, {
         ...trailInfo,
         id: null,
+        createdById: user.id,
       })
       await moveAttendance(sc, ot.id, tempId)
       await deleteTrail(sc, ot.id) // Delete original trail
@@ -147,6 +149,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ...trailInfo,
         id: existingDraft.id,
         draft: ot.id,
+        createdById: user.id,
       })
       res.revalidate(`/trail/${existingDraft.id}`) // Revalidate the updated draft
       res.redirect(`/trail/${existingDraft.id}?warning=Your changes have been saved to your draft. This is a draft and not the actual trail.`)
@@ -158,6 +161,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       ...trailInfo,
       id: null,
       draft: ot.id,
+      createdById: user.id,
     })
     const personalizations = []
     for (let x = 0; x < ot.hares.length; x += 1) {
