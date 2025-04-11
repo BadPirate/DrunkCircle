@@ -1,0 +1,15 @@
+name: Schedule Trails
+on:
+  schedule:                             
+    - cron: '0 8 * * 0'
+env:
+  TZ: "America/Los Angeles"
+jobs:
+  airbnb:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Schedule Trails
+        run: |
+          curl --request POST \
+          --url 'https://drunkcircle.com/api/cron/updatePlaceholders' \
+          --fail-with-body
