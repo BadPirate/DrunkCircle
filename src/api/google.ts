@@ -39,8 +39,8 @@ export async function storeTokenForKennel(kennelID: number, token: Credentials) 
 }
 
 export function gcal(accessToken : string, refreshToken: string) : calendar_v3.Calendar {
+  // Only set the refresh token so OAuth2Client will auto-refresh access tokens as needed
   oauth2Client.setCredentials({
-    access_token: accessToken,
     refresh_token: refreshToken,
   })
   return google.calendar({
