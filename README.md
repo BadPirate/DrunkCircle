@@ -23,10 +23,29 @@ This project requires a Hasura backend (GraphQL) for development. If you want to
    ```bash
    yarn install
    ```
-3. Start the development server:
+3. Create a `.env.local` file in the project root with the required environment variables (see **Environment Variables** below).
+4. Start the development server:
    ```bash
    yarn dev
    ```
+
+## Environment Variables
+
+Create a `.env.local` file in the project root with the following environment variables:
+
+- NEXT_PUBLIC_HASURA_ENDPOINT: Your Hasura GraphQL endpoint (e.g., https://your-hasura-instance/v1/graphql)
+- NEXT_PUBLIC_HASURA_WS_ENDPOINT: Your Hasura GraphQL WebSocket endpoint (e.g., wss://your-hasura-instance/v1/graphql)
+- HASURA_GRAPHQL_ADMIN_SECRET: Your Hasura admin secret
+- NEXT_PUBLIC_URL: Base URL of your application (e.g., http://localhost:3000)
+- NEXT_PUBLIC_CALENDAR_URL: (optional) URL used for calendar links (defaults to NEXT_PUBLIC_URL)
+- NEXT_PUBLIC_GOOGLE_MAP_KEY: Your Google Maps API key
+- NEXT_PUBLIC_GOOGLE_CLIENT_ID: Google OAuth client ID for Calendar authorization
+- GOOGLE_CLIENT_SECRET: Google OAuth client secret for Calendar authorization
+- SENDGRID_API_KEY: SendGrid API key for sending emails
+- JWT_SECRET: Secret for signing JSON Web Tokens (used for Hasura JWTs)
+- HASURA_SERVER_USER_EMAIL: Service account email for server-side Hasura operations
+- HASURA_SERVER_USER_NAME: Service account name for server-side Hasura operations
+- HASURA_SERVER_USER_ROLE: Role for the service account (e.g., service_role)
 
 ## Contributing
 

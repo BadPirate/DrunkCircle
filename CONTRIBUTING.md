@@ -22,8 +22,21 @@ Thank you for your interest in contributing to DrunkCircle! This document provid
    ```
 
 3. **Environment Setup**
-   - Create a `.env.local` file in the root directory with the required environment variables
-   - Required variables include Hasura connection details and authentication settings
+   - Create a `.env.local` file in the root directory.
+   - Define the following environment variables (see [README.md](./README.md) for examples):
+     - NEXT_PUBLIC_HASURA_ENDPOINT
+     - NEXT_PUBLIC_HASURA_WS_ENDPOINT
+     - HASURA_GRAPHQL_ADMIN_SECRET
+     - NEXT_PUBLIC_URL
+     - NEXT_PUBLIC_CALENDAR_URL (optional)
+     - NEXT_PUBLIC_GOOGLE_MAP_KEY
+     - NEXT_PUBLIC_GOOGLE_CLIENT_ID
+     - GOOGLE_CLIENT_SECRET
+     - SENDGRID_API_KEY
+     - JWT_SECRET
+     - HASURA_SERVER_USER_EMAIL
+     - HASURA_SERVER_USER_NAME
+     - HASURA_SERVER_USER_ROLE
 
 ## Project Structure
 
