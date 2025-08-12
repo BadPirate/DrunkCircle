@@ -1,0 +1,11 @@
+[phases.build]
+# Avoid mounting a cache over a file path (tsconfig.tsbuildinfo) which breaks BuildKit.
+# Keep other useful caches for efficient builds.
+dependsOn = ["install"]
+cmds = ["yarn run build"]
+cacheDirectories = [
+  ".next/cache",
+  "node_modules/.cache",
+]
+
+
