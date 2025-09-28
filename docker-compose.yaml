@@ -81,7 +81,7 @@ services:
       SMTP_SERVER: ${SMTP_SERVER}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/healthz"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
     expose:
       - '3000'
 volumes:
