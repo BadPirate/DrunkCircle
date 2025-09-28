@@ -81,6 +81,7 @@ services:
       SMTP_SERVER: ${SMTP_SERVER}
     restart: unless-stopped
     healthcheck:
+      interval: 5s
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
     expose:
       - '3000'

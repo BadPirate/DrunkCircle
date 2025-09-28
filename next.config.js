@@ -16,10 +16,7 @@ module.exports = withPlugins(
   ],
   {
     output: 'standalone',
-    env: {
-      NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL || process.env.SERVICE_FQDN_NEXT,
-      JWT_SECRET: process.env.JWT_SECRET || process.env.SERVICE_BASE64_JWT
-    },
+    env: { },
     publicRuntimeConfig: {},
     webpack: (configIm, options) => {
       const config = configIm

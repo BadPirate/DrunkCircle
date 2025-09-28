@@ -113,13 +113,20 @@ export const HasuraCallbacks = <Partial<CallbacksOptions<Profile, Account>>>{
   },
 }
 
-const adapterClient = HasuraClient(hasuraToken(
-  <string>process.env.HASURA_SERVER_USER_EMAIL,
-  '10',
-  <string>process.env.HASURA_SERVER_USER_NAME,
-  <string>process.env.HASURA_SERVER_USER_ROLE,
-  MAX_AGE,
-))
+let adapterClient: ApolloClient<any> | undefined
+
+const getAdapterClient = () => {
+  if (!adapterClient) {
+    adapterClient = HasuraClient(hasuraToken(
+      <string>process.env.HASURA_SERVER_USER_EMAIL,
+      '10',
+      <string>process.env.HASURA_SERVER_USER_NAME,
+      <string>process.env.HASURA_SERVER_USER_ROLE,
+      MAX_AGE,
+    ))
+  }
+  return adapterClient
+}
 
 export const emailToken = async (email: string, daysValid: number = 7) => {
   const expires = new Date()
@@ -134,7 +141,8 @@ export const emailToken = async (email: string, daysValid: number = 7) => {
 export const createVerificationToken = async (verificationToken: VerificationToken) => {
   const { identifier: email, token, expires } = verificationToken
   ilog('createVerficationToken...', verificationToken)
-  return adapterClient.mutate<GqlCreateVerificationTokenMutation>({
+  const client = getAdapterClient()
+  return client.mutate<GqlCreateVerificationTokenMutation>({
     mutation: GqlCreateVerificationTokenDocument,
     variables: { email, token, expires },
   }).then((result) => {
@@ -151,7 +159,8 @@ export function HasuraAdapter() {
   return <Adapter>{
     getUserByEmail: async (email: string) => {
       ilog('getUserByEmail...', email)
-      return adapterClient.query<GqlGetUserByEmailQuery>({
+      const client = getAdapterClient()
+      return client.query<GqlGetUserByEmailQuery>({
         query: GqlGetUserByEmailDocument,
         variables: { email },
       }).then((result) => {
@@ -176,7 +185,8 @@ export function HasuraAdapter() {
   }) => {
       const { identifier, token } = params
       ilog('useVerificationToken...', params)
-      return adapterClient.query<GqlCheckVerificationTokenQuery>({
+      const client = getAdapterClient()
+      return client.query<GqlCheckVerificationTokenQuery>({
         query: GqlCheckVerificationTokenDocument,
         variables: params,
       }).then((result) => {
@@ -190,7 +200,7 @@ export function HasuraAdapter() {
           token,
         }
         ilog('useVerificationToken: valid', validToken)
-        return adapterClient.mutate<GqlUseVerificationTokenMutation>({
+        return client.mutate<GqlUseVerificationTokenMutation>({
           mutation: GqlUseVerificationTokenDocument,
           variables: {
             ...params,
@@ -202,7 +212,8 @@ export function HasuraAdapter() {
 
     getSessionAndUser: async (sessionToken: any) => {
       ilog('getSessionAndUser...', sessionToken)
-      return adapterClient.query<GqlGetSessionAndUserQuery>({
+      const client = getAdapterClient()
+      return client.query<GqlGetSessionAndUserQuery>({
         query: GqlGetSessionAndUserDocument,
         variables: { sessionToken },
       }).then((result) => {
@@ -238,7 +249,8 @@ export function HasuraAdapter() {
 
     deleteSession: async (sessionToken: any) => {
       ilogError('deleteSession...', sessionToken)
-      return adapterClient.mutate<GqlDeleteSessionMutation>({
+      const client = getAdapterClient()
+      return client.mutate<GqlDeleteSessionMutation>({
         mutation: GqlDeleteSessionDocument,
         variables: { sessionToken },
       }).then((result) => {
@@ -261,7 +273,8 @@ export function HasuraAdapter() {
 
     updateUser: async (user: Partial<AdapterUser>) => {
       ilogError('updateUser', user)
-      return adapterClient.mutate<GqlUpdateUserMutation>({
+      const client = getAdapterClient()
+      return client.mutate<GqlUpdateUserMutation>({
         mutation: GqlUpdateUserDocument,
         variables: user,
       }).then((result) => {
@@ -286,7 +299,8 @@ export function HasuraAdapter() {
       expires: Date;
   }) => {
       ilogError('createSession...', session)
-      return adapterClient.mutate<GqlCreateSessionMutation>({
+      const client = getAdapterClient()
+      return client.mutate<GqlCreateSessionMutation>({
         mutation: GqlCreateSessionDocument,
         variables: {
           ...session,
@@ -308,7 +322,8 @@ export function HasuraAdapter() {
 
     createUser: async (omitUser: Omit<AdapterUser, 'id'>) => {
       ilog('createUser...', omitUser)
-      return adapterClient.mutate<GqlCreateUserMutation>({
+      const client = getAdapterClient()
+      return client.mutate<GqlCreateUserMutation>({
         mutation: GqlCreateUserDocument,
         variables: omitUser,
       }).then((result) => {
@@ -325,7 +340,8 @@ export function HasuraAdapter() {
 
     getUser: async (id: string) => {
       ilog('getUser...', id)
-      return adapterClient.query<GqlGetUserQuery>({
+      const client = getAdapterClient()
+      return client.query<GqlGetUserQuery>({
         query: GqlGetUserDocument,
         variables: { id },
       }).then((result) => {
@@ -347,7 +363,8 @@ export function HasuraAdapter() {
 
     getUserByAccount: (providerAccountId: Pick<Account, 'provider' | 'providerAccountId'>) => {
       ilog('getUserByAccount...', providerAccountId)
-      return adapterClient.query<GqlGetUserByAccountQuery>({
+      const client = getAdapterClient()
+      return client.query<GqlGetUserByAccountQuery>({
         query: GqlGetUserByAccountDocument,
         variables: providerAccountId,
       }).then((result) => {
@@ -368,7 +385,8 @@ export function HasuraAdapter() {
 
     linkAccount: (account: Account) => {
       ilog('linkAccount...', account)
-      return adapterClient.mutate<GqlLinkAccountMutation>({
+      const client = getAdapterClient()
+      return client.mutate<GqlLinkAccountMutation>({
         mutation: GqlLinkAccountDocument,
         variables: account,
       }).then((result) => {
@@ -381,7 +399,8 @@ export function HasuraAdapter() {
 
     updateSession: (session: Partial<AdapterSession> & Pick<AdapterSession, 'sessionToken'>) => {
       ilog('updateSession...', session.userId)
-      return adapterClient.query<GqlUpdateSessionQuery>({
+      const client = getAdapterClient()
+      return client.query<GqlUpdateSessionQuery>({
         query: GqlUpdateSessionDocument,
         variables: session,
       }).then((result) => {

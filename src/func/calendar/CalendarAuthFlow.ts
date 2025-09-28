@@ -25,14 +25,15 @@ if (clientId) {
   }
 }
 
-if (!process.env.NEXT_PUBLIC_URL) {
-  throw Error('NEXT_PUBLIC_URL must be set')
-}
-
 // eslint-disable-next-line import/prefer-default-export
 export const accessURL = async (kennelID : string) => new Promise<string>((resolve, reject) => {
   if (!publicOauth2) {
     reject(Error('NEXT_PUBLIC_GOOGLE_CLIENT_ID must be set'))
+    return
+  }
+  const publicUrl = process.env.NEXT_PUBLIC_URL
+  if (!publicUrl) {
+    reject(Error('NEXT_PUBLIC_URL must be set'))
     return
   }
   resolve(publicOauth2.getAuthorizeUrl({
@@ -40,7 +41,7 @@ export const accessURL = async (kennelID : string) => new Promise<string>((resol
     access_type: 'offline',
     response_type: 'code',
     scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar email profile',
-    redirect_uri: `${process.env.NEXT_PUBLIC_URL}/api/auth/gcal`,
+    redirect_uri: `${publicUrl}/api/auth/gcal`,
     state: kennelID,
   }))
 })
@@ -56,11 +57,16 @@ export const accessAndRefresh = async (code: string) => new Promise<AccessTokenR
     reject(Error('GOOGLE_CLIENT_SECRET & NEXT_PUBLIC_GOOGLE_CLIENT_ID must be set'))
     return
   }
+  const publicUrl = process.env.NEXT_PUBLIC_URL
+  if (!publicUrl) {
+    reject(Error('NEXT_PUBLIC_URL must be set'))
+    return
+  }
   oauth2.getOAuthAccessToken(
     code,
     {
       grant_type: 'authorization_code',
-      redirect_uri: `${process.env.NEXT_PUBLIC_URL}/api/auth/gcal`,
+      redirect_uri: `${publicUrl}/api/auth/gcal`,
     },
     (e, accessToken, refreshToken) => {
       if (e) {
