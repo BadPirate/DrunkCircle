@@ -6,4 +6,8 @@ coverage
 npm-debug.log
 yarn-error.log
 README.md
-
+hasura
+hasura_load
+db_load
+docker-compose.yaml
+docker-compose.local.yaml

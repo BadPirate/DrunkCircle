@@ -1,0 +1,36 @@
+table:
+  name: account_links
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: dc_server
+    permission:
+      check: {}
+      columns:
+        - user_id
+        - provider
+        - provider_id
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - provider
+        - provider_id
+        - user_id
+      filter: {}
+update_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - user_id
+        - provider
+        - provider_id
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: dc_server
+    permission:
+      filter: {}

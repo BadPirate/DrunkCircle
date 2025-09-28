@@ -1,0 +1,23 @@
+table:
+  name: permission_enum
+  schema: public
+is_enum: true
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - permission
+        - description
+      filter: {}
+  - role: hasher
+    permission:
+      columns:
+        - description
+        - permission
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - description
+        - permission
+      filter: {}

@@ -1,0 +1,89 @@
+services:
+  db:
+    image: 'postgres:15'
+    restart: unless-stopped
+    volumes:
+      - 'drunkcircle-db:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '${SERVICE_PASSWORD_DB}'
+      POSTGRES_DB: postgres
+    healthcheck:
+      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+  db-load:
+    build:
+      context: db_load
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '${SERVICE_PASSWORD_DB}'
+      POSTGRES_DB: postgres
+    restart: no
+    volumes:
+      - 'drunkcircle-load-state:/load-state'
+    
+  hasura:
+    image: 'hasura/graphql-engine:latest'
+    depends_on:
+      db-load:
+        condition: service_completed_successfully
+    environment:
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: 'postgresql://postgres:${SERVICE_PASSWORD_DB}@db:5432/hasura'
+      DRUNKCIRCLE_DATABASE_URL: 'postgresql://postgres:${SERVICE_PASSWORD_DB}@db:5432/drunkcircle'
+      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256","key":"${SERVICE_BASE64_JWT}"}'
+      HASURA_GRAPHQL_ADMIN_SECRET: '${SERVICE_PASSWORD_HASURAADMIN}'
+      HASURA_GRAPHQL_ENABLE_CONSOLE: true
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
+      HASURA_GRAPHQL_CORS_DOMAIN: '*'
+    restart: unless-stopped
+    expose:
+      - '8080'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+
+  hasura-load:
+    build:
+      context: hasura_load
+    depends_on:
+      hasura:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_ADMIN_SECRET: ${SERVICE_PASSWORD_HASURAADMIN}
+      HASURA_CLI_ENDPOINT: http://hasura:8080
+    volumes:
+      - 'drunkcircle-load-state:/load-state'
+    restart: no
+  next:
+    build: .
+    depends_on:
+      hasura-load:
+        condition: service_completed_successfully
+    environment:
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      HASURA_GRAPHQL_ADMIN_SECRET: ${SERVICE_PASSWORD_HASURAADMIN}
+      HASURA_SERVER_USER_EMAIL: ${HASURA_SERVER_USER_EMAIL}
+      HASURA_SERVER_USER_ID: ${HASURA_SERVER_USER_ID:-1}
+      HASURA_SERVER_USER_NAME: ${HASURA_SERVER_USER_NAME:-'DrunkCircle Server'}
+      HASURA_SERVER_USER_ROLE: ${HASURA_SERVER_USER_ROLE:-'dc_server'}
+      JWT_SECRET: ${SERVICE_BASE64_JWT}
+      NEXT_PUBLIC_CALENDAR_URL: ${SERVICE_FQDN_NEXT}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+      NEXT_PUBLIC_GOOGLE_MAP_KEY: ${NEXT_PUBLIC_GOOGLE_MAP_KEY}
+      NEXT_PUBLIC_HASURA_ENDPOINT: ${SERVICE_FQDN_HASURA}
+      NEXT_PUBLIC_URL: ${SERVICE_FQDN_NEXT}
+      NEXTAUTH_URL: ${SERVICE_FQDN_NEXT}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      SMTP_FROM: ${SMTP_FROM}
+      SMTP_SERVER: ${SMTP_SERVER}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/healthz"]
+    expose:
+      - '3000'
+volumes:
+  drunkcircle-db:
+  drunkcircle-load-state:

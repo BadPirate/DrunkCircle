@@ -1,6 +1,8 @@
 version: 3
-endpoint_from_env: NEXT_PUBLIC_HASURA_ENDPOINT
-admin_secret_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+endpoint:
+  from_env: HASURA_CLI_ENDPOINT
+admin_secret:
+  from_env: HASURA_GRAPHQL_ADMIN_SECRET
 metadata_directory: metadata
 migrations_directory: migrations
 seeds_directory: seeds

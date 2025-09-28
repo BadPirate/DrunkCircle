@@ -1,0 +1,10 @@
+services:
+  db:
+    ports:
+      - '6701:5432'
+  hasura:
+    ports:
+      - '6702:8080'
+  next:
+    ports:
+      - '6703:3000'

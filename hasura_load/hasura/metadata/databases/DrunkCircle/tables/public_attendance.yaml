@@ -1,0 +1,82 @@
+table:
+  name: attendance
+  schema: public
+object_relationships:
+  - name: hasherInfo
+    using:
+      foreign_key_constraint_on: hasher
+insert_permissions:
+  - role: dc_server
+    permission:
+      check: {}
+      columns:
+        - attended
+        - paid
+        - hasher
+        - trail
+        - note
+  - role: hasher
+    permission:
+      check:
+        hasher:
+          _eq: X-Hasura-User-Id
+      columns:
+        - attended
+        - hasher
+        - note
+        - trail
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - attended
+        - hasher
+        - note
+        - paid
+        - trail
+      filter: {}
+  - role: hasher
+    permission:
+      columns:
+        - attended
+        - hasher
+        - note
+        - paid
+        - trail
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - attended
+        - hasher
+        - note
+        - paid
+        - trail
+      filter: {}
+      allow_aggregations: true
+update_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - attended
+        - paid
+        - hasher
+        - trail
+        - note
+      filter: {}
+      check: {}
+  - role: hasher
+    permission:
+      columns:
+        - attended
+        - hasher
+        - note
+        - trail
+      filter:
+        hasher:
+          _eq: X-Hasura-User-Id
+      check: null
+delete_permissions:
+  - role: dc_server
+    permission:
+      filter: {}

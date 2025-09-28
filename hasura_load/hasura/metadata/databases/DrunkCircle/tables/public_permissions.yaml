@@ -1,0 +1,42 @@
+table:
+  name: permissions
+  schema: public
+object_relationships:
+  - name: permissionInfo
+    using:
+      foreign_key_constraint_on: permission
+  - name: roleInfo
+    using:
+      foreign_key_constraint_on: role
+insert_permissions:
+  - role: dc_server
+    permission:
+      check: {}
+      columns:
+        - role
+        - permission
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - role
+        - permission
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - role
+        - permission
+      filter: {}
+update_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - role
+        - permission
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: dc_server
+    permission:
+      filter: {}

@@ -1,0 +1,118 @@
+table:
+  name: trails
+  schema: public
+object_relationships:
+  - name: createdBy
+    using:
+      manual_configuration:
+        column_mapping:
+          createdById: id
+        insertion_order: null
+        remote_table:
+          name: hashers
+          schema: public
+  - name: draftFor
+    using:
+      foreign_key_constraint_on: draft
+  - name: kennelInfo
+    using:
+      foreign_key_constraint_on: kennel
+array_relationships:
+  - name: drafts
+    using:
+      foreign_key_constraint_on:
+        column: draft
+        table:
+          name: trails
+          schema: public
+  - name: hares
+    using:
+      foreign_key_constraint_on:
+        column: trail
+        table:
+          name: hares
+          schema: public
+insert_permissions:
+  - role: dc_server
+    permission:
+      check: {}
+      columns:
+        - calculated_number
+        - createdById
+        - description
+        - directions
+        - draft
+        - gcal_dirty
+        - google_calendar
+        - id
+        - kennel
+        - latitude
+        - longitude
+        - name
+        - number
+        - start
+        - verification
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - calculated_number
+        - createdById
+        - description
+        - directions
+        - draft
+        - gcal_dirty
+        - google_calendar
+        - id
+        - kennel
+        - latitude
+        - longitude
+        - name
+        - number
+        - start
+        - verification
+      filter: {}
+      allow_aggregations: true
+  - role: public
+    permission:
+      columns:
+        - calculated_number
+        - createdById
+        - description
+        - directions
+        - draft
+        - google_calendar
+        - id
+        - kennel
+        - latitude
+        - longitude
+        - name
+        - number
+        - start
+      filter: {}
+      allow_aggregations: true
+update_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - calculated_number
+        - createdById
+        - description
+        - directions
+        - draft
+        - gcal_dirty
+        - google_calendar
+        - id
+        - kennel
+        - latitude
+        - longitude
+        - name
+        - number
+        - start
+        - verification
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: dc_server
+    permission:
+      filter: {}

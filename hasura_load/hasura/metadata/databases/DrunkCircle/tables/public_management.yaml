@@ -1,0 +1,62 @@
+table:
+  name: management
+  schema: public
+object_relationships:
+  - name: hasherInfo
+    using:
+      foreign_key_constraint_on: hasher
+  - name: kennelInfo
+    using:
+      foreign_key_constraint_on: kennel
+array_relationships:
+  - name: permissions
+    using:
+      foreign_key_constraint_on:
+        column: role
+        table:
+          name: permissions
+          schema: public
+insert_permissions:
+  - role: dc_server
+    permission:
+      check: {}
+      columns:
+        - role
+        - hasher
+        - id
+        - kennel
+        - title
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - role
+        - hasher
+        - id
+        - kennel
+        - title
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - hasher
+        - id
+        - kennel
+        - role
+        - title
+      filter: {}
+update_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - role
+        - hasher
+        - id
+        - kennel
+        - title
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: dc_server
+    permission:
+      filter: {}

@@ -1,0 +1,444 @@
+- name: allowed-queries
+  definition:
+    queries:
+      - name: attendance_by_pk
+        query: |
+          query attendance_by_pk ($hasher: Int!, $trail: Int!) {
+            attendance_by_pk(hasher: $hasher, trail: $trail) {
+              attended
+              hasher
+              note
+              paid
+              trail
+            }
+          }
+      - name: attendance
+        query: |
+          query attendance {
+            attendance {
+              attended
+              hasher
+              note
+              paid
+              trail
+            }
+          }
+      - name: insert_attendance_one
+        query: |
+          mutation insert_attendance_one ($object: attendance_insert_input!) {
+            insert_attendance_one(object: $object) {
+              attended
+              hasher
+              note
+              paid
+              trail
+            }
+          }
+      - name: update_attendance_by_pk
+        query: |
+          mutation update_attendance_by_pk ($hasher: Int!, $trail: Int!, $object: attendance_set_input!) {
+            update_attendance_by_pk(pk_columns: {hasher:$hasher,trail:$trail}, _set: $object) {
+              attended
+              hasher
+              note
+              paid
+              trail
+            }
+          }
+      - name: delete_attendance_by_pk
+        query: |
+          mutation delete_attendance_by_pk ($hasher: Int!, $trail: Int!) {
+            delete_attendance_by_pk(hasher: $hasher, trail: $trail) {
+              attended
+              hasher
+              note
+              paid
+              trail
+            }
+          }
+      - name: hares
+        query: |
+          query hares {
+            hares {
+              hasher
+              trail
+            }
+          }
+      - name: insert_hares_one
+        query: |
+          mutation insert_hares_one ($object: hares_insert_input!) {
+            insert_hares_one(object: $object) {
+              hasher
+              trail
+            }
+          }
+      - name: hashers_by_pk
+        query: |
+          query hashers_by_pk ($id: Int!) {
+            hashers_by_pk(id: $id) {
+              email
+              email_verified
+              id
+              login
+              login_expires
+              name
+            }
+          }
+      - name: hashers
+        query: |
+          query hashers {
+            hashers {
+              email
+              email_verified
+              id
+              login
+              login_expires
+              name
+            }
+          }
+      - name: insert_hashers_one
+        query: |
+          mutation insert_hashers_one ($object: hashers_insert_input!) {
+            insert_hashers_one(object: $object) {
+              email
+              email_verified
+              id
+              login
+              login_expires
+              name
+            }
+          }
+      - name: update_hashers_by_pk
+        query: |
+          mutation update_hashers_by_pk ($id: Int!, $object: hashers_set_input!) {
+            update_hashers_by_pk(pk_columns: {id:$id}, _set: $object) {
+              email
+              email_verified
+              id
+              login
+              login_expires
+              name
+            }
+          }
+      - name: delete_hashers_by_pk
+        query: |
+          mutation delete_hashers_by_pk ($id: Int!) {
+            delete_hashers_by_pk(id: $id) {
+              email
+              email_verified
+              id
+              login
+              login_expires
+              name
+            }
+          }
+      - name: kennels_by_pk
+        query: |
+          query kennels_by_pk ($id: Int!) {
+            kennels_by_pk(id: $id) {
+              area
+              dc_verify
+              description
+              frequency
+              gm_email
+              gm_verify
+              google_calendar
+              google_refresh
+              google_token
+              id
+              name
+              next
+              price
+              short_name
+              timezone
+              web
+            }
+          }
+      - name: kennels
+        query: |
+          query kennels {
+            kennels {
+              area
+              dc_verify
+              description
+              frequency
+              gm_email
+              gm_verify
+              google_calendar
+              google_refresh
+              google_token
+              id
+              name
+              next
+              price
+              short_name
+              timezone
+              web
+            }
+          }
+      - name: insert_kennels_one
+        query: |
+          mutation insert_kennels_one ($object: kennels_insert_input!) {
+            insert_kennels_one(object: $object) {
+              area
+              dc_verify
+              description
+              frequency
+              gm_email
+              gm_verify
+              google_calendar
+              google_refresh
+              google_token
+              id
+              name
+              next
+              price
+              short_name
+              timezone
+              web
+            }
+          }
+      - name: update_kennels_by_pk
+        query: |
+          mutation update_kennels_by_pk ($id: Int!, $object: kennels_set_input!) {
+            update_kennels_by_pk(pk_columns: {id:$id}, _set: $object) {
+              area
+              dc_verify
+              description
+              frequency
+              gm_email
+              gm_verify
+              google_calendar
+              google_refresh
+              google_token
+              id
+              name
+              next
+              price
+              short_name
+              timezone
+              web
+            }
+          }
+      - name: delete_kennels_by_pk
+        query: |
+          mutation delete_kennels_by_pk ($id: Int!) {
+            delete_kennels_by_pk(id: $id) {
+              area
+              dc_verify
+              description
+              frequency
+              gm_email
+              gm_verify
+              google_calendar
+              google_refresh
+              google_token
+              id
+              name
+              next
+              price
+              short_name
+              timezone
+              web
+            }
+          }
+      - name: permission_enum_by_pk
+        query: |
+          query permission_enum_by_pk ($permission: String!) {
+            permission_enum_by_pk(permission: $permission) {
+              description
+              permission
+            }
+          }
+      - name: permission_enum
+        query: |
+          query permission_enum {
+            permission_enum {
+              description
+              permission
+            }
+          }
+      - name: insert_permission_enum_one
+        query: |
+          mutation insert_permission_enum_one ($object: permission_enum_insert_input!) {
+            insert_permission_enum_one(object: $object) {
+              description
+              permission
+            }
+          }
+      - name: update_permission_enum_by_pk
+        query: |
+          mutation update_permission_enum_by_pk ($permission: String!, $object: permission_enum_set_input!) {
+            update_permission_enum_by_pk(pk_columns: {permission:$permission}, _set: $object) {
+              description
+              permission
+            }
+          }
+      - name: delete_permission_enum_by_pk
+        query: |
+          mutation delete_permission_enum_by_pk ($permission: String!) {
+            delete_permission_enum_by_pk(permission: $permission) {
+              description
+              permission
+            }
+          }
+      - name: trails_by_pk
+        query: |
+          query trails_by_pk ($id: Int!) {
+            trails_by_pk(id: $id) {
+              calculated_number
+              createdById
+              description
+              directions
+              draft
+              gcal_dirty
+              google_calendar
+              id
+              kennel
+              latitude
+              longitude
+              name
+              number
+              start
+              verification
+            }
+          }
+      - name: trails
+        query: |
+          query trails {
+            trails {
+              calculated_number
+              createdById
+              description
+              directions
+              draft
+              gcal_dirty
+              google_calendar
+              id
+              kennel
+              latitude
+              longitude
+              name
+              number
+              start
+              verification
+            }
+          }
+      - name: insert_trails_one
+        query: |
+          mutation insert_trails_one ($object: trails_insert_input!) {
+            insert_trails_one(object: $object) {
+              calculated_number
+              createdById
+              description
+              directions
+              draft
+              gcal_dirty
+              google_calendar
+              id
+              kennel
+              latitude
+              longitude
+              name
+              number
+              start
+              verification
+            }
+          }
+      - name: update_trails_by_pk
+        query: |
+          mutation update_trails_by_pk ($id: Int!, $object: trails_set_input!) {
+            update_trails_by_pk(pk_columns: {id:$id}, _set: $object) {
+              calculated_number
+              createdById
+              description
+              directions
+              draft
+              gcal_dirty
+              google_calendar
+              id
+              kennel
+              latitude
+              longitude
+              name
+              number
+              start
+              verification
+            }
+          }
+      - name: delete_trails_by_pk
+        query: |
+          mutation delete_trails_by_pk ($id: Int!) {
+            delete_trails_by_pk(id: $id) {
+              calculated_number
+              createdById
+              description
+              directions
+              draft
+              gcal_dirty
+              google_calendar
+              id
+              kennel
+              latitude
+              longitude
+              name
+              number
+              start
+              verification
+            }
+          }
+      - name: management_by_pk
+        query: |
+          query management_by_pk ($id: Int!) {
+            management_by_pk(id: $id) {
+              hasher
+              id
+              kennel
+              role
+              title
+            }
+          }
+      - name: management
+        query: |
+          query management {
+            management {
+              hasher
+              id
+              kennel
+              role
+              title
+            }
+          }
+      - name: insert_management_one
+        query: |
+          mutation insert_management_one ($object: management_insert_input!) {
+            insert_management_one(object: $object) {
+              hasher
+              id
+              kennel
+              role
+              title
+            }
+          }
+      - name: update_management_by_pk
+        query: |
+          mutation update_management_by_pk ($id: Int!, $object: management_set_input!) {
+            update_management_by_pk(pk_columns: {id:$id}, _set: $object) {
+              hasher
+              id
+              kennel
+              role
+              title
+            }
+          }
+      - name: delete_management_by_pk
+        query: |
+          mutation delete_management_by_pk ($id: Int!) {
+            delete_management_by_pk(id: $id) {
+              hasher
+              id
+              kennel
+              role
+              title
+            }
+          }
