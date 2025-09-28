@@ -5,7 +5,7 @@ import HareCount from './HareCount'
 import KennelList from './KennelList'
 import ListTable, { DataRow, DataTable } from './ListTable'
 import { LoadSpinner } from './LoadSpinner'
-import PublicClientHasura from '../graph/PublicClientHasura'
+import getPublicClientHasura from '../graph/PublicClientHasura'
 import { GqlHasherManagementFragment, useGqlHasherInfoClientQuery } from '../graph/types'
 
 type MMRolesType = { roles: GqlHasherManagementFragment[] }
@@ -27,7 +27,7 @@ export const MismanagementRolesPart = ({ roles } : MMRolesType) => (
 type HIPType = { hasherId: number; }
 export const HasherInfoPageDetailPart = ({ hasherId }: HIPType) => {
   const { loading, data, error } = useGqlHasherInfoClientQuery(
-    { variables: { hasherId }, client: PublicClientHasura },
+    { variables: { hasherId }, client: getPublicClientHasura() },
   )
   if (loading) { return <LoadSpinner /> }
   if (error) { return <ErrorBanner error={error} /> }

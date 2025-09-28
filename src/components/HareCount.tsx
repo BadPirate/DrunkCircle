@@ -1,12 +1,12 @@
 import { Table } from 'react-bootstrap'
-import PublicClientHasura from '../graph/PublicClientHasura'
+import getPublicClientHasura from '../graph/PublicClientHasura'
 import { useGqlPageHasherHaresQuery } from '../graph/types'
 import ErrorBanner from './ErrorBanner'
 import { LoadSpinner } from './LoadSpinner'
 
 const HareCount = ({ hasherId } : {hasherId : number}) => {
   const { error, data, loading } = useGqlPageHasherHaresQuery(
-    { variables: { hasherId }, client: PublicClientHasura },
+    { variables: { hasherId }, client: getPublicClientHasura() },
   )
   if (error) return <ErrorBanner error={error} />
   if (loading || !data) return <LoadSpinner />

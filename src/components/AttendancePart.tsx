@@ -6,7 +6,7 @@ import {
   Badge, Button, ButtonGroup, Card, InputGroup, ListGroup,
 } from 'react-bootstrap'
 import { liveMutate } from '../func/liveMutate'
-import PublicClientHasura from '../graph/PublicClientHasura'
+import getPublicClientHasura from '../graph/PublicClientHasura'
 import {
   Permission_Enum_Enum, useGqlAttendanceViewSubscription,
   useGqlUpdateAttendanceMutation, useGqlUpdateNoteMutation,
@@ -153,7 +153,7 @@ export default ({ trailId, kennelID, isHare }
   const user = sessionData?.user
   const perms = useUserPermissions(kennelID)
   const { loading, data, error } = useGqlAttendanceViewSubscription(
-    { variables: { trailId }, client: PublicClientHasura },
+    { variables: { trailId }, client: getPublicClientHasura() },
   )
   const [showNoShows, setShowNoShows] = useState(false)
 

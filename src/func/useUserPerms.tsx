@@ -1,12 +1,12 @@
 /* eslint-disable import/prefer-default-export */
 import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import PublicClientHasura from '../graph/PublicClientHasura'
+import getPublicClientHasura from '../graph/PublicClientHasura'
 import { useGqlUserPermsLazyQuery } from '../graph/types'
 
 export function useUserPermissions(kennelId: number) {
   const session = useSession()
-  const [loadPerms, { data }] = useGqlUserPermsLazyQuery({ client: PublicClientHasura })
+  const [loadPerms, { data }] = useGqlUserPermsLazyQuery({ client: getPublicClientHasura() })
   const hasherId = session && session.data && session.data.user
     ? parseInt(session.data.user.id, 10) : null
   useEffect(() => {

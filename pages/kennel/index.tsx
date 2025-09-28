@@ -7,7 +7,7 @@ import ListTable from '../../src/components/ListTable'
 import { BodySpinner } from '../../src/components/BodySpinner'
 import RootNav from '../../src/components/RootNav'
 import { catchError } from '../../src/func/catchError'
-import PublicClientHasura from '../../src/graph/PublicClientHasura'
+import getPublicClientHasura from '../../src/graph/PublicClientHasura'
 import { GqlGetKennelsDocument, GqlGetKennelsKennelFragment, GqlGetKennelsQuery } from '../../src/graph/types'
 
 type ServerSideProps = {
@@ -57,7 +57,7 @@ KennelList.defaultProps = {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const info : ServerSideProps = await PublicClientHasura.query<GqlGetKennelsQuery>({
+  const info : ServerSideProps = await getPublicClientHasura().query<GqlGetKennelsQuery>({
     query: GqlGetKennelsDocument,
   }).then((r) => ({
     kennels: r.data.kennels,

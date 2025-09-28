@@ -4,7 +4,7 @@ import {
 import { useSession } from 'next-auth/react'
 import { useMemo } from 'react'
 import { Spinner } from 'react-bootstrap'
-import PublicClientHasura from '../graph/PublicClientHasura'
+import getPublicClientHasura from '../graph/PublicClientHasura'
 import { HasuraSession } from '../../pages/api/auth/[...nextauth]'
 
 const HasuraProvider = ({ children } : {children : React.ReactNode}) => {
@@ -13,7 +13,7 @@ const HasuraProvider = ({ children } : {children : React.ReactNode}) => {
 
   const client = useMemo(() => {
     if (!session || !session.hasura_token) {
-      return PublicClientHasura
+      return getPublicClientHasura()
     }
     return new ApolloClient({
       link: new HttpLink({

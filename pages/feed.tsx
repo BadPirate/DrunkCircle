@@ -5,13 +5,13 @@ import { BodyError } from '../src/components/ErrorBanner'
 import { BodySpinner } from '../src/components/BodySpinner'
 import { trailDateFormat } from '../src/func/dateFormats'
 import { queryToInt, queryToStrings } from '../src/func/queryParsing'
-import PublicClientHasura from '../src/graph/PublicClientHasura'
+import getPublicClientHasura from '../src/graph/PublicClientHasura'
 import { useGqlFeedPageLazyQuery } from '../src/graph/types'
 
 const FeedPage = () => {
   const q = useRouter().query
   const [loadTrails, { data, loading, error }] = useGqlFeedPageLazyQuery(
-    { client: PublicClientHasura },
+    { client: getPublicClientHasura() },
   )
   useEffect(() => {
     if (!q) return

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import RootNav from '../../src/components/RootNav'
 import ErrorBanner from '../../src/components/ErrorBanner'
-import PublicClientHasura from '../../src/graph/PublicClientHasura'
+import getPublicClientHasura from '../../src/graph/PublicClientHasura'
 import ListTable from '../../src/components/ListTable'
 import { LoadSpinner } from '../../src/components/LoadSpinner'
 import { trailDateFormat } from '../../src/func/dateFormats'
@@ -41,7 +41,7 @@ const Trail = ({ kennels: allKennels } : {kennels : GqlKennelInfoFragment[]}) =>
     localStorage.setItem('kennelFilters', updatedFilters.join(','))
   }
   const { loading, error, data } = useGqlPageTrailsQuery(
-    { client: PublicClientHasura, variables: { limit, after, filters } },
+    { client: getPublicClientHasura(), variables: { limit, after, filters } },
   )
   const kennels : { [key: string] : {
     toggled: boolean,
@@ -164,7 +164,7 @@ const Trail = ({ kennels: allKennels } : {kennels : GqlKennelInfoFragment[]}) =>
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const kennels = await PublicClientHasura.query<GqlTrailIndexPreloadQuery>({
+  const kennels = await getPublicClientHasura().query<GqlTrailIndexPreloadQuery>({
     query: GqlTrailIndexPreloadDocument,
   }).then((r) => {
     if (!r.data) {

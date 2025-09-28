@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { BodyError } from '../../../src/components/ErrorBanner'
 import PageCard from '../../../src/components/PageCard'
 import { queryToInt } from '../../../src/func/queryParsing'
-import PublicClientHasura from '../../../src/graph/PublicClientHasura'
+import getPublicClientHasura from '../../../src/graph/PublicClientHasura'
 import { HasherInfoPageDetailPart } from '../../../src/components/HasherInfoPageDetailPart'
 import { GqlHasherInfoServerDocument, GqlHasherInfoServerQuery } from '../../../src/graph/types'
 
@@ -37,7 +37,7 @@ HasherInfoPage.defaultProps = {
 
 export const getServerSideProps: GetServerSideProps = async ({ query: { hasherId } }) => {
   const props : ServerSideProps = {}
-  await PublicClientHasura.query<GqlHasherInfoServerQuery>({
+  await getPublicClientHasura().query<GqlHasherInfoServerQuery>({
     query: GqlHasherInfoServerDocument,
     variables: { hasherId },
   })

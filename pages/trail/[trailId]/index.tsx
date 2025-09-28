@@ -4,7 +4,7 @@ import {
 import dateFormat from 'dateformat'
 import { GetServerSideProps } from 'next'
 import RootNav from '../../../src/components/RootNav'
-import PublicClientHasura from '../../../src/graph/PublicClientHasura'
+import getPublicClientHasura from '../../../src/graph/PublicClientHasura'
 import { BodyError } from '../../../src/components/ErrorBanner'
 import TrailCard from '../../../src/components/TrailCard'
 import { GqlPageTrailIdDocument, GqlPageTrailIdQuery } from '../../../src/graph/types'
@@ -62,7 +62,7 @@ TrailId.defaultProps = {
 
 export const getServerSideProps: GetServerSideProps = async ({ query: { trailId } }) => {
   let props: ServerSideProps = {}
-  await PublicClientHasura.query<GqlPageTrailIdQuery>({
+  await getPublicClientHasura().query<GqlPageTrailIdQuery>({
     query: GqlPageTrailIdDocument,
     fetchPolicy: 'no-cache',
     variables: {
