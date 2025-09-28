@@ -140,12 +140,19 @@ const disablePersistedQueries = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-const httpLink = createHttpLink({
-  'X-Hasura-Admin-Secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET || '',
-})
+let adminHttpLink: HttpLink | undefined
+
+const getAdminHttpLink = () => {
+  if (!adminHttpLink) {
+    adminHttpLink = createHttpLink({
+      'X-Hasura-Admin-Secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET || '',
+    })
+  }
+  return adminHttpLink
+}
 
 export const ServerClient = () => new ApolloClient({
-  link: ApolloLink.from([logApolloError, disablePersistedQueries, httpLink]),
+  link: ApolloLink.from([logApolloError, disablePersistedQueries, getAdminHttpLink()]),
   cache: new InMemoryCache(),
 })
 
