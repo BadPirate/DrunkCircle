@@ -38,7 +38,6 @@ services:
       HASURA_GRAPHQL_ENABLE_CONSOLE: true
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
       HASURA_GRAPHQL_CORS_DOMAIN: '*'
-      SERVICE_FQDN_GRAPHQL: /v1/graphql
     restart: unless-stopped
     expose:
       - '8080'
@@ -58,7 +57,10 @@ services:
       - 'drunkcircle-load-state:/load-state'
     restart: no
   next:
-    build: .
+    build: 
+      context: .
+      args:
+        - HASURA_URL=${SERVICE_FQDN_HASURA}
     depends_on:
       hasura-load:
         condition: service_completed_successfully
@@ -75,7 +77,6 @@ services:
       NEXT_PUBLIC_CALENDAR_URL: ${SERVICE_URL_NEXT}
       NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
       NEXT_PUBLIC_GOOGLE_MAP_KEY: ${NEXT_PUBLIC_GOOGLE_MAP_KEY}
-      NEXT_PUBLIC_HASURA_ENDPOINT: ${SERVICE_FQDN_GRAPHQL}
       NEXT_PUBLIC_URL: ${SERVICE_URL_NEXT}
       NEXTAUTH_URL: ${SERVICE_URL_NEXT}
       NEXTAUTH_SECRET: ${SERVICE_PASSWORD_NEXTAUTH}

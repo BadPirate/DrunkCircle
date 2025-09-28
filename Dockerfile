@@ -11,6 +11,8 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 ENV NODE_ENV=production
+ARG HASURA_URL
+ENV NEXT_PUBLIC_HASURA_ENDPOINT=${HASURA_URL}/v1/graphql
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
