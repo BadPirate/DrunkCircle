@@ -27,6 +27,11 @@ DrunkCircle is a collaborative platform for the Hash House Harriers community. I
 8. Launch locally with docker `yarn up`
 9. Bring down when you are done with `yarn down`
 
+You can also run dev server for better debugging and live changes:
+
+1. `yarn up && docker compose down next`
+2. `yarn dev`
+
 ## Services
 
 When running locally:

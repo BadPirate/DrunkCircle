@@ -2,6 +2,7 @@ import {
   ApolloClient, InMemoryCache, HttpLink,
   ApolloLink,
 } from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
 import { v4 as uuidv4 } from 'uuid'
 import jwt from 'jsonwebtoken'
 import {
@@ -27,13 +28,105 @@ import {
 
 const MAX_AGE = (24 * 60 * 60 * 30) // 30 days
 
+const safeCause = (cause: any) => {
+  if (!cause) return undefined
+  return {
+    name: cause.name,
+    message: cause.message,
+    code: cause.code,
+    errno: cause.errno,
+    syscall: cause.syscall,
+    address: cause.address,
+    port: cause.port,
+    stack: cause.stack,
+  }
+}
+
+const logApolloError = onError(({ graphQLErrors, networkError, operation }) => {
+  if (graphQLErrors?.length) {
+    graphQLErrors.forEach((error) => {
+      ilogError('GraphQL error', {
+        operation: operation.operationName,
+        message: error.message,
+        path: error.path,
+        extensions: error.extensions,
+      })
+    })
+  }
+  if (networkError) {
+    const {
+      response,
+      result,
+      statusCode,
+      stack,
+      message: networkMessage,
+      cause,
+    } = networkError as any
+    ilogError('Network error', {
+      operation: operation.operationName,
+      message: networkMessage,
+      status: response?.status ?? statusCode,
+      url: response?.url,
+      body: result,
+      properties: Object.getOwnPropertyNames(networkError),
+      stack,
+      cause: safeCause(cause),
+    })
+  }
+})
+
+const loggingFetch: typeof fetch = async (input, init) => {
+  try {
+    return await fetch(input, init)
+  } catch (error: any) {
+    let requestUrl: string
+    if (typeof input === 'string') {
+      requestUrl = input
+    } else if (input instanceof Request) {
+      requestUrl = input.url
+    } else {
+      requestUrl = `${input}`
+    }
+    let method
+    let headers
+    if (init) {
+      ({ method, headers } = init)
+    }
+    const {
+      message: fetchMessage,
+      stack: fetchStack,
+      cause,
+    } = error ?? {}
+    ilogError('Fetch failed', {
+      request: requestUrl,
+      method,
+      headers,
+      message: fetchMessage,
+      stack: fetchStack,
+      cause: safeCause(cause ?? error),
+    })
+    throw error
+  }
+}
+
+const getHasuraEndpoint = () => {
+  const endpoint = process.env.NEXT_PUBLIC_HASURA_ENDPOINT
+  if (!endpoint) {
+    throw new Error('NEXT_PUBLIC_HASURA_ENDPOINT must be set')
+  }
+  return endpoint
+}
+
+const createHttpLink = (headers: Record<string, string>) => new HttpLink({
+  uri: getHasuraEndpoint(),
+  headers,
+  fetch: loggingFetch,
+})
+
 export const HasuraClient = (authToken : string) => new ApolloClient({
-  link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  }),
+  link: ApolloLink.from([logApolloError, createHttpLink({
+    Authorization: `Bearer ${authToken}`,
+  })]),
   cache: new InMemoryCache(),
 })
 
@@ -47,15 +140,12 @@ const disablePersistedQueries = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
-  headers: {
-    'X-Hasura-Admin-Secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET || '',
-  },
+const httpLink = createHttpLink({
+  'X-Hasura-Admin-Secret': process.env.HASURA_GRAPHQL_ADMIN_SECRET || '',
 })
 
 export const ServerClient = () => new ApolloClient({
-  link: ApolloLink.from([disablePersistedQueries, httpLink]),
+  link: ApolloLink.from([logApolloError, disablePersistedQueries, httpLink]),
   cache: new InMemoryCache(),
 })
 
