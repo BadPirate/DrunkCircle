@@ -2,3 +2,8 @@
     font-family: "UpchuckedBB-Regular";
     src: url("/UpchuckedBB-Regular.otf") format("opentype");
 }
+
+footer a:hover,
+footer a:focus {
+    text-decoration: underline;
+}

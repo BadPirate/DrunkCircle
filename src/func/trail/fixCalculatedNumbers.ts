@@ -47,8 +47,9 @@ export async function fixCalculatedNumbers(
           throw e
         })
         .then((r) => {
-          if (r.errors && r.errors.length > 0) {
-            ilogError('Error updating calculated number for trail', t, r.errors)
+          const graphErrors = (r as { errors?: readonly Error[] }).errors
+          if (graphErrors && graphErrors.length > 0) {
+            ilogError('Error updating calculated number for trail', t, graphErrors)
             return null
           }
           ilog('Updated calculated number for trail', t.calculated_number, to)

@@ -1,0 +1,8 @@
+version: 3
+endpoint_from_env: NEXT_PUBLIC_HASURA_ENDPOINT
+admin_secret_from_env: HASURA_GRAPHQL_ADMIN_SECRET
+metadata_directory: metadata
+migrations_directory: migrations
+seeds_directory: seeds
+actions:
+  kind: synchronous

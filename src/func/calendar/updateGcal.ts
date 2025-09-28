@@ -43,7 +43,10 @@ export async function updateCalendar(
       variables: { trailId: trail.id },
     }))
     .then((r) => {
-      if (r.errors) { throw r.errors[0] }
+      const graphErrors = (r as { errors?: readonly Error[] }).errors
+      if (graphErrors && graphErrors.length > 0) {
+        throw graphErrors[0]
+      }
       if (!r.data?.update_trails?.affected_rows || r.data.update_trails.affected_rows < 1) {
         throw Error(`Error updating trail info ${trail.id}`)
       }
@@ -69,7 +72,10 @@ export async function insertCalendar(
     variables: { trailId: trail.id, gid },
   })
     .then((r) => {
-      if (r.errors) { throw r.errors[0] }
+      const graphErrors = (r as { errors?: readonly Error[] }).errors
+      if (graphErrors && graphErrors.length > 0) {
+        throw graphErrors[0]
+      }
       if (!r.data?.update_trails?.affected_rows || r.data.update_trails.affected_rows < 1) {
         throw Error(`Error updating trail info ${trail.id}`)
       }

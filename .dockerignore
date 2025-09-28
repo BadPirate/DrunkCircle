@@ -1,0 +1,9 @@
+node_modules
+.next
+build
+coverage
+.git
+npm-debug.log
+yarn-error.log
+README.md
+

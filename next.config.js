@@ -15,6 +15,7 @@ module.exports = withPlugins(
     withSourceMaps,
   ],
   {
+    output: 'standalone',
     env: { },
     publicRuntimeConfig: {},
     webpack: (configIm, options) => {

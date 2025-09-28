@@ -1,7 +1,7 @@
 schema: 
   "https://drunkcircle.hasura.app/v1/graphql":
     headers:
-      X-Hasura-Admin-Secret: IncrementallyBetterThanTI82
+      X-Hasura-Admin-Secret: ${HASURA_GRAPHQL_ADMIN_SECRET}
 documents: "src/**/*.{graphql,js,ts,jsx,tsx}"
 config: # The following configuration will adjust output to the defaults of Apollo-Codegen, and should be compatible with most use-cases.
   namingConventions: keep
