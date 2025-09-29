@@ -60,7 +60,7 @@ services:
     build: 
       context: .
       args:
-        - HASURA_URL=${SERVICE_FQDN_HASURA}
+        - HASURA_URL=${SERVICE_URL_HASURA}
     depends_on:
       hasura-load:
         condition: service_completed_successfully
