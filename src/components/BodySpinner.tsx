@@ -3,4 +3,10 @@ import RootNav from './RootNav'
 import { LoadSpinner } from './LoadSpinner'
 
 // eslint-disable-next-line import/prefer-default-export
-export const BodySpinner = () => <RootNav title="Loading"><Container><LoadSpinner /></Container></RootNav>
+export const BodySpinner = () => (
+  <RootNav title="Loading">
+    <Container className="pb-4">
+      <LoadSpinner />
+    </Container>
+  </RootNav>
+)

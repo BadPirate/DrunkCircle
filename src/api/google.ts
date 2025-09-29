@@ -4,20 +4,25 @@ import { calendar_v3, google } from 'googleapis'
 import { ServerClient } from '../graph/hasura'
 import { GqlUpdateGoogleTokensDocument, GqlUpdateGoogleTokensMutation } from '../graph/types'
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_PUBLIC_URL } = process.env
-
-if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !NEXT_PUBLIC_URL) {
-  throw Error('!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET')
+const getOAuthConfig = () => {
+  const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_PUBLIC_URL } = process.env
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !NEXT_PUBLIC_URL) {
+    throw Error('!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET')
+  }
+  return { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_PUBLIC_URL }
 }
 
-const oauth2Client = new google.auth.OAuth2(
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  `${NEXT_PUBLIC_URL}/api/auth/gcal`,
-)
+const getOAuthClient = () => {
+  const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_PUBLIC_URL } = getOAuthConfig()
+  return new google.auth.OAuth2(
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    `${NEXT_PUBLIC_URL}/api/auth/gcal`,
+  )
+}
 
 export async function getTokenFromCode(code: string) {
-  return oauth2Client.getToken(code).then((r) => r.tokens)
+  return getOAuthClient().getToken(code).then((r) => r.tokens)
 }
 
 export async function storeTokenForKennel(kennelID: number, token: Credentials) : Promise<void> {
@@ -40,6 +45,7 @@ export async function storeTokenForKennel(kennelID: number, token: Credentials) 
 
 export function gcal(accessToken : string, refreshToken: string) : calendar_v3.Calendar {
   // Only set the refresh token so OAuth2Client will auto-refresh access tokens as needed
+  const oauth2Client = getOAuthClient()
   oauth2Client.setCredentials({
     refresh_token: refreshToken,
   })
@@ -51,6 +57,7 @@ export function gcal(accessToken : string, refreshToken: string) : calendar_v3.C
 }
 
 export async function getMe(accessToken : string, refreshToken: string) {
+  const oauth2Client = getOAuthClient()
   oauth2Client.setCredentials({
     access_token: accessToken,
     refresh_token: refreshToken,

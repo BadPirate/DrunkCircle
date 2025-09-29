@@ -9,7 +9,7 @@ import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
 import { LoadSpinner } from '../../../src/components/LoadSpinner'
 import PageCard from '../../../src/components/PageCard'
-import PublicClientHasura from '../../../src/graph/PublicClientHasura'
+import getPublicClientHasura from '../../../src/graph/PublicClientHasura'
 import FormattedDate, { MobileAlt } from '../../../src/components/FormattedDate'
 import { queryToInt } from '../../../src/func/queryParsing'
 import { useUserPermissions } from '../../../src/func/useUserPerms'
@@ -23,7 +23,7 @@ import {
 
 const HareRank = ({ kennelId }: { kennelId: number }) => {
   const { data, error } = useGqlHareRankQuery({
-    client: PublicClientHasura,
+    client: getPublicClientHasura(),
     variables: { kennelId },
   })
 
@@ -119,7 +119,7 @@ const TrailsPart = ({
 const MismanagementPart = ({ kennelId } : { kennelId : number }) => {
   const { loading, data, error } = useGqlMismanagementViewQuery({
     variables: { kennelId },
-    client: PublicClientHasura,
+    client: getPublicClientHasura(),
   })
   if (loading) return <LoadSpinner />
   if (error) return <ErrorBanner error={error} />
@@ -222,7 +222,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query: { kennelId
   let props: ServerSideProps = {}
   const after = new Date()
   after.setHours(after.getHours() - 8)
-  await PublicClientHasura.query<GqlGetKennelPageQuery>({
+  await getPublicClientHasura().query<GqlGetKennelPageQuery>({
     query: GqlGetKennelPageDocument,
     fetchPolicy: 'no-cache',
     variables: { kennelId, after },

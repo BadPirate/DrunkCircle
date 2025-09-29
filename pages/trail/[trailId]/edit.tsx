@@ -4,7 +4,7 @@ import { BodyError } from '../../../src/components/ErrorBanner'
 import { BodySpinner } from '../../../src/components/BodySpinner'
 import RootNav from '../../../src/components/RootNav'
 import TrailCard from '../../../src/components/TrailCard'
-import PublicClientHasura from '../../../src/graph/PublicClientHasura'
+import getPublicClientHasura from '../../../src/graph/PublicClientHasura'
 import { useGqlPageTrailIdQuery } from '../../../src/graph/types'
 import { queryToInt } from '../../../src/func/queryParsing'
 
@@ -12,7 +12,7 @@ export default () => {
   const { trailId } = queryToInt(useRouter().query)
   const { loading, error, data } = useGqlPageTrailIdQuery({
     variables: { trailId },
-    client: PublicClientHasura,
+    client: getPublicClientHasura(),
   })
   if (loading) {
     return <BodySpinner />

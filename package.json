@@ -3,13 +3,14 @@
   "version": "3.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "PORT=6703 next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "schema": "set -a; source .env.local; set +a; yarn graphql-codegen -c graphqlrc.yml --verbose",
-    "test:e2e": "playwright test",
-    "test": "yarn test:e2e"
+    "schema": "set -a; source .env; set +a; yarn graphql-codegen -c graphqlrc.yml --verbose",
+    "setup": "sudo curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v${HASURA_CLI_VERSION:-2.48.5} bash",
+    "up": "docker compose -f docker-compose.yaml -f docker-compose.local.yaml up -d",
+    "down": "docker compose down"
   },
   "dependencies": {
     "@apollo/client": "^3.6.1",
@@ -31,7 +32,7 @@
     "google-auth-library": "^8.1.1",
     "googleapis": "^114.0.0",
     "googleapis-common": "^6.0.4",
-    "graphql": "16.6.0",
+    "graphql": "^16.11.0",
     "graphql-ws": "^5.9.1",
     "jquery": "^3.6.0",
     "jsonwebtoken": "^9.0.0",
@@ -52,6 +53,8 @@
     "react-google-calendar-api": "^2.0.3",
     "react-markdown": "^8.0.3",
     "react-scripts": "^5.0.1",
+    "remark-breaks": "^4.0.0",
+    "sharp": "^0.34.4",
     "uuid": "^9.0.0",
     "webpack": "^5.74.0",
     "yarn": "^1.22.18"
@@ -67,10 +70,8 @@
     "@graphql-codegen/typescript-react-apollo": "^3.3.2",
     "@graphql-codegen/typescript-react-query": "^4.0.0",
     "@next/eslint-plugin-next": "^13.3.0",
-    "@playwright/test": "^1.51.1",
     "@types/dateformat": "^5.0.0",
     "@types/google-map-react": "^2.1.7",
-    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.15.11",
     "@types/nodemailer": "^6.4.4",
@@ -80,6 +81,7 @@
     "@types/react-dom": "^18.0.5",
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "dotenv-cli": "^10.0.0",
     "eslint": "^8.14.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -90,7 +92,6 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "install-peers": "^1.0.3",
-    "ts-jest": "^29.3.1",
     "typescript": "^5.0.3"
   }
 }

@@ -13,7 +13,7 @@ const UserRequired = ({ children } : { children : React.ReactNode }) => {
   if (needsLogin) {
     return (
       <RootNav title="Login required">
-        <Container>
+        <Container className="pb-4">
           <Button variant="waring" onClick={() => signIn()}>Login Required</Button>
         </Container>
       </RootNav>

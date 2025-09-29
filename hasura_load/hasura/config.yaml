@@ -1,0 +1,10 @@
+version: 3
+endpoint:
+  from_env: HASURA_CLI_ENDPOINT
+admin_secret:
+  from_env: HASURA_GRAPHQL_ADMIN_SECRET
+metadata_directory: metadata
+migrations_directory: migrations
+seeds_directory: seeds
+actions:
+  kind: synchronous

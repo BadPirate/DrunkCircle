@@ -1,0 +1,43 @@
+table:
+  name: hares
+  schema: public
+object_relationships:
+  - name: hasherInfo
+    using:
+      foreign_key_constraint_on: hasher
+  - name: trailInfo
+    using:
+      foreign_key_constraint_on: trail
+insert_permissions:
+  - role: dc_server
+    permission:
+      check: {}
+      columns:
+        - hasher
+        - trail
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - hasher
+        - trail
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - hasher
+        - trail
+      filter: {}
+      allow_aggregations: true
+update_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - hasher
+        - trail
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: dc_server
+    permission:
+      filter: {}

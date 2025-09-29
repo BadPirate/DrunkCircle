@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserCheck, faUserSlash } from '@fortawesome/free-solid-svg-icons'
 import Image from 'next/image'
 import { LoadSpinner } from './LoadSpinner'
+import Footer from './Footer'
 
 export interface RootNavProps {
   children : React.ReactNode,
@@ -87,6 +88,7 @@ const RootNav = ({
         </Container>
       </Navbar>
       {children}
+      <Footer />
     </>
   )
 }

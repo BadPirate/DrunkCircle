@@ -16,7 +16,7 @@ import PageCard from '../../../../src/components/PageCard'
 import { accessURL } from '../../../../src/func/calendar/CalendarAuthFlow'
 import { ServerClient } from '../../../../src/graph/hasura'
 import { gcal, getMe } from '../../../../src/api/google'
-import PublicClientHasura from '../../../../src/graph/PublicClientHasura'
+import getPublicClientHasura from '../../../../src/graph/PublicClientHasura'
 import { LoadSpinner } from '../../../../src/components/LoadSpinner'
 import ListTable from '../../../../src/components/ListTable'
 import { HasherPicker } from '../../../../src/components/HasherPicker'
@@ -145,7 +145,7 @@ const PermissionAddPart = ({
   hide: string[]
 }) => {
   const [selected, setSelected] = useState<string|null>(null)
-  const { loading, error, data } = useGqlPermissionsEnumQuery({ client: PublicClientHasura })
+  const { loading, error, data } = useGqlPermissionsEnumQuery({ client: getPublicClientHasura() })
 
   if (loading) return <LoadSpinner />
   if (error) return <ErrorBanner error={error} />
@@ -247,7 +247,7 @@ const RoleEditPart = ({
     GqlKennelRolesEditViewDocument,
     {
       variables: { kennelId },
-      client: PublicClientHasura,
+      client: getPublicClientHasura(),
     },
   )
 
@@ -348,7 +348,7 @@ const RoleEditPart = ({
 
 const KennelEditPart = ({ kennelId } : {kennelId : number}) => {
   const { loading, data, error } = useGqlKennelEditPartQuery({
-    client: PublicClientHasura,
+    client: getPublicClientHasura(),
     variables: { kennelId },
   })
   const kennel = data && data.kennels.length > 0 ? data.kennels[0] : undefined

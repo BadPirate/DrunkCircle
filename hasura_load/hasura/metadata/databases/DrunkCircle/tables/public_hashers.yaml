@@ -1,0 +1,86 @@
+table:
+  name: hashers
+  schema: public
+array_relationships:
+  - name: attendance
+    using:
+      foreign_key_constraint_on:
+        column: hasher
+        table:
+          name: attendance
+          schema: public
+  - name: gm
+    using:
+      foreign_key_constraint_on:
+        column: gm_email
+        table:
+          name: kennels
+          schema: public
+  - name: hares
+    using:
+      foreign_key_constraint_on:
+        column: hasher
+        table:
+          name: hares
+          schema: public
+  - name: management
+    using:
+      foreign_key_constraint_on:
+        column: hasher
+        table:
+          name: management
+          schema: public
+insert_permissions:
+  - role: dc_server
+    permission:
+      check: {}
+      columns:
+        - id
+        - email
+        - login
+        - name
+        - email_verified
+        - login_expires
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - id
+        - email
+        - login
+        - name
+        - email_verified
+        - login_expires
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - id
+        - name
+      filter: {}
+      allow_aggregations: true
+update_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - id
+        - email
+        - login
+        - name
+        - email_verified
+        - login_expires
+      filter: {}
+      check: {}
+  - role: hasher
+    permission:
+      columns:
+        - name
+      filter: {}
+      check:
+        id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+delete_permissions:
+  - role: dc_server
+    permission:
+      filter: {}

@@ -50,7 +50,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     },
   }).then((r) => {
     if (!r.data) {
-      throw r.errors![0]
+      const graphErrors = (r as { errors?: readonly Error[] }).errors
+      throw new Error(graphErrors?.[0]?.message ?? 'Failed to update kennel')
     }
   })
   res.redirect(`/kennel/${kennelID}`)

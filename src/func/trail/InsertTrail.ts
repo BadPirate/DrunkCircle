@@ -20,7 +20,9 @@ export async function insertTrail(
     variables,
   }).then((r) => {
     if (!r.data?.insert_trails_one?.id) {
-      throw Error(`Unable to insert: ${r.errors?.map((e) => e.message).join(', ')}`)
+      const graphErrors = (r as { errors?: readonly Error[] }).errors ?? []
+      const messages = graphErrors.map((e) => e.message).join(', ')
+      throw Error(`Unable to insert: ${messages}`)
     }
     ilog(`Inserted trail ${r.data.insert_trails_one.id}`)
     return r.data.insert_trails_one.id

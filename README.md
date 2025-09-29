@@ -1,5 +1,3 @@
-# DrunkCircle
-
 DrunkCircle is a collaborative platform for the Hash House Harriers community. It provides tools for managing trails, kennels, and events, making it easier for members to connect and organize activities.
 
 ## Features
@@ -9,55 +7,55 @@ DrunkCircle is a collaborative platform for the Hash House Harriers community. I
 - **Hasher Profiles**: Manage hasher details and participation.
 - **Google Calendar Integration**: Sync events with Google Calendar.
 
-## Development Requirements
+## Contributing / License
 
-This project requires a Hasura backend (GraphQL) for development. If you want to start your own instance, please reach out to badpirate@gmail.com to get set up with a database backend.
+- See first the [Down Down License](LICENSE.md)
+- After making changes, submit your changes to a fork (or if you have permission a non-main non-dev branch for PR review)
 
-## Getting Started
+## Development
 
 1. Clone the repository:
    ```bash
    git clone git@github.com:BadPirate/drunkcircle.git
    ```
-2. Install dependencies:
-   ```bash
-   yarn install
-   ```
-3. Create a `.env.local` file in the project root with the required environment variables (see **Environment Variables** below).
-4. Start the development server:
-   ```bash
-   yarn dev
-   ```
+2. Install nvm
+3. Install correct version of node: `nvm install && nvm use`
+4. Install yarn `npm -g install yarn`
+5. Install dependencies: `yarn install`
+6. Move and upate [.env.EXAMPLE] to [.env] `mv .env.EXAMPLE .env` file in the project root with the required environment variables (see **Environment Variables** below).
+7. Install docker and docker compose if needed
+8. Launch locally with docker `yarn up`
+9. Bring down when you are done with `yarn down`
+
+You can also run dev server for better debugging and live changes:
+
+1. `yarn up && docker compose down next`
+2. `yarn dev`
+
+## Services
+
+When running locally:
+
+- Database (Postgres 15): localhost:6701
+- Hasura: http://localhost:6702 (password in .env)
+- DrunkCircle: http://localhost:6703
+
+## Schema Changes
+
+After making changes with local development Hasura UI (http://localhost:6702) -- Must create a new migration:
+
+- Install hasura cli if needed, `yarn setup`
+- `cd hasura_load/hasura`
+- `hasura migration create <migration_name> --endpoint http://localhost:6702 --admin-secret <dev_admin_secret>` which
+  should create the new migration
 
 ## Environment Variables
 
-Create a `.env.local` file in the project root with the following environment variables:
+These need to be set for various actions to work
 
-- NEXT_PUBLIC_HASURA_ENDPOINT: Your Hasura GraphQL endpoint (e.g., https://your-hasura-instance/v1/graphql)
-- NEXT_PUBLIC_HASURA_WS_ENDPOINT: Your Hasura GraphQL WebSocket endpoint (e.g., wss://your-hasura-instance/v1/graphql)
-- HASURA_GRAPHQL_ADMIN_SECRET: Your Hasura admin secret
-- NEXT_PUBLIC_URL: Base URL of your application (e.g., http://localhost:3000)
-- NEXT_PUBLIC_CALENDAR_URL: (optional) URL used for calendar links (defaults to NEXT_PUBLIC_URL)
-- NEXT_PUBLIC_GOOGLE_MAP_KEY: Your Google Maps API key
-- NEXT_PUBLIC_GOOGLE_CLIENT_ID: Google OAuth client ID for Calendar authorization
-- GOOGLE_CLIENT_SECRET: Google OAuth client secret for Calendar authorization
-- SENDGRID_API_KEY: SendGrid API key for sending emails
-- JWT_SECRET: Secret for signing JSON Web Tokens (used for Hasura JWTs)
-- HASURA_SERVER_USER_EMAIL: Service account email for server-side Hasura operations
-- HASURA_SERVER_USER_NAME: Service account name for server-side Hasura operations
-- HASURA_SERVER_USER_ROLE: Role for the service account (e.g., service_role)
-
-## Contributing
-
-Contributions are welcome! Before contributing, please read our [CONTRIBUTING.md](./CONTRIBUTING.md) guide which contains detailed information about:
-
-- Development environment setup
-- Project structure
-- Coding standards and style guidelines
-- Working with GraphQL
-- Testing practices
-- Pull request process
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+- GOOGLE_CLIENT_ID=replace_with_real_app_id.apps.googleusercontent.com
+- GOOGLE_CLIENT_SECRET=-replace_with_real_secret
+- NEXT_PUBLIC_GOOGLE_CLIENT_ID=replace_with_real_client_id_again.apps.googleusercontent.com
+- NEXT_PUBLIC_GOOGLE_MAP_KEY=replace_with_google_map_key
+- SENDGRID_API_KEY=replace_with_sendgrid_api_key
+- SMTP_SERVER=smtp://smtpuser:smtppass@smtp.mailgun.org:587

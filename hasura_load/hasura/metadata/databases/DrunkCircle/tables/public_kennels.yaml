@@ -1,0 +1,102 @@
+table:
+  name: kennels
+  schema: public
+object_relationships:
+  - name: gm
+    using:
+      foreign_key_constraint_on: gm_email
+array_relationships:
+  - name: management
+    using:
+      foreign_key_constraint_on:
+        column: kennel
+        table:
+          name: management
+          schema: public
+  - name: trails
+    using:
+      foreign_key_constraint_on:
+        column: kennel
+        table:
+          name: trails
+          schema: public
+insert_permissions:
+  - role: dc_server
+    permission:
+      check: {}
+      columns:
+        - frequency
+        - id
+        - area
+        - dc_verify
+        - description
+        - gm_email
+        - gm_verify
+        - google_calendar
+        - google_refresh
+        - google_token
+        - name
+        - short_name
+        - timezone
+        - web
+        - next
+select_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - frequency
+        - id
+        - area
+        - dc_verify
+        - description
+        - gm_email
+        - gm_verify
+        - google_calendar
+        - google_refresh
+        - google_token
+        - name
+        - short_name
+        - timezone
+        - web
+        - next
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - area
+        - description
+        - frequency
+        - google_calendar
+        - id
+        - name
+        - next
+        - price
+        - short_name
+        - timezone
+        - web
+      filter: {}
+update_permissions:
+  - role: dc_server
+    permission:
+      columns:
+        - frequency
+        - id
+        - area
+        - dc_verify
+        - description
+        - gm_email
+        - gm_verify
+        - google_calendar
+        - google_refresh
+        - google_token
+        - name
+        - short_name
+        - timezone
+        - web
+        - next
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: dc_server
+    permission:
+      filter: {}

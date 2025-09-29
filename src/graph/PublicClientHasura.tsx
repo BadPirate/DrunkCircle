@@ -1,21 +1,42 @@
 import {
   ApolloClient, HttpLink, InMemoryCache, split,
 } from '@apollo/client'
+import type { NormalizedCacheObject } from '@apollo/client'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createClient } from 'graphql-ws'
+import { ilog } from '../func/Logging'
 
-const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
-})
+const getWsEndpoint = (endpoint?: string) => {
+  if (endpoint?.startsWith('https://')) {
+    return `wss://${endpoint.substring('https://'.length)}`
+  }
 
-const wsLink = typeof window !== 'undefined' ? new GraphQLWsLink(createClient({
-  url: process.env.NEXT_PUBLIC_HASURA_WS_ENDPOINT!,
-})) : null
+  if (endpoint?.startsWith('http://')) {
+    return `ws://${endpoint.substring('http://'.length)}`
+  }
 
-const PublicClientHasura = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: wsLink ? split(
+  throw new Error(`Invalid endpoint, must start with https:// or http://: ${endpoint}`)
+}
+
+let cachedClient: ApolloClient<NormalizedCacheObject> | null = null
+
+const createClientLink = () => {
+  const hasuraEndpoint = process.env.NEXT_PUBLIC_HASURA_ENDPOINT
+
+  const httpLink = new HttpLink({
+    uri: hasuraEndpoint,
+  })
+
+  const wsEndpoint = getWsEndpoint(hasuraEndpoint)
+
+  const wsLink = (typeof window !== 'undefined' && wsEndpoint) ? new GraphQLWsLink(createClient({
+    url: wsEndpoint,
+  })) : null
+
+  ilog('createClientLink', { wsEndpoint, hasuraEndpoint })
+
+  return wsLink ? split(
     // split based on operation type
     ({ query }) => {
       const definition = getMainDefinition(query)
@@ -26,7 +47,20 @@ const PublicClientHasura = new ApolloClient({
     },
     wsLink,
     httpLink,
-  ) : httpLink,
+  ) : httpLink
+}
+
+const createPublicClientHasura = () => new ApolloClient({
+  cache: new InMemoryCache(),
+  link: createClientLink(),
 })
 
-export default PublicClientHasura
+const getPublicClientHasura = () => {
+  if (!cachedClient) {
+    cachedClient = createPublicClientHasura()
+  }
+
+  return cachedClient
+}
+
+export default getPublicClientHasura

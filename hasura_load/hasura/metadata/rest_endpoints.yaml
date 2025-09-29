@@ -1,0 +1,288 @@
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: attendance
+  methods:
+    - GET
+  name: attendance
+  url: attendance
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: insert_attendance_one
+  methods:
+    - POST
+  name: insert_attendance_one
+  url: attendance
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: attendance_by_pk
+  methods:
+    - GET
+  name: attendance_by_pk
+  url: attendance/:hasher/:trail
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: update_attendance_by_pk
+  methods:
+    - POST
+  name: update_attendance_by_pk
+  url: attendance/:hasher/:trail
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: delete_attendance_by_pk
+  methods:
+    - DELETE
+  name: delete_attendance_by_pk
+  url: attendance/:hasher/:trail
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: hares
+  methods:
+    - GET
+  name: hares
+  url: hares
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: insert_hares_one
+  methods:
+    - POST
+  name: insert_hares_one
+  url: hares
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: hashers
+  methods:
+    - GET
+  name: hashers
+  url: hashers
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: insert_hashers_one
+  methods:
+    - POST
+  name: insert_hashers_one
+  url: hashers
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: hashers_by_pk
+  methods:
+    - GET
+  name: hashers_by_pk
+  url: hashers/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: update_hashers_by_pk
+  methods:
+    - POST
+  name: update_hashers_by_pk
+  url: hashers/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: delete_hashers_by_pk
+  methods:
+    - DELETE
+  name: delete_hashers_by_pk
+  url: hashers/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: kennels
+  methods:
+    - GET
+  name: kennels
+  url: kennels
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: insert_kennels_one
+  methods:
+    - POST
+  name: insert_kennels_one
+  url: kennels
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: kennels_by_pk
+  methods:
+    - GET
+  name: kennels_by_pk
+  url: kennels/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: update_kennels_by_pk
+  methods:
+    - POST
+  name: update_kennels_by_pk
+  url: kennels/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: delete_kennels_by_pk
+  methods:
+    - DELETE
+  name: delete_kennels_by_pk
+  url: kennels/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: management
+  methods:
+    - GET
+  name: management
+  url: management
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: insert_management_one
+  methods:
+    - POST
+  name: insert_management_one
+  url: management
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: management_by_pk
+  methods:
+    - GET
+  name: management_by_pk
+  url: management/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: update_management_by_pk
+  methods:
+    - POST
+  name: update_management_by_pk
+  url: management/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: delete_management_by_pk
+  methods:
+    - DELETE
+  name: delete_management_by_pk
+  url: management/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: permission_enum
+  methods:
+    - GET
+  name: permission_enum
+  url: permission_enum
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: insert_permission_enum_one
+  methods:
+    - POST
+  name: insert_permission_enum_one
+  url: permission_enum
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: permission_enum_by_pk
+  methods:
+    - GET
+  name: permission_enum_by_pk
+  url: permission_enum/:permission
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: update_permission_enum_by_pk
+  methods:
+    - POST
+  name: update_permission_enum_by_pk
+  url: permission_enum/:permission
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: delete_permission_enum_by_pk
+  methods:
+    - DELETE
+  name: delete_permission_enum_by_pk
+  url: permission_enum/:permission
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: trails
+  methods:
+    - GET
+  name: trails
+  url: trails
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: insert_trails_one
+  methods:
+    - POST
+  name: insert_trails_one
+  url: trails
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: trails_by_pk
+  methods:
+    - GET
+  name: trails_by_pk
+  url: trails/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: update_trails_by_pk
+  methods:
+    - POST
+  name: update_trails_by_pk
+  url: trails/:id
+- comment: ""
+  definition:
+    query:
+      collection_name: allowed-queries
+      query_name: delete_trails_by_pk
+  methods:
+    - DELETE
+  name: delete_trails_by_pk
+  url: trails/:id

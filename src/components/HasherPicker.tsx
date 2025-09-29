@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleXmark, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import ErrorBanner from './ErrorBanner'
-import PublicClientHasura from '../graph/PublicClientHasura'
+import getPublicClientHasura from '../graph/PublicClientHasura'
 import { LoadSpinner } from './LoadSpinner'
 import { liveMutate } from '../func/liveMutate'
 import { queryToInt, queryToStrings } from '../func/queryParsing'
@@ -33,7 +33,7 @@ export const HasherPicker = ({
   const [hasher, setHasher] = useState<PublicHasherInfoFragment | undefined>(undefined)
 
   const { loading, data, error } = useGqlGetHasherNamesQuery({
-    client: PublicClientHasura,
+    client: getPublicClientHasura(),
   })
   if (loading) {
     return <LoadSpinner />
