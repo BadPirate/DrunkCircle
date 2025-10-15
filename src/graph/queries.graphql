@@ -547,3 +547,18 @@ query Sync {
     ...KennelSyncInfo
   }
 }
+
+query GQLTrailsForIcal($where: trails_bool_exp!) {
+  trails(order_by: { start: asc }, where: $where) {
+    id
+    name
+    start
+    description
+    directions
+    latitude
+    longitude
+    kennelInfo {
+      short_name
+    }
+  }
+}
