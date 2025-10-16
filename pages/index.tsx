@@ -1,10 +1,13 @@
 import Link from 'next/link'
 import {
+  Button,
   Card,
 } from 'react-bootstrap'
 import ReactMarkdown from 'react-markdown'
 import { DataRow, InfoTable } from '../src/components/ListTable'
 import PageCard from '../src/components/PageCard'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
 
 const Home = () => {
   const webcalBase = (process.env.NEXT_PUBLIC_URL || 'https://drunkcircle.com').replace(/^https?:\/\//, 'webcal://')
@@ -67,8 +70,9 @@ to get started.
       title="DrunkCircle"
       description="A site for finding trail and kennel information for the Hash House Harriers drinking and running club"
     >
-      <Card.Text>
-        Welcome to the DrunkCircle website.  A free resource for Hash House Harriers.
+      <Card.Text className="d-flex">
+        <div>Welcome to the DrunkCircle website.  A free resource for Hash House Harriers.</div>
+        <Button href={`${webcalBase}/api/trails/ical`} variant="success" className="ms-auto"><FontAwesomeIcon icon={faCalendarAlt} /> Subscribe to all hash calendars</Button>
       </Card.Text>
       <Card.Text>
         Thanklessly maintained by

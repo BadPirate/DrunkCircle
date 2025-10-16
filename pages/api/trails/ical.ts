@@ -107,8 +107,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }, [])
 
     const calendarName = kennelShortNames.length > 0
-      ? `${kennelShortNames.join(', ')} Trails`
-      : 'All Trails'
+      ? `${kennelShortNames.join(', ')} DrunkCircle Trails`
+      : 'DrunkCircle All Trails'
 
     const { error, value } = createEvents(events, {
       calName: calendarName,
