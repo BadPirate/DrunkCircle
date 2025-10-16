@@ -27,7 +27,7 @@ const parseKennelFilter = (value?: string | string[]): string[] => {
   const raw = Array.isArray(value) ? value.join(',') : value
   return raw
     .split(/[\s,]+/)
-    .map((token) => token.trim())
+    .map((token) => token.trim().replace(/^[\s[("']+/, '').replace(/[\s[)"']+$/, ''))
     .filter((token) => token.length > 0)
 }
 
@@ -40,16 +40,21 @@ const toUtcStartArray = (date: Date): [number, number, number, number, number] =
 ]
 
 const DEFAULT_DURATION_HOURS = 3
-const CAL_PRODUCT_ID = 'DrunkCircle iCal Feed'
+const CAL_PRODUCT_ID = 'DrunkCircle'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     ilog('Trail iCal API called', { query: req.query, url: req.url })
 
-    const kennelShortNames = parseKennelFilter(req.query.k)
+    const kennelShortNames = parseKennelFilter(req.query.k ?? req.query.kennels)
+    const since = new Date()
+    since.setDate(since.getDate() - 60)
     const where: Record<string, unknown> = {
       draft: { _is_null: true },
-      start: { _is_null: false },
+      start: {
+        _is_null: false,
+        _gte: since.toISOString(),
+      },
     }
     if (kennelShortNames.length > 0) {
       where.kennelInfo = { short_name: { _in: kennelShortNames } }
@@ -62,14 +67,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       fetchPolicy: 'no-cache',
     })
 
-    const trails = data.trails.filter((trail) => Number.isInteger(trail.id))
-    if (trails.length === 0) {
-      res.status(404).json({ error: 'No trails found for iCal feed.' })
-      return
-    }
-
     const baseUrl = process.env.NEXT_PUBLIC_URL ?? 'https://drunkcircle.com'
-    const events = trails.reduce<EventAttributes[]>((accumulator, trail) => {
+    const nowIso = new Date().toISOString()
+    const events = data.trails.reduce<EventAttributes[]>((accumulator, trail) => {
       const startDate = new Date(trail.start)
       if (Number.isNaN(startDate.getTime())) {
         return accumulator
@@ -94,6 +94,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         uid: `trail-${trail.id}@drunkcircle`,
         status: 'CONFIRMED',
         calName: 'DrunkCircle Trails',
+        created: nowIso,
+        lastModified: nowIso,
       }
 
       if (typeof trail.latitude === 'number' && typeof trail.longitude === 'number') {
@@ -104,12 +106,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return accumulator
     }, [])
 
-    if (events.length === 0) {
-      res.status(404).json({ error: 'No valid trails with start times available.' })
-      return
-    }
+    const calendarName = kennelShortNames.length > 0
+      ? `${kennelShortNames.join(', ')} Trails`
+      : 'All Trails'
 
-    const { error, value } = createEvents(events)
+    const { error, value } = createEvents(events, {
+      calName: calendarName,
+      productId: CAL_PRODUCT_ID,
+      method: 'PUBLISH',
+    })
+
     if (error || !value) {
       ilogError('Failed to generate ICS feed', { error })
       res.status(500).json({ error: 'Unable to generate iCal feed.' })
@@ -117,8 +123,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     res.setHeader('Content-Type', 'text/calendar; charset=utf-8')
-    res.setHeader('Cache-Control', 'public, max-age=300')
-    res.setHeader('Content-Disposition', 'inline; filename="drunkcircle-trails.ics"')
+    res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate')
+    res.setHeader('Content-Disposition', `inline; filename="${calendarName.replace(/\s+/g, '-').toLowerCase()}.ics"`)
     res.status(200).send(value)
   } catch (error) {
     ilogError('Trail iCal API unhandled error', error)
