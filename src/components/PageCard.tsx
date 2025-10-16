@@ -15,7 +15,7 @@ interface CardInfo extends RootNavProps {
 }
 
 export const BodyCard = ({
-  title, children, preamble, editLink,
+  title, accessory, children, preamble, editLink,
 } : CardInfo) => {
   const { query } = useRouter()
   const { message, warning } = queryToStrings(query)
@@ -38,8 +38,9 @@ export const BodyCard = ({
       <Card>
         <Card.Body>
           {preamble || null}
-          <Card.Title>
+          <Card.Title className="d-flex">
             <span>{title}</span>
+            { accessory ? <span className="ms-auto me-2">{accessory}</span> : null}
             {editLink ? (
               <Button href={editLink} className="float-end">
                 <FontAwesomeIcon icon={faPen} />
@@ -58,11 +59,11 @@ BodyCard.defaultProps = {
 }
 
 const PageCard = ({
-  title, children, preamble, description, editLink,
+  title, accessory, children, preamble, description, editLink,
 } : CardInfo) => (
   <RootNav key={title} title={title} description={description}>
     <Container>
-      <BodyCard title={title} preamble={preamble} editLink={editLink}>
+      <BodyCard title={title} accessory={accessory} preamble={preamble} editLink={editLink}>
         {children}
       </BodyCard>
     </Container>
