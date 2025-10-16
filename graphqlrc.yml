@@ -1,5 +1,5 @@
 schema: 
-  "https://drunkcircle.hasura.app/v1/graphql":
+  "https://hasura.dev.drunkcircle.com/v1/graphql":
     headers:
       X-Hasura-Admin-Secret: ${HASURA_GRAPHQL_ADMIN_SECRET}
 documents: "src/**/*.{graphql,js,ts,jsx,tsx}"

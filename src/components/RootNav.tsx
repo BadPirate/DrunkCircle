@@ -15,6 +15,7 @@ import Footer from './Footer'
 export interface RootNavProps {
   children : React.ReactNode,
   title: string,
+  accessory?: React.ReactNode,
   type?: string,
   image?: string | undefined,
   description?: string | undefined,
@@ -25,7 +26,7 @@ export interface RootNavProps {
 }
 
 const RootNav = ({
-  children, title, type, image, description, imageSize,
+  children, title, accessory, type, image, description, imageSize,
 } : RootNavProps) => {
   const { data: session } = useSession()
   if (session === undefined) return <LoadSpinner />
@@ -68,6 +69,11 @@ const RootNav = ({
             {/* <Nav.Link href="/calendar">Calendar</Nav.Link> */}
           </Nav>
           <Navbar.Text className="ms-auto" key="spacer" />
+          { accessory && (
+            <div className="me-3" key="accessory">
+              {accessory}
+            </div>
+          ) }
           { !session?.user
             ? (
               <Button key="login" variant="warning" onClick={() => { signIn() }}>
@@ -94,6 +100,7 @@ const RootNav = ({
 }
 
 RootNav.defaultProps = {
+  accessory: undefined,
   type: 'website',
   image: undefined,
   description: undefined,

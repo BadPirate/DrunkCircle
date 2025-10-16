@@ -1388,6 +1388,7 @@ export type Kennels = {
   management: Array<Management>;
   /** An aggregate relationship */
   management_aggregate: Management_Aggregate;
+  mh_id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   next?: Maybe<Scalars['timestamptz']>;
   price?: Maybe<Scalars['float8']>;
@@ -1582,6 +1583,7 @@ export type Kennels_Avg_Fields = {
   __typename?: 'kennels_avg_fields';
   frequency?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
+  mh_id?: Maybe<Scalars['Float']>;
   price?: Maybe<Scalars['Float']>;
 };
 
@@ -1589,6 +1591,7 @@ export type Kennels_Avg_Fields = {
 export type Kennels_Avg_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
 };
 
@@ -1610,6 +1613,7 @@ export type Kennels_Bool_Exp = {
   id?: InputMaybe<Int_Comparison_Exp>;
   management?: InputMaybe<Management_Bool_Exp>;
   management_aggregate?: InputMaybe<Management_Aggregate_Bool_Exp>;
+  mh_id?: InputMaybe<Int_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   next?: InputMaybe<Timestamptz_Comparison_Exp>;
   price?: InputMaybe<Float8_Comparison_Exp>;
@@ -1630,6 +1634,7 @@ export enum Kennels_Constraint {
 export type Kennels_Inc_Input = {
   frequency?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['Int']>;
+  mh_id?: InputMaybe<Scalars['Int']>;
   price?: InputMaybe<Scalars['float8']>;
 };
 
@@ -1647,6 +1652,7 @@ export type Kennels_Insert_Input = {
   google_token?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['Int']>;
   management?: InputMaybe<Management_Arr_Rel_Insert_Input>;
+  mh_id?: InputMaybe<Scalars['Int']>;
   name?: InputMaybe<Scalars['String']>;
   next?: InputMaybe<Scalars['timestamptz']>;
   price?: InputMaybe<Scalars['float8']>;
@@ -1669,6 +1675,7 @@ export type Kennels_Max_Fields = {
   google_refresh?: Maybe<Scalars['String']>;
   google_token?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['Int']>;
+  mh_id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   next?: Maybe<Scalars['timestamptz']>;
   price?: Maybe<Scalars['float8']>;
@@ -1689,6 +1696,7 @@ export type Kennels_Max_Order_By = {
   google_refresh?: InputMaybe<Order_By>;
   google_token?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   next?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
@@ -1710,6 +1718,7 @@ export type Kennels_Min_Fields = {
   google_refresh?: Maybe<Scalars['String']>;
   google_token?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['Int']>;
+  mh_id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   next?: Maybe<Scalars['timestamptz']>;
   price?: Maybe<Scalars['float8']>;
@@ -1730,6 +1739,7 @@ export type Kennels_Min_Order_By = {
   google_refresh?: InputMaybe<Order_By>;
   google_token?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   next?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
@@ -1775,6 +1785,7 @@ export type Kennels_Order_By = {
   google_token?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   management_aggregate?: InputMaybe<Management_Aggregate_Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   next?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
@@ -1811,6 +1822,8 @@ export enum Kennels_Select_Column {
   GoogleToken = 'google_token',
   /** column name */
   Id = 'id',
+  /** column name */
+  MhId = 'mh_id',
   /** column name */
   Name = 'name',
   /** column name */
@@ -1885,6 +1898,7 @@ export type Kennels_Set_Input = {
   google_refresh?: InputMaybe<Scalars['String']>;
   google_token?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['Int']>;
+  mh_id?: InputMaybe<Scalars['Int']>;
   name?: InputMaybe<Scalars['String']>;
   next?: InputMaybe<Scalars['timestamptz']>;
   price?: InputMaybe<Scalars['float8']>;
@@ -1898,6 +1912,7 @@ export type Kennels_Stddev_Fields = {
   __typename?: 'kennels_stddev_fields';
   frequency?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
+  mh_id?: Maybe<Scalars['Float']>;
   price?: Maybe<Scalars['Float']>;
 };
 
@@ -1905,6 +1920,7 @@ export type Kennels_Stddev_Fields = {
 export type Kennels_Stddev_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
 };
 
@@ -1913,6 +1929,7 @@ export type Kennels_Stddev_Pop_Fields = {
   __typename?: 'kennels_stddev_pop_fields';
   frequency?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
+  mh_id?: Maybe<Scalars['Float']>;
   price?: Maybe<Scalars['Float']>;
 };
 
@@ -1920,6 +1937,7 @@ export type Kennels_Stddev_Pop_Fields = {
 export type Kennels_Stddev_Pop_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
 };
 
@@ -1928,6 +1946,7 @@ export type Kennels_Stddev_Samp_Fields = {
   __typename?: 'kennels_stddev_samp_fields';
   frequency?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
+  mh_id?: Maybe<Scalars['Float']>;
   price?: Maybe<Scalars['Float']>;
 };
 
@@ -1935,6 +1954,7 @@ export type Kennels_Stddev_Samp_Fields = {
 export type Kennels_Stddev_Samp_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
 };
 
@@ -1958,6 +1978,7 @@ export type Kennels_Stream_Cursor_Value_Input = {
   google_refresh?: InputMaybe<Scalars['String']>;
   google_token?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['Int']>;
+  mh_id?: InputMaybe<Scalars['Int']>;
   name?: InputMaybe<Scalars['String']>;
   next?: InputMaybe<Scalars['timestamptz']>;
   price?: InputMaybe<Scalars['float8']>;
@@ -1971,6 +1992,7 @@ export type Kennels_Sum_Fields = {
   __typename?: 'kennels_sum_fields';
   frequency?: Maybe<Scalars['Int']>;
   id?: Maybe<Scalars['Int']>;
+  mh_id?: Maybe<Scalars['Int']>;
   price?: Maybe<Scalars['float8']>;
 };
 
@@ -1978,6 +2000,7 @@ export type Kennels_Sum_Fields = {
 export type Kennels_Sum_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
 };
 
@@ -2003,6 +2026,8 @@ export enum Kennels_Update_Column {
   GoogleToken = 'google_token',
   /** column name */
   Id = 'id',
+  /** column name */
+  MhId = 'mh_id',
   /** column name */
   Name = 'name',
   /** column name */
@@ -2031,6 +2056,7 @@ export type Kennels_Var_Pop_Fields = {
   __typename?: 'kennels_var_pop_fields';
   frequency?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
+  mh_id?: Maybe<Scalars['Float']>;
   price?: Maybe<Scalars['Float']>;
 };
 
@@ -2038,6 +2064,7 @@ export type Kennels_Var_Pop_Fields = {
 export type Kennels_Var_Pop_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
 };
 
@@ -2046,6 +2073,7 @@ export type Kennels_Var_Samp_Fields = {
   __typename?: 'kennels_var_samp_fields';
   frequency?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
+  mh_id?: Maybe<Scalars['Float']>;
   price?: Maybe<Scalars['Float']>;
 };
 
@@ -2053,6 +2081,7 @@ export type Kennels_Var_Samp_Fields = {
 export type Kennels_Var_Samp_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
 };
 
@@ -2061,6 +2090,7 @@ export type Kennels_Variance_Fields = {
   __typename?: 'kennels_variance_fields';
   frequency?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['Float']>;
+  mh_id?: Maybe<Scalars['Float']>;
   price?: Maybe<Scalars['Float']>;
 };
 
@@ -2068,6 +2098,7 @@ export type Kennels_Variance_Fields = {
 export type Kennels_Variance_Order_By = {
   frequency?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  mh_id?: InputMaybe<Order_By>;
   price?: InputMaybe<Order_By>;
 };
 
@@ -5913,6 +5944,13 @@ export type SyncQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type SyncQuery = { __typename?: 'query_root', kennels: Array<{ __typename?: 'kennels', google_calendar?: string | null, short_name?: string | null, google_refresh?: string | null, google_token?: string | null, id: number, name?: string | null, trails: Array<{ __typename?: 'trails', calculated_number?: number | null, id: number, name: string, start: any, latitude?: any | null, longitude?: any | null, directions?: string | null, google_calendar?: string | null, description?: string | null, hares: Array<{ __typename?: 'hares', hasherInfo: { __typename?: 'hashers', name?: string | null } }> }> }> };
 
+export type GqlTrailsForIcalQueryVariables = Exact<{
+  where: Trails_Bool_Exp;
+}>;
+
+
+export type GqlTrailsForIcalQuery = { __typename?: 'query_root', trails: Array<{ __typename?: 'trails', id: number, name: string, start: any, description?: string | null, directions?: string | null, latitude?: any | null, longitude?: any | null, kennelInfo: { __typename?: 'kennels', short_name?: string | null } }> };
+
 export type GqlKennelRolesEditViewSubscriptionVariables = Exact<{
   kennelId?: InputMaybe<Scalars['Int']>;
 }>;
@@ -9036,6 +9074,50 @@ export function useSyncLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SyncQ
 export type SyncQueryHookResult = ReturnType<typeof useSyncQuery>;
 export type SyncLazyQueryHookResult = ReturnType<typeof useSyncLazyQuery>;
 export type SyncQueryResult = Apollo.QueryResult<SyncQuery, SyncQueryVariables>;
+export const GqlTrailsForIcalDocument = gql`
+    query GQLTrailsForIcal($where: trails_bool_exp!) {
+  trails(order_by: {start: asc}, where: $where) {
+    id
+    name
+    start
+    description
+    directions
+    latitude
+    longitude
+    kennelInfo {
+      short_name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGqlTrailsForIcalQuery__
+ *
+ * To run a query within a React component, call `useGqlTrailsForIcalQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGqlTrailsForIcalQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGqlTrailsForIcalQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGqlTrailsForIcalQuery(baseOptions: Apollo.QueryHookOptions<GqlTrailsForIcalQuery, GqlTrailsForIcalQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GqlTrailsForIcalQuery, GqlTrailsForIcalQueryVariables>(GqlTrailsForIcalDocument, options);
+      }
+export function useGqlTrailsForIcalLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GqlTrailsForIcalQuery, GqlTrailsForIcalQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GqlTrailsForIcalQuery, GqlTrailsForIcalQueryVariables>(GqlTrailsForIcalDocument, options);
+        }
+export type GqlTrailsForIcalQueryHookResult = ReturnType<typeof useGqlTrailsForIcalQuery>;
+export type GqlTrailsForIcalLazyQueryHookResult = ReturnType<typeof useGqlTrailsForIcalLazyQuery>;
+export type GqlTrailsForIcalQueryResult = Apollo.QueryResult<GqlTrailsForIcalQuery, GqlTrailsForIcalQueryVariables>;
 export const GqlKennelRolesEditViewDocument = gql`
     subscription GQLKennelRolesEditView($kennelId: Int) {
   kennels(limit: 1, where: {id: {_eq: $kennelId}}) {

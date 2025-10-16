@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import { Button, Tab, Tabs } from 'react-bootstrap'
 import moment from 'moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
 import ErrorBanner, { BodyError } from '../../../src/components/ErrorBanner'
 import ListTable, { DataRow, InfoTable } from '../../../src/components/ListTable'
 import { LoadSpinner } from '../../../src/components/LoadSpinner'
@@ -178,9 +180,18 @@ const KennelPage = ({ error: kennelError, data: kennelData }: ServerSideProps) =
       : 'Hashes periodically.  Click on Add trail to host your own trail for this kennel.',
   })
 
+  const webcalBase = (process.env.NEXT_PUBLIC_URL || 'https://drunkcircle.com').replace(/^https?:\/\//, 'webcal://')
+
   return (
     <PageCard
       title={kennel.name || 'DrunkCircle Kennel'}
+      accessory={(
+        <Button href={`${webcalBase}/api/trails/ical?k=${encodeURIComponent(kennel.short_name ?? '')}`} variant="success">
+          <FontAwesomeIcon icon={faCalendarAlt} />
+          {' '}
+          Subscribe to Calendar
+        </Button>
+      )}
       description={kennel.description || undefined}
       editLink={perms.includes(Permission_Enum_Enum.Mismanage) ? `/kennel/${kennelId}/edit` : undefined}
     >

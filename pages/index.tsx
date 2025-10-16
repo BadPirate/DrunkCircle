@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import {
-  Alert,
   Card,
 } from 'react-bootstrap'
 import ReactMarkdown from 'react-markdown'
@@ -8,6 +7,8 @@ import { DataRow, InfoTable } from '../src/components/ListTable'
 import PageCard from '../src/components/PageCard'
 
 const Home = () => {
+  const webcalBase = (process.env.NEXT_PUBLIC_URL || 'https://drunkcircle.com').replace(/^https?:\/\//, 'webcal://')
+
   const rows : DataRow[] = [
     {
       title: 'New to Hashing?',
@@ -32,8 +33,8 @@ that weeks trail (called the 'Hare').
       row: (
         <ReactMarkdown>
           {`
-Search by [kennel](/kennel), all [trails](/trail) or add the [hash calendar](/calendar) to your favorite
-calendar client. 
+Search by [kennel](/kennel), all [trails](/trail) or add the all the hash calendars to your favorite
+calendar client. (you can subscribe to individual kennels on from the calendar button on their pages)
         `}
         </ReactMarkdown>
       ),
@@ -66,13 +67,6 @@ to get started.
       title="DrunkCircle"
       description="A site for finding trail and kennel information for the Hash House Harriers drinking and running club"
     >
-      <Alert variant="info">
-        Looking for the old site?
-        {' '}
-        <a href="https://crusty.drunkcircle.com">crusty.drunkcircle.com</a>
-        .
-        But why not give the update site a chance while you&apos;re here.
-      </Alert>
       <Card.Text>
         Welcome to the DrunkCircle website.  A free resource for Hash House Harriers.
       </Card.Text>
