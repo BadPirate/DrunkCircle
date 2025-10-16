@@ -33,7 +33,7 @@ that weeks trail (called the 'Hare').
       row: (
         <ReactMarkdown>
           {`
-Search by [kennel](/kennel), all [trails](/trail) or add the all the [hash calendars](${webcalBase}/api/trails/ical) to your favorite
+Search by [kennel](/kennel), all [trails](/trail) or add the all the hash calendars to your favorite
 calendar client. (you can subscribe to individual kennels on from the calendar button on their pages)
         `}
         </ReactMarkdown>
