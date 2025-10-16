@@ -7,6 +7,8 @@ import { DataRow, InfoTable } from '../src/components/ListTable'
 import PageCard from '../src/components/PageCard'
 
 const Home = () => {
+  const webcalBase = (process.env.NEXT_PUBLIC_URL || 'https://drunkcircle.com').replace(/^https?:\/\//, 'webcal://')
+
   const rows : DataRow[] = [
     {
       title: 'New to Hashing?',
@@ -31,7 +33,7 @@ that weeks trail (called the 'Hare').
       row: (
         <ReactMarkdown>
           {`
-Search by [kennel](/kennel), all [trails](/trail) or add the all the [hash calendars](/api/trails/ical) to your favorite
+Search by [kennel](/kennel), all [trails](/trail) or add the all the [hash calendars](${webcalBase}/api/trails/ical) to your favorite
 calendar client. (you can subscribe to individual kennels on from the calendar button on their pages)
         `}
         </ReactMarkdown>
